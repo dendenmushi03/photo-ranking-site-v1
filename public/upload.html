@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>写真アップロード</title>
+  <link rel="stylesheet" href="style.css?v=1" />
+  <style>
+    body {
+      text-align: center;
+      font-family: sans-serif;
+      background-color: #f4f4f8;
+      padding: 2rem;
+    }
+
+    h1 {
+      font-size: 1.8rem;
+      margin-bottom: 1.5rem;
+    }
+
+    form {
+      margin-bottom: 2rem;
+    }
+
+    .form-row {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .form-row label {
+      font-weight: bold;
+      white-space: nowrap;
+    }
+
+    .form-row input[type="text"],
+    .form-row input[type="file"] {
+      padding: 0.4rem;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    .form-row input[type="text"] {
+      width: 200px;
+    }
+
+    button {
+      padding: 0.6rem 1.5rem;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    .nav-links {
+      margin-top: 2rem;
+    }
+
+    .nav-button {
+      display: inline-block;
+      margin: 0 1rem;
+      padding: 0.8rem 1.5rem;
+      font-size: 1rem;
+      color: white;
+      border: none;
+      border-radius: 30px;
+      text-decoration: none;
+      background: linear-gradient(to right, #a18cd1, #fbc2eb);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    }
+
+    .nav-button:hover {
+      opacity: 0.9;
+    }
+  </style>
+</head>
+<body>
+  <h1>写真をアップロードしてランキングに参加しよう</h1>
+
+  <form id="uploadForm" enctype="multipart/form-data">
+    <!-- ✅ 写真選択を上に配置 -->
+    <div class="form-row">
+      <label for="photo">写真を選択（複数可）：</label>
+      <input type="file" id="photo" name="photo" accept="image/*" multiple required>
+    </div>
+
+    <!-- ✅ 投稿者名を下に配置 -->
+    <div class="form-row">
+      <label for="author">投稿者名：</label>
+      <input type="text" id="author" name="author" placeholder="ニックネームを入力" required>
+    </div>
+
+    <button type="submit">アップロード</button>
+  </form>
+
+  <div class="nav-links">
+    <a href="vote.html" class="nav-button">🗳 投票ページへ</a>
+    <a href="rankings.html" class="nav-button">🏆 ランキングページへ</a>
+  </div>
+
+  <script src="upload.js?v=1"></script>
+</body>
+</html>

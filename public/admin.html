@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>管理者ページ</title>
+  <link rel="stylesheet" href="style.css?v=1">
+  <style>
+    body {
+      background-color: #f7f7fb;
+      font-family: sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    header {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 1rem;
+      position: relative;
+    }
+
+    h1 {
+      text-align: center;
+      flex-grow: 1;
+    }
+
+    #logout-button {
+      position: absolute;
+      right: 20px;
+      top: 20px;
+      background-color: #dc3545;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .access-box {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      background-color: #fff;
+      padding: 1rem;
+      border-radius: 8px;
+      box-shadow: 0 0 5px rgba(0,0,0,0.1);
+    }
+
+    .main-content {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+      padding: 2rem 2rem 4rem 240px;
+    }
+
+    .photo-card {
+      width: 150px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      background: #fff;
+      box-shadow: 0 0 6px rgba(0,0,0,0.1);
+      padding: 0.8rem;
+      text-align: center;
+    }
+
+    .photo-card img {
+      width: 100%;
+      height: auto;
+      border-radius: 5px;
+    }
+
+    .photo-card p {
+      font-size: 0.9rem;
+      margin: 0.5rem 0;
+    }
+
+    .photo-card button {
+      margin: 0.2rem;
+      font-size: 0.8rem;
+      padding: 0.3rem 0.5rem;
+    }
+
+    .duplicate-label {
+      color: red;
+      font-size: 0.8rem;
+      margin-top: 0.3rem;
+    }
+
+    .nav-links {
+      display: flex;
+      justify-content: center;
+      margin: 2rem 0;
+    }
+
+    .nav-button {
+      display: inline-block;
+      padding: 0.8rem 1.5rem;
+      font-size: 1rem;
+      color: white;
+      border: none;
+      border-radius: 30px;
+      text-decoration: none;
+      background: linear-gradient(to right, #a18cd1, #fbc2eb);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+      margin: 0 1rem;
+    }
+
+    .nav-button:hover {
+      opacity: 0.9;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>未承認の写真一覧</h1>
+    <button id="logout-button">ログアウト</button>
+  </header>
+
+  <div class="access-box">
+    <h3>📊 アクセス統計</h3>
+    <p id="all">累計: -</p>
+    <p id="daily">本日: -</p>
+    <p id="weekly">過去7日間: -</p>
+  </div>
+
+  <div class="main-content" id="pending-container"></div>
+
+  <div class="nav-links">
+    <a href="admin-approved.html" class="nav-button">✅ 承認済みの写真一覧</a>
+  </div>
+
+  <script>
+    async function fetchPendingPhotos() {
+      const res = await fetch('/api/pending-photos', { credentials: 'include' });
+      if (!res.ok) {
+        alert('未承認データ取得エラー');
+        return;
+      }
+      const photos = await res.json();
+      const container = document.getElementById('pending-container');
+      container.innerHTML = '';
+  
+      for (const p of photos) {
+        const div = document.createElement('div');
+        div.className = 'photo-card';
+        div.innerHTML = `
+          <img src="/image/${p.filename}" alt="画像">
+          <p>投稿者: ${p.author}</p>
+          <div class="duplicate-label">${p.isDuplicate ? '⚠ 重複画像です' : ''}</div>
+          <button onclick="approve('${p.filename}')">✅ 承認</button>
+          <button onclick="remove('${p.filename}')">🗑 削除</button>
+        `;
+        container.appendChild(div);
+      }
+    }
+  
+    async function approve(filename) {
+      const res = await fetch('/api/approve-photo', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ filename })
+      });
+      if (res.ok) {
+        alert('承認しました');
+        fetchPendingPhotos();
+      } else {
+        alert('承認失敗');
+      }
+    }
+  
+    async function remove(filename) {
+      if (!confirm('本当に削除しますか？')) return;
+      const res = await fetch(`/api/photo/${filename}`, {
+        method: 'DELETE',
+        credentials: 'include'
+      });
+      if (res.ok) {
+        alert('削除しました');
+        fetchPendingPhotos();
+      } else {
+        alert('削除失敗');
+      }
+    }
+  
+    async function fetchAccessStats() {
+      const res = await fetch('/api/access-stats', { credentials: 'include' });
+      if (!res.ok) return;
+      const data = await res.json();
+      document.getElementById('all').textContent = '累計: ' + data.all;
+      document.getElementById('daily').textContent = '本日: ' + data.daily;
+      document.getElementById('weekly').textContent = '過去7日間: ' + data.weekly;
+    }
+  
+    document.getElementById("logout-button").addEventListener("click", async () => {
+      await fetch("/admin-logout", {
+        method: "POST",
+        credentials: 'include'
+      });
+      alert("ログアウトしました");
+      window.location.href = "/admin-login.html";
+    });
+  
+    fetchPendingPhotos();
+    fetchAccessStats();
+  </script> 
+</body>
+</html>

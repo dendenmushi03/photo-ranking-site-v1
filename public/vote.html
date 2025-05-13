@@ -1,0 +1,37 @@
+<!-- vote.html 最終強化版（GridFS対応 + 表示改善） -->
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>投票ページ</title>
+  <link rel="stylesheet" href="style.css?v=1" />
+</head>
+<body>
+  <h1 style="font-size: 2.8rem; color: #ff69b4; font-weight: bold; text-align: center;">
+    💖 AI美女のNo.1を決めよう！！ 💖
+  </h1>
+
+  <p style="text-align: center; font-size: 1.1rem; color: #555;">
+    気に入った写真を1枚選んで「投票する」ボタンを押してください 📸✨
+  </p>
+
+  <noscript>
+    <p style="color:red;">JavaScriptが無効になっています。写真の表示と投票にはJavaScriptが必要です。</p>
+  </noscript>
+
+  <form id="voteForm">
+    <div id="photo-container"></div>
+    <div id="vote-container">
+      <button id="vote-button" type="submit">投票する</button>
+    </div>
+  </form>
+
+  <div class="nav-links">
+    <a href="upload.html" class="nav-button">AI画像を投稿して参加！</a>
+    <a href="rankings.html" class="nav-button">ランキングページへ</a>
+  </div>
+
+  <script src="vote.js?v=2"></script>
+</body>
+</html>
