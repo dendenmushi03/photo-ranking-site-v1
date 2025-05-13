@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>写真ランキング（11～30位）</title>
+  <link rel="stylesheet" href="style.css?v=1" />
+  <style>
+    .rank-img {
+      width: 200px;
+      height: 200px;
+      object-fit: cover;
+      border-radius: 8px;
+      margin-right: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <h1>写真ランキング（11～30位）</h1>
+  <div id="ranking-container"></div>
+
+  <div class="nav-links">
+    <a href="rankings.html" class="nav-button">1～10位へ戻る</a>
+    <a href="upload.html" class="nav-button">AI画像を投稿して参加！</a>
+    <a href="vote.html" class="nav-button">投票ページへ戻る</a>
+  </div>
+
+  <script>
+    Promise.all([
+      fetch('/photo-meta').then(res => res.json()),
+      fetch('/api/rankings').then(res => res.json()),
+      fetch('/api/comments/all').then(res => res.json())
+    ])
+    .then(([meta, rankings, allComments]) => {
+      const container = document.getElementById('ranking-container');
+
+      const merged = rankings.map(item => {
+        const info = meta.find(m => m.filename === item.id);
+        return {
+          fileId: item.id,
+          author: info ? info.author : '不明',
+          votes: item.votes
+        };
+      });
+
+      const maxVotes = merged[0]?.votes || 1;
+      const others = merged.slice(10, 30);
+
+      others.forEach((item, index) => {
+        const div = document.createElement('div');
+        div.className = 'rank-item';
+
+        const rank = index + 11;
+        const widthPercent = Math.round((item.votes / maxVotes) * 100);
+        const comments = allComments[item.fileId] || [];
+
+        div.innerHTML = `
+          <img src="/image/${item.fileId}" alt="ランキング画像" class="rank-img">
+          <div class="rank-info">
+            <h3>第${rank}位：${item.author}さん</h3>
+            <p>得票数：${item.votes}票</p>
+            <div class="bar" style="width: ${widthPercent}%;"></div>
+            <ul class="comment-list" id="comments-${item.fileId}">
+              ${comments.map(c => `<li>${c}</li>`).join('')}
+            </ul>
+            <div class="comment-box">
+              <textarea id="input-${item.fileId}" placeholder="この写真へのコメントを書く"></textarea><br>
+              <button onclick="submitComment('${item.fileId}')">送信</button>
+              <button onclick="deleteComments('${item.fileId}')" style="background-color: #f66;">削除</button>
+            </div>
+          </div>
+        `;
+        container.appendChild(div);
+      });
+    });
+
+    function submitComment(photoId) {
+      const input = document.getElementById(`input-${photoId}`);
+      const comment = input.value.trim();
+      if (!comment) return;
+      fetch('/api/comments', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ photoId, comment })
+      }).then(() => location.reload());
+    }
+
+    function deleteComments(photoId) {
+      if (!confirm('本当にこの写真のコメントをすべて削除しますか？')) return;
+      fetch('/api/comments', {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ photoId })
+      }).then(() => location.reload());
+    }
+  </script>
+</body>
+</html>

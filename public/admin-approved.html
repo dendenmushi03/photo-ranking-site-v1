@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>承認済みの写真一覧</title>
+  <link rel="stylesheet" href="style.css?v=1">
+  <style>
+    h1 {
+      text-align: center;
+      margin-bottom: 1rem;
+    }
+    .approved-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      justify-content: flex-start;
+      padding: 1rem;
+    }
+    .photo-card {
+      width: 150px;
+      background: #fff;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      padding: 0.5rem;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    .photo-card img {
+      width: 100%;
+      height: auto;
+      border-radius: 6px;
+      margin-bottom: 0.5rem;
+    }
+    .photo-card p {
+      font-size: 0.9rem;
+      margin: 0;
+      text-align: center;
+    }
+    .photo-card button {
+      margin-top: 0.5rem;
+      width: 100%;
+      background-color: #dc3545;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      padding: 0.4rem;
+      cursor: pointer;
+    }
+    .photo-card button:hover {
+      background-color: #c82333;
+    }
+    #logout-button {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background-color: #dc3545;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .nav-links {
+      text-align: center;
+      margin-top: 2rem;
+    }
+    .nav-button {
+      display: inline-block;
+      margin: 0 1rem;
+      padding: 0.6rem 1.2rem;
+      background: #007bff;
+      color: white;
+      border-radius: 5px;
+      text-decoration: none;
+    }
+    .nav-button:hover {
+      background-color: #0056b3;
+    }
+  </style>
+</head>
+<body>
+  <h1>承認済みの写真一覧</h1>
+  <div class="approved-container" id="approved-container"></div>
+  <button id="logout-button">ログアウト</button>
+
+  <div class="nav-links">
+    <a href="admin.html" class="nav-button">← 未承認ページへ戻る</a>
+  </div>
+
+  <script>
+    async function fetchApprovedPhotos() {
+      const res = await fetch('/photo-meta', { credentials: 'include' });
+      const photos = await res.json();
+      const container = document.getElementById('approved-container');
+      container.innerHTML = '';
+      photos.forEach(p => {
+        const div = document.createElement('div');
+        div.className = 'photo-card';
+        div.innerHTML = `
+          <img src="/image/${p.filename}" alt="画像">
+          <p>${p.author}さん</p>
+          <button onclick="deletePhoto('${p.filename}')">削除</button>
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    async function deletePhoto(filename) {
+      if (!confirm('本当に削除しますか？')) return;
+      const res = await fetch(`/api/photo/${filename}`, {
+        method: 'DELETE',
+        credentials: 'include'
+      });
+      if (res.ok) {
+        alert('削除しました');
+        fetchApprovedPhotos();
+      } else {
+        alert('削除に失敗しました');
+      }
+    }
+
+    document.getElementById("logout-button").addEventListener("click", async () => {
+      await fetch("/admin-logout", {
+        method: "POST",
+        credentials: 'include'
+      });
+      alert("ログアウトしました");
+      window.location.href = "/admin-login.html";
+    });
+
+    fetchApprovedPhotos();
+  </script>
+</body>
+</html>
