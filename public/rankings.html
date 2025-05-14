@@ -6,28 +6,90 @@
   <title>写真ランキング（1〜10位）</title>
   <link rel="stylesheet" href="style.css?v=1" />
   <style>
+    body {
+      background-color: #f7f7fb;
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      padding: 2rem;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 2.2rem;
+      color: #ff7f00;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.6rem;
+      font-weight: bold;
+      margin-bottom: 1rem;
+    }
+
+    h1::before {
+      content: '📁';
+      font-size: 1.8rem;
+    }
+
+    h1 span {
+      color: #444;
+      font-size: 1.1rem;
+      font-weight: normal;
+    }
+
+    .underline {
+      width: 60%;
+      height: 4px;
+      background: linear-gradient(to right, orange, tomato);
+      margin: 0 auto 2rem;
+      border-radius: 2px;
+    }
+
     .top-ranking {
       display: flex;
       justify-content: center;
-      gap: 2rem;
-      margin-bottom: 2rem;
       flex-wrap: wrap;
+      gap: 1.5rem;
+      margin-bottom: 2rem;
     }
+
     .top-card {
+      width: 220px;
+      padding: 1rem;
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
       text-align: center;
     }
+
     .top-card img {
-      width: 220px;
+      width: 100%;
       height: 220px;
       object-fit: cover;
       border-radius: 12px;
     }
+
+    .top-card.gold {
+      border: 4px solid gold;
+      background: linear-gradient(to top, #fff8dc, white);
+    }
+
+    .top-card.silver {
+      border: 4px solid silver;
+      background: linear-gradient(to top, #f0f0f0, white);
+    }
+
+    .top-card.bronze {
+      border: 4px solid #cd7f32;
+      background: linear-gradient(to top, #ffe5d0, white);
+    }
+
     .rank-list {
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
       gap: 1.5rem;
     }
+
     .rank-card {
       width: 200px;
       border: 1px solid #ddd;
@@ -36,24 +98,51 @@
       background: #fff;
       box-shadow: 0 2px 6px rgba(0,0,0,0.05);
     }
+
     .rank-card img {
       width: 100%;
       height: 150px;
       object-fit: cover;
       border-radius: 8px;
     }
+
     .rank-card h4 {
       margin: 0.5rem 0 0.3rem;
       font-size: 1rem;
     }
+
     .rank-card p {
       margin: 0;
       font-size: 0.9rem;
     }
+
+    .nav-links {
+      margin-top: 3rem;
+    }
+
+    .nav-button {
+      display: inline-block;
+      margin: 0 1rem;
+      padding: 0.8rem 1.8rem;
+      font-size: 1rem;
+      color: white;
+      border: none;
+      border-radius: 30px;
+      text-decoration: none;
+      background: linear-gradient(to right, #a18cd1, #fbc2eb);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      transition: transform 0.2s ease;
+    }
+
+    .nav-button:hover {
+      transform: translateY(-2px);
+    }
   </style>
 </head>
 <body>
-  <h1>写真ランキング（1〜10位）</h1>
+  <h1>写真ランキング <span>（1〜10位）</span></h1>
+  <div class="underline"></div>
+
   <div class="top-ranking" id="top-ranking"></div>
   <div id="rank-list"></div>
 
@@ -84,11 +173,13 @@
 
       const top10 = merged.slice(0, 10);
 
-      // 1〜3位を上部に表示
       top10.forEach((item, index) => {
         if (index < 3) {
           const div = document.createElement('div');
           div.className = 'top-card';
+          if (index === 0) div.classList.add('gold');
+          else if (index === 1) div.classList.add('silver');
+          else if (index === 2) div.classList.add('bronze');
           div.innerHTML = `
             <div style="font-size: 2rem;">${['🥇', '🥈', '🥉'][index]}</div>
             <img src="/image/${item.fileId}" alt="画像">
@@ -98,7 +189,6 @@
         }
       });
 
-      // 4〜6位 → 2段目（3枚）
       const secondRow = document.createElement('div');
       secondRow.className = 'rank-list';
       top10.slice(3, 6).forEach((item, index) => {
@@ -113,7 +203,6 @@
       });
       listContainer.appendChild(secondRow);
 
-      // 7〜10位 → 3段目（4枚）
       const thirdRow = document.createElement('div');
       thirdRow.className = 'rank-list';
       top10.slice(6, 10).forEach((item, index) => {

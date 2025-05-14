@@ -82,7 +82,7 @@ conn.once('open', () => {
   gfs = new GridFSBucket(conn.db, { bucketName: 'uploads' });
   console.log('✅ MongoDB & GridFS ready');
 
-  app.post('/upload-photo', upload.array('photo', 10), async (req, res) => {
+  app.post('/upload-photo', upload.array('photo', 50), async (req, res) => {
     try {
       const author = req.body.author;
       const files = req.files;
