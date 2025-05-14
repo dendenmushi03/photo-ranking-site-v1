@@ -3,55 +3,69 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>写真アップロード</title>
+  <title>AI画像投稿</title>
   <link rel="stylesheet" href="style.css?v=1" />
   <style>
     body {
       text-align: center;
-      font-family: sans-serif;
+      font-family: 'Segoe UI', sans-serif;
       background-color: #f4f4f8;
       padding: 2rem;
     }
 
     h1 {
-      font-size: 1.8rem;
-      margin-bottom: 1.5rem;
+      font-size: 2rem;
+      font-weight: bold;
+      color: #4e4eaa;
+      margin-bottom: 2rem;
     }
 
     form {
-      margin-bottom: 2rem;
+      background: white;
+      padding: 2rem 3rem;
+      border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      display: inline-block;
     }
 
     .form-row {
       display: flex;
-      justify-content: center;
+      justify-content: flex-start;
       align-items: center;
-      gap: 0.5rem;
-      margin-bottom: 1rem;
+      gap: 1rem;
+      margin-bottom: 1.2rem;
     }
 
     .form-row label {
       font-weight: bold;
-      white-space: nowrap;
+      width: 160px;
+      text-align: right;
+      white-space: nowrap; /* ← ここを追加して1行表示に固定 */
     }
 
     .form-row input[type="text"],
     .form-row input[type="file"] {
-      padding: 0.4rem;
+      flex: 1;
+      padding: 0.5rem;
       border: 1px solid #ccc;
-      border-radius: 5px;
+      border-radius: 6px;
+      font-size: 1rem;
     }
 
     .form-row input[type="text"] {
-      width: 200px;
+      width: 100%;
     }
 
     button {
-      padding: 0.6rem 1.5rem;
+      display: block;
+      width: 100%;
+      padding: 0.8rem;
       background-color: #007bff;
       color: white;
       border: none;
-      border-radius: 5px;
+      border-radius: 6px;
+      font-size: 1rem;
+      margin-top: 1rem;
       cursor: pointer;
     }
 
@@ -66,32 +80,31 @@
     .nav-button {
       display: inline-block;
       margin: 0 1rem;
-      padding: 0.8rem 1.5rem;
+      padding: 0.8rem 1.8rem;
       font-size: 1rem;
       color: white;
       border: none;
       border-radius: 30px;
       text-decoration: none;
       background: linear-gradient(to right, #a18cd1, #fbc2eb);
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      transition: transform 0.2s ease;
     }
 
     .nav-button:hover {
-      opacity: 0.9;
+      transform: translateY(-2px);
     }
   </style>
 </head>
 <body>
-  <h1>写真をアップロードしてランキングに参加しよう</h1>
+  <h1>自身のAI画像を投稿して参加しよう！</h1>
 
   <form id="uploadForm" enctype="multipart/form-data">
-    <!-- ✅ 写真選択を上に配置 -->
     <div class="form-row">
-      <label for="photo">写真を選択（複数可）：</label>
+      <label for="photo">画像を選択（複数可）：</label>
       <input type="file" id="photo" name="photo" accept="image/*" multiple required>
     </div>
 
-    <!-- ✅ 投稿者名を下に配置 -->
     <div class="form-row">
       <label for="author">投稿者名：</label>
       <input type="text" id="author" name="author" placeholder="ニックネームを入力" required>
