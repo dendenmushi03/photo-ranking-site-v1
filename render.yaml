@@ -3,8 +3,11 @@ services:
   - type: web
     name: photo-ranking-site-v1  # 正確なサービス名を記入
     env: node
-    buildCommand: npm install
-    startCommand: npm start
-    rootDir: /  # ルートディレクトリを正しく指定
+    buildCommand: |
+      npm install       # 依存関係のインストール
+      npm run build      # ビルドが必要な場合は追加
+      npm audit fix --force  # もし依存関係の脆弱性があれば自動修正
+    startCommand: npm start  # サーバー起動コマンド
+    rootDir: /  # プロジェクトのルートディレクトリ
     autoDeploy: true
-    plan: free
+    plan: free  # 無料プランを使用
