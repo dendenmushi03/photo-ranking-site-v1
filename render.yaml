@@ -1,0 +1,10 @@
+# render.yaml
+services:
+  - type: web
+    name: photo-ranking-site-v1  # 正確なサービス名を記入
+    env: node
+    buildCommand: npm install
+    startCommand: npm start
+    rootDir: /  # ルートディレクトリを正しく指定
+    autoDeploy: true
+    plan: free

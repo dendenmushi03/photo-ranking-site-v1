@@ -1,0 +1,144 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f4f4f9;
+  text-align: center;
+}
+
+h1 {
+  color: #333;
+  margin-top: 20px;
+}
+
+button {
+  padding: 10px 20px;
+  margin: 10px;
+  background-color: #008cba;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #006f8c;
+}
+
+img {
+  cursor: pointer;
+}
+
+#vote-container {
+  margin-top: 20px;
+}
+
+/* 投票ページ・ランキングページ共通の画像サイズ */
+.photo-card img,
+.rank-item img {
+  width: 200px;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 6px;
+  margin-bottom: 0.5rem;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.photo-card {
+  background-color: transparent;
+  padding: 0;
+  border-radius: 0;
+  box-shadow: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#photo-container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  max-width: 960px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+
+#vote-button {
+  padding: 12px 24px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  background: linear-gradient(135deg, #66ccff, #3388ff);
+  color: white;
+  border: none;
+  border-radius: 30px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+#vote-button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3);
+  background: linear-gradient(135deg, #3388ff, #66ccff);
+}
+
+/* ナビゲーションリンクのボタンデザイン */
+.nav-links {
+  text-align: center;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+}
+
+.nav-button {
+  display: inline-block;
+  margin: 0 10px;
+  padding: 10px 20px;
+  background: linear-gradient(135deg, #a18cd1, #fbc2eb);
+  color: white;
+  text-decoration: none;
+  border-radius: 25px;
+  font-weight: bold;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.nav-button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+}
+
+/* モバイル対応：画像グリッド列数の調整 */
+@media screen and (max-width: 768px) {
+  #photo-container {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media screen and (max-width: 480px) {
+  #photo-container {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* コメント入力欄の装飾 */
+.comment-box textarea {
+  width: 90%;
+  max-width: 500px;
+  height: 60px;
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  margin-bottom: 8px;
+  font-family: inherit;
+  resize: vertical;
+}
+
+/* 得票数バーの装飾 */
+.bar {
+  height: 10px;
+  background-color: #66ccff;
+  border-radius: 5px;
+  margin: 0.5rem 0;
+}
+
