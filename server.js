@@ -15,50 +15,48 @@ const imghash = require('imghash');
 
 const app = express();
 
-const mongoUri = process.env.MONGO_URI || 'mongodb+srv://89bouzu19970307yuchan:zQXcCGTSAFEY824I@cluster0.ze31ydc.mongodb.net/photo-ranking?retryWrites=true&w=majority&appName=Cluster0';
-mongoose.connect(mongoUri, { useNewUrlParser: true, useUnifiedTopology: true });
+// MongoDB 接続 URI
+const mongoUri = process.env.MONGO_URI || 
+  'mongodb+srv://user:pass@cluster.mongodb.net/photo-ranking?retryWrites=true&w=majority&appName=Cluster0';
+
+mongoose.connect(mongoUri, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
 
 const conn = mongoose.connection;
 let gfs;
 
-const storage = multer.memoryStorage();
-const upload = multer({ storage });
-
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
-
 app.use(session({
-  secret: 'supersecretkey',
+  secret: process.env.SECRET_KEY || 'fallback-secret',
   resave: false,
   saveUninitialized: true,
-  cookie: { maxAge: 3600000, sameSite: 'lax', secure: false }
+  cookie: {
+    maxAge: 3600000,
+    sameSite: 'lax',
+    secure: false
+  }
 }));
 
-const Photo = mongoose.model('Photo', new mongoose.Schema({
-  filename: String,
-  author: String,
-  approved: { type: Boolean, default: false },
-  hash: String
-}));
+const upload = multer({
+  storage: multer.memoryStorage(),
+  limits: { fileSize: 5 * 1024 * 1024 }, // 最大5MB
+  fileFilter: (req, file, cb) => {
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
+    if (!allowedTypes.includes(file.mimetype)) {
+      return cb(new Error('Only image files are allowed!'), false);
+    }
+    cb(null, true);
+  }
+});
 
-const VoteLog = mongoose.model('VoteLog', new mongoose.Schema({
-  photoId: String,
-  votedAt: { type: Date, default: Date.now }
-}));
-
-const Comment = mongoose.model('Comment', new mongoose.Schema({
-  photoId: String,
-  text: String
-}));
-
-const AccessLog = mongoose.model('AccessLog', new mongoose.Schema({
-  type: String,
-  timestamp: { type: Date, default: Date.now }
-}));
-
-console.log("DEBUG - USER:", process.env.ADMIN_USERNAME);
-console.log("DEBUG - PASS:", process.env.ADMIN_PASSWORD);
+const Photo = mongoose.model('Photo', new mongoose.Schema({ filename: String, author: String, approved: { type: Boolean, default: false }, hash: String }));
+const VoteLog = mongoose.model('VoteLog', new mongoose.Schema({ photoId: String, votedAt: { type: Date, default: Date.now } }));
+const Comment = mongoose.model('Comment', new mongoose.Schema({ photoId: String, text: String }));
+const AccessLog = mongoose.model('AccessLog', new mongoose.Schema({ type: String, timestamp: { type: Date, default: Date.now } }));
 
 const adminUser = {
   username: process.env.ADMIN_USERNAME,
@@ -78,40 +76,38 @@ async function computePerceptualHash(buffer) {
   }
 }
 
+function requireAdmin(req, res, next) {
+  if (req.session?.isAdmin) return next();
+  res.status(403).json({ message: 'Forbidden' });
+}
+
 conn.once('open', () => {
   gfs = new GridFSBucket(conn.db, { bucketName: 'uploads' });
-  console.log('✅ MongoDB & GridFS ready');
 
   app.post('/upload-photo', upload.array('photo', 50), async (req, res) => {
     try {
-      const author = req.body.author;
+      const { author } = req.body;
       const files = req.files;
-      if (!author || !files || files.length === 0) {
-        return res.status(400).json({ message: 'Missing author or files' });
-      }
-
+      if (!author || !files?.length) return res.status(400).json({ message: 'Missing author or files' });
       const savedPhotos = [];
       for (const file of files) {
         const hash = await computePerceptualHash(file.buffer);
-        console.log('📷 pHash:', hash);
-        const stream = Readable.from(file.buffer);
-        const randomName = crypto.randomBytes(16).toString('hex') + path.extname(file.originalname);
-        const uploadStream = gfs.openUploadStream(randomName, { contentType: file.mimetype });
-
+        const uploadStream = gfs.openUploadStream(
+          crypto.randomBytes(16).toString('hex') + path.extname(file.originalname),
+          { contentType: file.mimetype }
+        );
+        Readable.from(file.buffer).pipe(uploadStream);
         await new Promise((resolve, reject) => {
-          stream.pipe(uploadStream)
-            .on('error', reject)
-            .on('finish', async () => {
-              const photo = new Photo({ filename: randomName, author, approved: false, hash });
-              await photo.save();
-              savedPhotos.push(photo);
-              resolve();
-            });
+          uploadStream.on('error', reject).on('finish', async () => {
+            const photo = new Photo({ filename: uploadStream.id, author, approved: false, hash });
+            await photo.save();
+            savedPhotos.push(photo);
+            resolve();
+          });
         });
       }
       res.json({ message: 'Upload successful (pending approval)', photos: savedPhotos });
     } catch (err) {
-      console.error('❌ Upload error:', err);
       res.status(500).json({ message: 'Upload failed', error: err.message });
     }
   });
@@ -119,54 +115,26 @@ conn.once('open', () => {
   app.get('/image/:filename', async (req, res) => {
     try {
       const files = await gfs.find({ filename: req.params.filename }).toArray();
-      if (!files || files.length === 0) return res.status(404).send('File not found');
-      const stream = gfs.openDownloadStreamByName(req.params.filename);
-      const chunks = [];
-      stream.on('data', chunk => chunks.push(chunk));
-      stream.on('end', () => {
-        res.set('Content-Type', files[0].contentType || 'application/octet-stream');
-        res.send(Buffer.concat(chunks));
-      });
-      stream.on('error', () => res.sendStatus(500));
-    } catch {
+      if (!files.length) return res.status(404).send('File not found');
+      gfs.openDownloadStreamByName(req.params.filename).pipe(res);
+    } catch (err) {
       res.sendStatus(500);
     }
   });
 
   app.get('/api/pending-photos', requireAdmin, async (req, res) => {
-    console.log('--- pending-photos start ---');
-    const approved = await Photo.find({ approved: true, hash: { $ne: null } });
-    const pending = await Photo.find({ approved: false });
-
-    function hammingDistance(a, b) {
-      let dist = 0;
-      for (let i = 0; i < a.length && i < b.length; i++) {
-        if (a[i] !== b[i]) dist++;
-      }
-      return dist + Math.abs(a.length - b.length);
-    }
-
-    const results = pending.map(p => {
-      let isDuplicate = false;
-      for (const a of approved) {
-        if (p.hash && a.hash) {
-          const dist = hammingDistance(p.hash, a.hash);
-          console.log(`🔍 比較: ${p.filename} vs ${a.filename} | 距離 = ${dist}`);
-          if (dist <= 10) {
-            isDuplicate = true;
-            break;
-          }
-        }
-      }
-      return {
-        filename: p.filename,
-        author: p.author,
-        isDuplicate
-      };
+    const approvedList = await Photo.find({ approved: true });
+    const pendingList = await Photo.find({ approved: false });
+    const results = pendingList.map(p => {
+      const isDuplicate = approvedList.some(a => {
+        const hd = [...p.hash].reduce((d, _, i) => d + (p.hash[i] !== a.hash[i] ? 1 : 0), 0);
+        return hd <= 10;
+      });
+      return { filename: p.filename, author: p.author, isDuplicate };
     });
-
     res.json(results);
   });
+
   app.post('/api/approve-photo', requireAdmin, async (req, res) => {
     const { filename } = req.body;
     if (!filename) return res.status(400).json({ message: 'Missing filename' });
@@ -176,48 +144,36 @@ conn.once('open', () => {
 
   app.delete('/api/photo/:filename', requireAdmin, async (req, res) => {
     await Photo.deleteOne({ filename: req.params.filename });
-    try {
-      const file = await gfs.find({ filename: req.params.filename }).toArray();
-      if (file.length > 0) await gfs.delete(file[0]._id);
-      res.json({ message: 'Photo deleted' });
-    } catch {
-      res.status(500).json({ message: 'Deletion error' });
-    }
+    const files = await gfs.find({ filename: req.params.filename }).toArray();
+    if (files.length) await gfs.delete(files[0]._id);
+    res.json({ message: 'Photo deleted' });
   });
 
   app.post('/vote-photo', async (req, res) => {
     const { photoId } = req.body;
     if (!photoId) return res.status(400).json({ message: 'Invalid vote' });
-    try {
-      await new VoteLog({ photoId }).save();
-      res.json({ message: 'Vote submitted' });
-    } catch {
-      res.status(500).json({ message: 'Vote failed' });
-    }
+    await new VoteLog({ photoId }).save();
+    res.json({ message: 'Vote submitted' });
   });
 
   app.get('/api/rankings', async (req, res) => {
     const photos = await Photo.find({ approved: true });
     const logs = await VoteLog.find();
-    const voteMap = {};
-    logs.forEach(log => {
-      voteMap[log.photoId] = (voteMap[log.photoId] || 0) + 1;
-    });
-    const results = photos.map(p => ({
-      id: p.filename,
-      author: p.author,
-      votes: voteMap[p.filename] || 0
-    })).sort((a, b) => b.votes - a.votes);
-    res.json(results);
+    const counts = logs.reduce((acc, l) => {
+      acc[l.photoId] = (acc[l.photoId] || 0) + 1;
+      return acc;
+    }, {});
+    res.json(photos.map(p => ({ id: p.filename, author: p.author, votes: counts[p.filename] || 0 }))
+      .sort((a, b) => b.votes - a.votes));
   });
 
   app.get('/api/comments/all', async (req, res) => {
-    const all = await Comment.find();
-    const grouped = {};
-    all.forEach(c => {
-      if (!grouped[c.photoId]) grouped[c.photoId] = [];
-      grouped[c.photoId].push(c.text);
-    });
+    const comments = await Comment.find();
+    const grouped = comments.reduce((g, c) => {
+      g[c.photoId] = g[c.photoId] || [];
+      g[c.photoId].push(c.text);
+      return g;
+    }, {});
     res.json(grouped);
   });
 
@@ -239,10 +195,10 @@ conn.once('open', () => {
     await Comment.deleteMany({ photoId });
     res.json({ message: 'Comments deleted' });
   });
+
   app.post('/admin-login', (req, res) => {
     const { username, password } = req.body;
-    const match = bcrypt.compareSync(password, adminUser.passwordHash);
-    if (username === adminUser.username && match) {
+    if (username === adminUser.username && bcrypt.compareSync(password, adminUser.passwordHash)) {
       req.session.isAdmin = true;
       req.session.save(() => res.json({ message: 'Login successful' }));
     } else {
@@ -256,21 +212,17 @@ conn.once('open', () => {
 
   app.get('/api/access-stats', requireAdmin, async (req, res) => {
     const now = new Date();
-    const startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-    const startOfWeek = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 6);
+    const startDay = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const startWeek = new Date(startDay.getTime() - 6 * 24 * 60 * 60 * 1000);
     const all = await AccessLog.countDocuments({ type: 'vote' });
-    const daily = await AccessLog.countDocuments({ type: 'vote', timestamp: { $gte: startOfDay } });
-    const weekly = await AccessLog.countDocuments({ type: 'vote', timestamp: { $gte: startOfWeek } });
+    const daily = await AccessLog.countDocuments({ type: 'vote', timestamp: { $gte: startDay } });
+    const weekly = await AccessLog.countDocuments({ type: 'vote', timestamp: { $gte: startWeek } });
     res.json({ all, daily, weekly });
   });
 
   app.post('/log-access', async (req, res) => {
-    try {
-      await new AccessLog({ type: 'vote' }).save();
-      res.json({ message: 'Access logged' });
-    } catch {
-      res.status(500).json({ message: 'Logging error' });
-    }
+    await new AccessLog({ type: 'vote' }).save();
+    res.json({ message: 'Access logged' });
   });
 
   app.get('/photo-meta', async (req, res) => {
@@ -278,11 +230,5 @@ conn.once('open', () => {
     res.json(photos.map(p => ({ filename: p.filename, author: p.author })));
   });
 
-  function requireAdmin(req, res, next) {
-    if (req.session?.isAdmin) return next();
-    res.status(403).json({ message: 'Forbidden' });
-  }
-  app.listen(3000, () => {
-    console.log('✅ Server running on port 3000');
-  });
+  app.listen(3000, () => console.log('✅ Server running on port 3000'));
 });

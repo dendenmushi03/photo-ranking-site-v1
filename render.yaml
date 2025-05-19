@@ -1,13 +1,10 @@
-# render.yaml
 services:
   - type: web
-    name: photo-ranking-site-v1  # 正確なサービス名を記入
+    name: photo-ranking-site-v1
     env: node
-    buildCommand: |
-      npm install       # 依存関係のインストール
-      npm run build      # ビルドが必要な場合は追加
-      npm audit fix --force  # もし依存関係の脆弱性があれば自動修正
-    startCommand: npm start  # サーバー起動コマンド
-    rootDir: /  # プロジェクトのルートディレクトリ
+    buildCommand: npm install
+    startCommand: npm start
     autoDeploy: true
-    plan: free  # 無料プランを使用
+    plan: free
+    envVars:
+      - fromDotEnv: true
