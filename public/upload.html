@@ -40,7 +40,7 @@
       font-weight: bold;
       width: 160px;
       text-align: right;
-      white-space: nowrap; /* ← ここを追加して1行表示に固定 */
+      white-space: nowrap;
     }
 
     .form-row input[type="text"],
@@ -110,7 +110,8 @@
       <input type="text" id="author" name="author" placeholder="ニックネームを入力" required>
     </div>
 
-    <button type="submit">アップロード</button>
+    <!-- ✅ ボタンにIDを追加 -->
+    <button id="uploadButton" type="submit">アップロード</button>
   </form>
 
   <div class="nav-links">
