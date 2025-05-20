@@ -1,4 +1,3 @@
-// ✅ 環境変数を使うためのdotenvを読み込み
 require('dotenv').config();
 
 const express = require('express');
@@ -15,7 +14,6 @@ const imghash = require('imghash');
 
 const app = express();
 
-// MongoDB 接続 URI
 const mongoUri = process.env.MONGO_URI || 
   'mongodb+srv://user:pass@cluster.mongodb.net/photo-ranking?retryWrites=true&w=majority&appName=Cluster0';
 
@@ -43,7 +41,7 @@ app.use(session({
 
 const upload = multer({
   storage: multer.memoryStorage(),
-  limits: { fileSize: 5 * 1024 * 1024 }, // 最大5MB
+  limits: { fileSize: 5 * 1024 * 1024 },
   fileFilter: (req, file, cb) => {
     const allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
     if (!allowedTypes.includes(file.mimetype)) {
@@ -53,10 +51,27 @@ const upload = multer({
   }
 });
 
-const Photo = mongoose.model('Photo', new mongoose.Schema({ filename: String, author: String, approved: { type: Boolean, default: false }, hash: String }));
-const VoteLog = mongoose.model('VoteLog', new mongoose.Schema({ photoId: String, votedAt: { type: Date, default: Date.now } }));
-const Comment = mongoose.model('Comment', new mongoose.Schema({ photoId: String, text: String }));
-const AccessLog = mongoose.model('AccessLog', new mongoose.Schema({ type: String, timestamp: { type: Date, default: Date.now } }));
+const Photo = mongoose.model('Photo', new mongoose.Schema({
+  filename: String,
+  author: String,
+  approved: { type: Boolean, default: false },
+  hash: String
+}));
+
+const VoteLog = mongoose.model('VoteLog', new mongoose.Schema({
+  photoId: String,
+  votedAt: { type: Date, default: Date.now }
+}));
+
+const Comment = mongoose.model('Comment', new mongoose.Schema({
+  photoId: String,
+  text: String
+}));
+
+const AccessLog = mongoose.model('AccessLog', new mongoose.Schema({
+  type: String,
+  timestamp: { type: Date, default: Date.now }
+}));
 
 const adminUser = {
   username: process.env.ADMIN_USERNAME,
@@ -90,12 +105,14 @@ conn.once('open', () => {
       const files = req.files;
       if (!author || !files?.length) return res.status(400).json({ message: 'Missing author or files' });
       const savedPhotos = [];
+
       for (const file of files) {
         const hash = await computePerceptualHash(file.buffer);
         const uploadStream = gfs.openUploadStream(
           crypto.randomBytes(16).toString('hex') + path.extname(file.originalname),
           { contentType: file.mimetype }
         );
+
         Readable.from(file.buffer).pipe(uploadStream);
         await new Promise((resolve, reject) => {
           uploadStream.on('error', reject).on('finish', async () => {
@@ -106,19 +123,20 @@ conn.once('open', () => {
           });
         });
       }
+
       res.json({ message: 'Upload successful (pending approval)', photos: savedPhotos });
     } catch (err) {
       res.status(500).json({ message: 'Upload failed', error: err.message });
     }
   });
 
+  // ✅ 画像取得ルート（filename に ObjectId を使っている前提）
   app.get('/image/:filename', async (req, res) => {
     try {
-      const files = await gfs.find({ filename: req.params.filename }).toArray();
-      if (!files.length) return res.status(404).send('File not found');
-      gfs.openDownloadStreamByName(req.params.filename).pipe(res);
+      const id = new mongoose.Types.ObjectId(req.params.filename);
+      gfs.openDownloadStream(id).pipe(res);
     } catch (err) {
-      res.sendStatus(500);
+      res.status(400).send('Invalid image ID');
     }
   });
 
@@ -144,7 +162,7 @@ conn.once('open', () => {
 
   app.delete('/api/photo/:filename', requireAdmin, async (req, res) => {
     await Photo.deleteOne({ filename: req.params.filename });
-    const files = await gfs.find({ filename: req.params.filename }).toArray();
+    const files = await gfs.find({ _id: new mongoose.Types.ObjectId(req.params.filename) }).toArray();
     if (files.length) await gfs.delete(files[0]._id);
     res.json({ message: 'Photo deleted' });
   });
@@ -163,8 +181,11 @@ conn.once('open', () => {
       acc[l.photoId] = (acc[l.photoId] || 0) + 1;
       return acc;
     }, {});
-    res.json(photos.map(p => ({ id: p.filename, author: p.author, votes: counts[p.filename] || 0 }))
-      .sort((a, b) => b.votes - a.votes));
+    res.json(photos.map(p => ({
+      id: p.filename,
+      author: p.author,
+      votes: counts[p.filename] || 0
+    })).sort((a, b) => b.votes - a.votes));
   });
 
   app.get('/api/comments/all', async (req, res) => {
