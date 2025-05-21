@@ -1,11 +1,10 @@
 // ✅ アクセスログを記録
 fetch('/log-access', { method: 'POST' });
 
-document.addEventListener("DOMContentLoaded", () => {
-  const voteButton = document.getElementById("vote-button");
-  voteButton.style.display = "none"; // 初期状態では非表示
+document.addEventListener('DOMContentLoaded', () => {
+  const voteButton = document.getElementById('vote-button');
+  voteButton.style.display = 'none'; // 初期は非表示
 
-  // 写真と投稿者を取得して表示
   fetch('/photo-meta')
     .then(res => res.ok ? res.json() : Promise.reject('写真データ取得失敗'))
     .then(photos => {
@@ -13,13 +12,6 @@ document.addEventListener("DOMContentLoaded", () => {
       container.innerHTML = '';
 
       const shuffled = photos.sort(() => 0.5 - Math.random()).slice(0, 9);
-
-      if (shuffled.length === 0) {
-        container.innerHTML = '<p style="color:red;">表示できる写真がありません。</p>';
-        return;
-      }
-
-      voteButton.style.display = "block"; // 写真が正常に取得できたときのみ表示
 
       shuffled.forEach((photo, index) => {
         const div = document.createElement('div');
@@ -37,6 +29,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
         container.appendChild(div);
       });
+
+      // ✅ 写真の表示が終わったらボタン表示
+      voteButton.style.display = 'block';
     })
     .catch(err => {
       console.error("画像読み込みエラー:", err);
