@@ -147,3 +147,26 @@ img {
   border-radius: 5px;
   margin: 0.5rem 0;
 }
+
+form {
+  max-width: 500px;
+  width: 90%;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+.form-row {
+  flex-wrap: wrap;
+}
+
+.form-row label {
+  width: 100%;
+  text-align: left;
+  margin-bottom: 0.3rem;
+}
+
+.form-row input[type="file"],
+.form-row input[type="text"] {
+  width: 100%;
+  box-sizing: border-box;
+}
