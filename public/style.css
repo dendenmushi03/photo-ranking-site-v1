@@ -190,3 +190,9 @@ form {
   margin: 1rem auto 2rem;
   border-radius: 2px;
 }
+
+.gradient-text {
+  background: linear-gradient(to right, #ff69b4, #ff8efb);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}

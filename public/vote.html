@@ -13,11 +13,17 @@
       margin: 0 auto 2rem;
       border-radius: 2px;
     }
+    h1 {
+      background: linear-gradient(to right, #ff8a00, #e52e71);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
   </style>
 </head>
 <body>
-  <h1 style="font-size: 2.8rem; color: #ff69b4; font-weight: bold; text-align: center;">
-    💖 No.1美女を選ぶのはあなた！✨ 💖
+  <h1 style="font-size: 2.8rem; font-weight: bold; text-align: center;">
+    No.1美女を選ぶのはあなた！✨
   </h1>
   <div class="underline-pink"></div>
 
@@ -52,7 +58,7 @@
         const container = document.getElementById('photo-container');
         container.innerHTML = '';
 
-        const shuffled = photos.sort(() => 0.5 - Math.random()).slice(0, 6); // 6枚に変更
+        const shuffled = photos.sort(() => 0.5 - Math.random()).slice(0, 6);
 
         shuffled.forEach((photo, index) => {
           const div = document.createElement('div');
