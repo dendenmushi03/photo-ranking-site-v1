@@ -5,18 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>写真ランキング（11～30位）</title>
   <link rel="stylesheet" href="style.css?v=1" />
-  <style>
-    .rank-img {
-      width: 200px;
-      height: 200px;
-      object-fit: cover;
-      border-radius: 8px;
-      margin-right: 1rem;
-    }
-  </style>
 </head>
 <body>
-  <h1>写真ランキング（11～30位）</h1>
+  <h1 style="font-size: 2rem; margin-top: 1.5rem; color: #ff6600;">
+    📁 <span style="font-weight: bold;">写真ランキング</span>
+    <span style="font-size: 1rem;">（11〜30位）</span>
+  </h1>
+  <hr style="border: none; height: 4px; background: linear-gradient(to right, #ff6600, #ff3366); width: 60%; margin: 1rem auto;">
+
   <div id="ranking-container"></div>
 
   <div class="nav-links">
@@ -55,7 +51,7 @@
         const comments = allComments[item.fileId] || [];
 
         div.innerHTML = `
-          <img src="/image/${item.fileId}" alt="ランキング画像" class="rank-img">
+          <img src="/image/${item.fileId}" alt="ランキング画像">
           <div class="rank-info">
             <h3>第${rank}位：${item.author}さん</h3>
             <p>得票数：${item.votes}票</p>
