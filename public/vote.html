@@ -1,4 +1,3 @@
-<!-- vote.html 最終強化版（GridFS対応 + 表示改善） -->
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -6,11 +5,21 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>投票ページ</title>
   <link rel="stylesheet" href="style.css?v=1" />
+  <style>
+    .underline-pink {
+      width: 60%;
+      height: 4px;
+      background: linear-gradient(to right, #ff69b4, #ff1493);
+      margin: 0 auto 2rem;
+      border-radius: 2px;
+    }
+  </style>
 </head>
 <body>
   <h1 style="font-size: 2.8rem; color: #ff69b4; font-weight: bold; text-align: center;">
     💖 AI美女のNo.1を決めよう！！ 💖
   </h1>
+  <div class="underline-pink"></div>
 
   <p style="text-align: center; font-size: 1.1rem; color: #555;">
     気に入った写真を1枚選んで「投票する」ボタンを押してください 📸✨
@@ -32,6 +41,69 @@
     <a href="rankings.html" class="nav-button">ランキングページへ</a>
   </div>
 
-  <script src="vote.js?v=2"></script>
+  <script>
+    // ✅ アクセスログを記録
+    fetch('/log-access', { method: 'POST' });
+
+    // 写真と投稿者を取得して表示
+    fetch('/photo-meta')
+      .then(res => res.ok ? res.json() : Promise.reject('写真データ取得失敗'))
+      .then(photos => {
+        const container = document.getElementById('photo-container');
+        container.innerHTML = '';
+
+        const shuffled = photos.sort(() => 0.5 - Math.random()).slice(0, 6); // ← 6枚に変更
+
+        shuffled.forEach((photo, index) => {
+          const div = document.createElement('div');
+          div.className = 'photo-card';
+
+          const radioId = `photo${index}`;
+
+          div.innerHTML = `
+            <img src="/image/${photo.filename}" alt="写真${index + 1}">
+            <label for="${radioId}">
+              <input type="radio" id="${radioId}" name="photo" value="${photo.filename}">
+              ${photo.author}さんの写真
+            </label>
+          `;
+
+          container.appendChild(div);
+        });
+      })
+      .catch(err => {
+        console.error("画像読み込みエラー:", err);
+        document.getElementById('photo-container').innerHTML =
+          '<p style="color:red;">写真の読み込みに失敗しました。</p>';
+      });
+
+    // 投票処理
+    document.getElementById("voteForm").addEventListener("submit", function(event) {
+      event.preventDefault();
+
+      const selected = document.querySelector('input[name="photo"]:checked');
+      if (!selected) {
+        alert("投票する写真を選んでください。");
+        return;
+      }
+
+      const photoId = selected.value;
+
+      fetch('/vote-photo', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ photoId })
+      })
+        .then(res => res.ok ? res.json() : Promise.reject('投票エラー'))
+        .then(data => {
+          alert("投票が完了しました！");
+          location.reload();
+        })
+        .catch(error => {
+          alert("投票中にエラーが発生しました。");
+          console.error(error);
+        });
+    });
+  </script>
 </body>
 </html>

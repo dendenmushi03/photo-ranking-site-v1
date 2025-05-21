@@ -181,3 +181,12 @@ form {
   width: 100%;
   box-sizing: border-box;
 }
+
+/* 💡 追加: ランキングや投票見出し下の装飾線 */
+.underline {
+  width: 60%;
+  height: 4px;
+  background: linear-gradient(to right, hotpink, deeppink);
+  margin: 1rem auto 2rem;
+  border-radius: 2px;
+}
