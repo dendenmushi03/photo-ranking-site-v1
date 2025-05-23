@@ -14,7 +14,7 @@ const imghash = require('imghash');
 
 const app = express();
 
-const mongoUri = process.env.MONGO_URI || 
+const mongoUri = process.env.MONGO_URI ||
   'mongodb+srv://user:pass@cluster.mongodb.net/photo-ranking?retryWrites=true&w=majority&appName=Cluster0';
 
 mongoose.connect(mongoUri, {
@@ -38,6 +38,11 @@ app.use(session({
     secure: false
   }
 }));
+
+// ✅ トップページのルート追加
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public/index.html'));
+});
 
 const upload = multer({
   storage: multer.memoryStorage(),
@@ -130,7 +135,6 @@ conn.once('open', () => {
     }
   });
 
-  // ✅ 画像取得ルート（filename に ObjectId を使っている前提）
   app.get('/image/:filename', async (req, res) => {
     try {
       const id = new mongoose.Types.ObjectId(req.params.filename);
