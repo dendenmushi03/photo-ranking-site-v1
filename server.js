@@ -39,7 +39,7 @@ app.use(session({
   }
 }));
 
-// ✅ トップページのルート追加
+// ✅ トップページのルート定義を conn.once の外に出す
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public/index.html'));
 });
