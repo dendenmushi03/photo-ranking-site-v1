@@ -5,6 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>投票ページ</title>
   <link rel="stylesheet" href="style.css?v=1" />
+
+  <!-- ✅ AdSense所有権確認コード -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2449604975433002"
+    crossorigin="anonymous"></script>
+
   <style>
     .underline-pink {
       width: 60%;
@@ -48,10 +53,8 @@
   </div>
 
   <script>
-    // ✅ アクセスログを記録
     fetch('/log-access', { method: 'POST' });
 
-    // 写真と投稿者を取得して表示
     fetch('/photo-meta')
       .then(res => res.ok ? res.json() : Promise.reject('写真データ取得失敗'))
       .then(photos => {
@@ -83,7 +86,6 @@
           '<p style="color:red;">写真の読み込みに失敗しました。</p>';
       });
 
-    // 投票処理
     document.getElementById("voteForm").addEventListener("submit", function(event) {
       event.preventDefault();
 
@@ -111,5 +113,10 @@
         });
     });
   </script>
+
+  <footer style="text-align: center; margin-top: 2rem;">
+    <a href="/privacy.html">プライバシーポリシー</a>
+  </footer>
+
 </body>
 </html>

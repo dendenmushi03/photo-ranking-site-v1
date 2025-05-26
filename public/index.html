@@ -1,24 +1,32 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>投票ページ</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>投票ページ</title>
+  <link rel="stylesheet" href="style.css">
+
+  <!-- ✅ AdSense所有権確認コード -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2449604975433002"
+    crossorigin="anonymous"></script>
 </head>
 <body>
-    <h1>ランダムに表示された写真に投票してください</h1>
+  <h1>ランダムに表示された写真に投票してください</h1>
 
-    <div id="photo-container"></div>
-    <div id="vote-container" style="display:none;">
-        <button id="vote-button">投票する</button>
-    </div>
+  <div id="photo-container"></div>
+  <div id="vote-container" style="display:none;">
+    <button id="vote-button">投票する</button>
+  </div>
 
-    <div>
-        <a href="upload.html"><button>写真アップロードページへ</button></a>
-        <a href="rankings.html"><button>ランキングページへ</button></a>
-    </div>
+  <div>
+    <a href="upload.html"><button>写真アップロードページへ</button></a>
+    <a href="rankings.html"><button>ランキングページへ</button></a>
+  </div>
 
-    <script src="vote.js"></script>
+  <footer style="text-align: center; margin-top: 2rem;">
+    <a href="/privacy.html">プライバシーポリシー</a>
+  </footer>
+
+  <script src="vote.js"></script>
 </body>
 </html>
