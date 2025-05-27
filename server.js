@@ -14,8 +14,7 @@ const imghash = require('imghash');
 
 const app = express();
 
-const mongoUri = process.env.MONGO_URI ||
-  'mongodb+srv://user:pass@cluster.mongodb.net/photo-ranking?retryWrites=true&w=majority&appName=Cluster0';
+const mongoUri = process.env.MONGO_URI || 'mongodb+srv://user:pass@cluster.mongodb.net/photo-ranking?retryWrites=true&w=majority&appName=Cluster0';
 
 mongoose.connect(mongoUri, {
   useNewUrlParser: true,
@@ -39,7 +38,6 @@ app.use(session({
   }
 }));
 
-// ✅ トップページのルート定義を conn.once の外に出す
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public/index.html'));
 });
@@ -137,8 +135,13 @@ conn.once('open', () => {
 
   app.get('/image/:filename', async (req, res) => {
     try {
-      const id = new mongoose.Types.ObjectId(req.params.filename);
-      gfs.openDownloadStream(id).pipe(res);
+      const fileId = new mongoose.Types.ObjectId(req.params.filename);
+      const stream = gfs.openDownloadStream(fileId);
+      stream.on('error', (err) => {
+        console.error('GridFS read error:', err);
+        return res.status(404).send('Image not found');
+      });
+      stream.pipe(res);
     } catch (err) {
       res.status(400).send('Invalid image ID');
     }
@@ -255,6 +258,6 @@ conn.once('open', () => {
     res.json(photos.map(p => ({ filename: p.filename, author: p.author })));
   });
 
-    const PORT = process.env.PORT || 3000;
+  const PORT = process.env.PORT || 3000;
   app.listen(PORT, () => console.log(`✅ Server running on port ${PORT}`));
-}); 
+});
