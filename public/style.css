@@ -216,3 +216,20 @@ form {
   height: auto;
 }
 
+.fancy-box {
+  background: #fff;
+  padding: 1.5rem;
+  margin: 2rem 1rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  line-height: 1.7;
+}
+
+.fancy-box h2 {
+  font-size: 1.3rem;
+  color: #ff3399;
+  margin-bottom: 1rem;
+}
+
+
