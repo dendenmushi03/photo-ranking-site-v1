@@ -58,14 +58,14 @@
 
   <form id="voteForm">
     <div id="photo-container"></div>
-    <div id="vote-container">
+    <div id="vote-container" class="button-wrapper">
       <button id="vote-button" type="submit">投票する</button>
-      <button id="reload-button">🔄</button>
+      <button id="reload-button" type="button">🔄</button>
     </div>
   </form>
 
   <div class="nav-links">
-    <a href="upload.html" class="nav-button">AI画像を投稿して参加！</a>
+    <a href="upload.html" class="nav-button">AI画像を投稿して参加!</a>
     <a href="rankings.html" class="nav-button">ランキングページへ</a>
   </div>
 
@@ -139,7 +139,8 @@
   </footer>
 
   <script>
-  document.getElementById("reload-button").addEventListener("click", () => {
+  document.getElementById("reload-button").addEventListener("click", (event) => {
+    event.stopPropagation(); // ← これが重要
     location.reload();
   });
   </script>

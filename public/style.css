@@ -269,3 +269,31 @@ form {
   background-color: #ccc;
 }
 
+.button-wrapper {
+  display: flex;
+  justify-content: center; /* 中央揃え */
+  align-items: center;
+  gap: 10px; /* ボタン同士の間隔 */
+  margin-top: 1.5rem;
+}
+
+#reload-button {
+  background-color: #e0e0e0;
+  color: #333;
+  border: none;
+  border-radius: 50%;
+  width: 34px;
+  height: 34px;
+  font-size: 16px;
+  cursor: pointer;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+  transition: transform 0.2s ease;
+  padding: 0;
+  line-height: 1;
+}
+
+#reload-button:hover {
+  transform: scale(1.1);
+}
+
+
