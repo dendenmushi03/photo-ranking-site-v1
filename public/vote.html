@@ -60,6 +60,7 @@
     <div id="photo-container"></div>
     <div id="vote-container">
       <button id="vote-button" type="submit">投票する</button>
+      <button id="reload-button">🔄</button>
     </div>
   </form>
 
@@ -137,5 +138,13 @@
     </p>
   </footer>
 
+  <script>
+  document.getElementById("reload-button").addEventListener("click", () => {
+    location.reload();
+  });
+  </script>
+
 </body>
 </html>
+
+

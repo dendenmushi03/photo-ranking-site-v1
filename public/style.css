@@ -244,3 +244,28 @@ form {
   -webkit-text-fill-color: transparent;
   margin: 2rem auto 1rem;
 }
+
+.vote-buttons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px; /* ボタン間の余白 */
+  margin-top: 1rem;
+}
+
+#reload-button {
+  padding: 10px 14px;
+  font-size: 1.2rem;
+  background-color: #e0e0e0;
+  color: #333;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  transition: background-color 0.2s;
+}
+
+#reload-button:hover {
+  background-color: #ccc;
+}
+
