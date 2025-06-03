@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>投票履歴</title>
+  <link rel="stylesheet" href="style.css?v=1">
+  <style>
+    .history-container {
+      max-width: 800px;
+      margin: 2rem auto;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      justify-content: center;
+    }
+    .history-card {
+      border: 1px solid #ccc;
+      border-radius: 12px;
+      padding: 1rem;
+      text-align: center;
+      width: 180px;
+      box-shadow: 2px 2px 6px rgba(0,0,0,0.1);
+    }
+    .history-card img {
+      width: 100%;
+      height: auto;
+      border-radius: 8px;
+    }
+    .chat-btn {
+      margin-top: 0.5rem;
+      padding: 0.4rem 1rem;
+      background-color: #ff69b4;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <h1 style="text-align:center;">🗳 あなたの投票履歴</h1>
+  <div class="history-container" id="history"></div>
+
+  <script>
+    fetch('/api/vote-history')
+      .then(res => res.ok ? res.json() : Promise.reject('取得失敗'))
+      .then(data => {
+        const container = document.getElementById('history');
+        if (data.length === 0) {
+          container.innerHTML = '<p style="text-align:center;">履歴がありません。</p>';
+          return;
+        }
+
+        data.forEach(entry => {
+          const div = document.createElement('div');
+          div.className = 'history-card';
+          div.innerHTML = `
+            <img src="/image/${entry.imageUrl}" alt="履歴画像">
+            <p>${new Date(entry.timestamp).toLocaleString()}</p>
+            <button class="chat-btn" onclick="startChat('${entry.characterId}')">この子と話す</button>
+          `;
+          container.appendChild(div);
+        });
+      })
+      .catch(err => {
+        console.error(err);
+        document.getElementById('history').innerHTML =
+          '<p style="color:red;">履歴の読み込みに失敗しました。</p>';
+      });
+
+    function startChat(characterId) {
+      localStorage.setItem("chatCharacterId", characterId);
+      window.location.href = "chat.html";
+    }
+  </script>
+</body>
+</html>

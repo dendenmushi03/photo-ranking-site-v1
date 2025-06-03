@@ -2,6 +2,7 @@ require('dotenv').config();
 
 const express = require('express');
 const mongoose = require('mongoose');
+const VoteLog = require('./models/VoteLog');
 const multer = require('multer');
 const path = require('path');
 const crypto = require('crypto');
@@ -12,6 +13,9 @@ const session = require('express-session');
 const bcrypt = require('bcryptjs');
 const imghash = require('imghash');
 
+const { GoogleGenerativeAI } = require('@google/generative-ai');
+const gemini = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+
 const app = express();
 
 const mongoUri = process.env.MONGO_URI || 'mongodb+srv://user:pass@cluster.mongodb.net/photo-ranking?retryWrites=true&w=majority&appName=Cluster0';
@@ -19,6 +23,25 @@ const mongoUri = process.env.MONGO_URI || 'mongodb+srv://user:pass@cluster.mongo
 mongoose.connect(mongoUri, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
+});
+
+// ✅ ←ここに追記OK！
+app.post('/api/vote', async (req, res) => {
+  const { imageUrl, characterId } = req.body;
+  const ip = req.ip;
+
+  try {
+    await VoteLog.create({
+      imageUrl,
+      characterId,
+      timestamp: new Date(),
+      ip
+    });
+    res.json({ success: true });
+  } catch (err) {
+    console.error('投票履歴の保存エラー:', err);
+    res.status(500).json({ error: '保存に失敗しました' });
+  }
 });
 
 const conn = mongoose.connection;
@@ -59,11 +82,6 @@ const Photo = mongoose.model('Photo', new mongoose.Schema({
   author: String,
   approved: { type: Boolean, default: false },
   hash: String
-}));
-
-const VoteLog = mongoose.model('VoteLog', new mongoose.Schema({
-  photoId: String,
-  votedAt: { type: Date, default: Date.now }
 }));
 
 const Comment = mongoose.model('Comment', new mongoose.Schema({
@@ -174,12 +192,51 @@ conn.once('open', () => {
     res.json({ message: 'Photo deleted' });
   });
 
+app.get('/api/vote-history', async (req, res) => {
+  const ip = req.ip;
+
+  try {
+    const history = await VoteLog.find({ ip }).sort({ timestamp: -1 }).limit(30);
+    res.json(history);
+  } catch (err) {
+    console.error('履歴取得エラー:', err);
+    res.status(500).json({ error: '履歴の取得に失敗しました' });
+  }
+});
+
   app.post('/vote-photo', async (req, res) => {
     const { photoId } = req.body;
     if (!photoId) return res.status(400).json({ message: 'Invalid vote' });
     await new VoteLog({ photoId }).save();
     res.json({ message: 'Vote submitted' });
   });
+
+  app.post('/api/chat', async (req, res) => {
+  const { messages } = req.body;
+  try {
+    const model = gemini.getGenerativeModel({ model: 'models/gemini-1.5-pro-latest' });
+
+    const userInput = messages
+      .filter(m => m.role === 'user')
+      .map(m => m.content)
+      .join('\n');
+
+    const result = await model.generateContent({
+      contents: [
+        {
+          role: 'user',
+          parts: [{ text: userInput }] 
+        }
+      ]
+    });
+
+    const reply = await result.response.text();
+    res.json({ reply });
+  } catch (err) {
+    console.error("Gemini API error:", err);
+    res.status(500).json({ error: "Chat failed" });
+  }
+});
 
   app.get('/api/rankings', async (req, res) => {
     const photos = await Photo.find({ approved: true });
