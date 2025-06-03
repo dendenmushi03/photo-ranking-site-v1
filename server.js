@@ -259,9 +259,6 @@ app.get('/api/vote-history', async (req, res) => {
   try {
     const model = gemini.getGenerativeModel({ model: 'models/gemini-1.5-pro-latest' });
 
-    // ✅ systemメッセージ1個だけ抽出
-    const systemText = messages.find(m => m.role === "system")?.content || "あなたは優しいAI美女です。";
-
     // ✅ userとassistantだけ抽出
     const chatMessages = messages.filter(m => m.role === "user" || m.role === "assistant");
 
