@@ -258,19 +258,12 @@ app.get('/api/vote-history', async (req, res) => {
   const { messages } = req.body;
   try {
     const model = gemini.getGenerativeModel({ model: 'models/gemini-1.5-flash-latest' });
-
-    const userInput = messages
-      .filter(m => m.role === 'user')
-      .map(m => m.content)
-      .join('\n');
-
+    
     const result = await model.generateContent({
-      contents: [
-        {
-          role: 'user',
-          parts: [{ text: userInput }] 
-        }
-      ]
+      contents: messages.map(m => ({
+        role: m.role,
+        parts: [{ text: m.content }]
+      }))
     });
 
     const reply = await result.response.text();

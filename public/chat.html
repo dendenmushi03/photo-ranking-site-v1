@@ -30,7 +30,7 @@
     const chatBox = document.getElementById('chat-box');
     const form = document.getElementById('chat-form');
     const input = document.getElementById('chat-input');
-    const messages = [];
+    const messages = [{ role: "system", content: systemPrompt }];
 
     function addMessage(text, type) {
       const div = document.createElement("div");
