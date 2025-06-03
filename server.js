@@ -23,7 +23,7 @@ async function generatePromptFromImage(buffer) {
   const base64Image = fs.readFileSync(tmpPath).toString('base64');
   fs.unlinkSync(tmpPath);
 
-  const model = gemini.getGenerativeModel({ model: 'gemini-1.5-flash-latest' });
+  const model = gemini.getGenerativeModel({ model: 'models/gemini-1.5-pro-latest' });
 
   const result = await model.generateContent({
     contents: [{
@@ -257,7 +257,7 @@ app.get('/api/vote-history', async (req, res) => {
   const { messages } = req.body;
 
   try {
-    const model = gemini.getGenerativeModel({ model: 'models/gemini-1.5-flash-latest' });
+    const model = gemini.getGenerativeModel({ model: 'models/gemini-1.5-pro-latest' });
 
     // ✅ systemメッセージ1個だけ抽出
     const systemText = messages.find(m => m.role === "system")?.content || "あなたは優しいAI美女です。";
