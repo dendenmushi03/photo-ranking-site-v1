@@ -30,7 +30,15 @@
     const chatBox = document.getElementById('chat-box');
     const form = document.getElementById('chat-form');
     const input = document.getElementById('chat-input');
-    const messages = [{ role: "system", content: systemPrompt }];
+    let messages = [];  // ← let にしてあとで代入可能にする
+
+async function initializeChat() {
+  try {
+    const res = await fetch(`/api/photo-prompt/${characterId}`);
+    const data = await res.json();
+    const systemPrompt = data.prompt || "あなたはかわいらしいAI美女です。";
+
+    messages = [{ role: "system", content: systemPrompt }];
 
     function addMessage(text, type) {
       const div = document.createElement("div");
