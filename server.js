@@ -23,7 +23,7 @@ async function generatePromptFromImage(buffer) {
   const base64Image = fs.readFileSync(tmpPath).toString('base64');
   fs.unlinkSync(tmpPath);
 
-  const model = gemini.getGenerativeModel({ model: 'gemini-1.5-pro-vision' });
+  const model = gemini.getGenerativeModel({ model: 'gemini-1.5-flash-latest' });
 
   const result = await model.generateContent({
     contents: [{
