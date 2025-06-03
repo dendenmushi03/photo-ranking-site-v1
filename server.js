@@ -265,19 +265,23 @@ app.get('/api/vote-history', async (req, res) => {
     // ✅ userとassistantだけ抽出
     const chatMessages = messages.filter(m => m.role === "user" || m.role === "assistant");
 
-    // ✅ Gemini APIに送信する構造を作成
-    const result = await model.generateContent({
-      contents: [
-        {
-          role: "user",
-          parts: [{ text: systemText }]
-        },
-        ...chatMessages.map(m => ({
-          role: m.role,
-          parts: [{ text: m.content }]
-        }))
-      ]
-    });
+    const systemText = `あなたは、親しみやすくて丁寧な話し方をするAI美女です。
+相手の気持ちに寄り添いながら、優しく、時に少し甘えるような返答をしてください。
+語尾には可愛らしい絵文字（😊💕✨など）を使って、会話を明るくしてください。
+以下はユーザーとの会話履歴です。続けてください。`;
+
+const result = await model.generateContent({
+  contents: [
+    {
+      role: "user",
+      parts: [{ text: systemText }]
+    },
+    ...chatMessages.map(m => ({
+      role: m.role,
+      parts: [{ text: m.content }]
+    }))
+  ]
+});
 
     // ✅ 応答テキストを安全に取り出す
     const reply = result.response?.candidates?.[0]?.content?.parts?.[0]?.text || "返答がありませんでした。";
