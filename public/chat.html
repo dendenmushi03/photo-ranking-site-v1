@@ -30,18 +30,7 @@
     const chatBox = document.getElementById('chat-box');
     const form = document.getElementById('chat-form');
     const input = document.getElementById('chat-input');
-
-    const characterPrompts = {
-      "001": "あなたは癒し系のお姉さんAI美女『ミユ』です。かわいく優しく、恋人のように話してください。",
-      "002": "あなたはクールでツンデレなAI美女『アイ』です。ツン9割、デレ1割で返してください。",
-      "003": "あなたは甘えん坊な妹系AI美女『ヒナ』です。語尾に「〜だよぉ」「〜なのぉ」など使ってください。"
-    };
-
-    const systemPrompt = characterPrompts[characterId] || "あなたはかわいらしいAI美女です。";
-
-    const messages = [
-      { role: "system", content: systemPrompt }
-    ];
+    const messages = [];
 
     function addMessage(text, type) {
       const div = document.createElement("div");
@@ -49,6 +38,32 @@
       div.textContent = text;
       chatBox.appendChild(div);
       chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    async function initializeChat() {
+      try {
+        const res = await fetch(`/api/photo-prompt/${characterId}`);
+        const data = await res.json();
+        const systemPrompt = data.prompt || "あなたはかわいらしいAI美女です。";
+
+        messages.push({ role: "system", content: systemPrompt });
+
+        // 履歴復元
+        const saved = localStorage.getItem("chatLog_" + characterId);
+        if (saved) {
+          const oldMessages = JSON.parse(saved);
+          oldMessages.forEach(msg => {
+            if (msg.role !== "system") {
+              addMessage(msg.content, msg.role === "user" ? "user" : "bot");
+            }
+            messages.push(msg);
+          });
+        }
+
+      } catch (err) {
+        console.error("プロンプト取得エラー:", err);
+        messages.push({ role: "system", content: "あなたは優しいAI美女です。" });
+      }
     }
 
     form.addEventListener("submit", async (e) => {
@@ -59,7 +74,6 @@
       addMessage(userMsg, "user");
       messages.push({ role: "user", content: userMsg });
 
-      // 一時的にローディング表示
       const loadingMsg = document.createElement("div");
       loadingMsg.className = "message bot";
       loadingMsg.textContent = "考え中...";
@@ -80,6 +94,7 @@
           const reply = data.reply;
           messages.push({ role: "assistant", content: reply });
           addMessage(reply, "bot");
+          localStorage.setItem("chatLog_" + characterId, JSON.stringify(messages));
         } else {
           addMessage("返答に失敗しました。", "bot");
         }
@@ -89,9 +104,12 @@
         console.error(err);
       }
     });
+
+    initializeChat();
   </script>
+
   <div class="nav-links">
-  <a href="history.html" class="nav-button">← 投票履歴に戻る</a>
+    <a href="history.html" class="nav-button">← 投票履歴に戻る</a>
   </div>
 </body>
 </html>

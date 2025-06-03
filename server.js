@@ -16,6 +16,35 @@ const imghash = require('imghash');
 const { GoogleGenerativeAI } = require('@google/generative-ai');
 const gemini = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
+// 13行目の直後に追記
+async function generatePromptFromImage(buffer) {
+  const tmpPath = path.join(__dirname, 'prompt-' + Date.now() + '.jpg');
+  fs.writeFileSync(tmpPath, buffer);
+  const base64Image = fs.readFileSync(tmpPath).toString('base64');
+  fs.unlinkSync(tmpPath);
+
+  const model = gemini.getGenerativeModel({ model: 'gemini-1.5-pro-vision' });
+
+  const result = await model.generateContent({
+    contents: [{
+      parts: [
+        {
+          inlineData: {
+            mimeType: 'image/jpeg',
+            data: base64Image
+          }
+        },
+        {
+          text: `この画像の女性の印象から性格を推測して、以下のいずれかのキャラクタータイプで日本語プロンプトを50文字以内で1文返してください。
+癒し系お姉さん／甘えん坊な妹／ツンデレ美女／知的で上品／元気で明るい`
+        }
+      ]
+    }]
+  });
+
+  return result.response?.candidates?.[0]?.content?.parts?.[0]?.text || "あなたは明るく可愛いAI美女です。";
+}
+
 const app = express();
 
 const mongoUri = process.env.MONGO_URI || 'mongodb+srv://user:pass@cluster.mongodb.net/photo-ranking?retryWrites=true&w=majority&appName=Cluster0';
@@ -81,7 +110,8 @@ const Photo = mongoose.model('Photo', new mongoose.Schema({
   filename: String,
   author: String,
   approved: { type: Boolean, default: false },
-  hash: String
+  hash: String,
+  prompt: String
 }));
 
 const Comment = mongoose.model('Comment', new mongoose.Schema({
@@ -129,6 +159,7 @@ conn.once('open', () => {
 
       for (const file of files) {
         const hash = await computePerceptualHash(file.buffer);
+        const prompt = await generatePromptFromImage(file.buffer);
         const uploadStream = gfs.openUploadStream(
           crypto.randomBytes(16).toString('hex') + path.extname(file.originalname),
           { contentType: file.mimetype }
@@ -137,7 +168,7 @@ conn.once('open', () => {
         Readable.from(file.buffer).pipe(uploadStream);
         await new Promise((resolve, reject) => {
           uploadStream.on('error', reject).on('finish', async () => {
-            const photo = new Photo({ filename: uploadStream.id, author, approved: false, hash });
+            const photo = new Photo({ filename: uploadStream.id, author, approved: false, hash, prompt });
             await photo.save();
             savedPhotos.push(photo);
             resolve();
@@ -207,8 +238,23 @@ app.get('/api/vote-history', async (req, res) => {
   app.post('/vote-photo', async (req, res) => {
   res.json({ message: 'Vote received' }); // 👍 これでOK
 });
+    
+  app.get('/api/photo-prompt/:characterId', async (req, res) => {
+  const { characterId } = req.params;
+  try {
+    const photo = await Photo.findOne({ filename: characterId });
+    if (!photo || !photo.prompt) {
+      return res.json({ prompt: "あなたは優しいAI美女です。" });
+    }
+    res.json({ prompt: photo.prompt });
+  } catch (err) {
+    console.error("プロンプト取得失敗:", err);
+    res.status(500).json({ prompt: "あなたは優しいAI美女です。" });
+  }
+});
 
   app.post('/api/chat', async (req, res) => {
+
   const { messages } = req.body;
   try {
     const model = gemini.getGenerativeModel({ model: 'models/gemini-1.5-flash-latest' });
@@ -305,6 +351,39 @@ app.get('/api/vote-history', async (req, res) => {
   app.post('/log-access', async (req, res) => {
     await new AccessLog({ type: 'vote' }).save();
     res.json({ message: 'Access logged' });
+  });
+
+    app.post('/api/backfill-prompts', requireAdmin, async (req, res) => {
+    try {
+      const photos = await Photo.find({ approved: true, $or: [{ prompt: null }, { prompt: "" }] });
+      const updated = [];
+
+      for (const photo of photos) {
+        try {
+          const fileId = new mongoose.Types.ObjectId(photo.filename);
+          const chunks = [];
+          const stream = gfs.openDownloadStream(fileId);
+
+          await new Promise((resolve, reject) => {
+            stream.on('data', chunk => chunks.push(chunk));
+            stream.on('end', resolve);
+            stream.on('error', reject);
+          });
+
+          const buffer = Buffer.concat(chunks);
+          const prompt = await generatePromptFromImage(buffer);
+          await Photo.updateOne({ _id: photo._id }, { prompt });
+          updated.push({ id: photo._id.toString(), prompt });
+        } catch (err) {
+          console.warn(`画像 ${photo.filename} のプロンプト生成に失敗:`, err.message);
+        }
+      }
+
+      res.json({ message: "一括プロンプト生成完了", count: updated.length, updated });
+    } catch (err) {
+      console.error("一括プロンプト生成全体エラー:", err);
+      res.status(500).json({ error: "処理に失敗しました" });
+    }
   });
 
   app.get('/photo-meta', async (req, res) => {
