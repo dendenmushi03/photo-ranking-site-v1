@@ -25,6 +25,23 @@ mongoose.connect(mongoUri, {
   useUnifiedTopology: true,
 });
 
+const conn = mongoose.connection;
+let gfs;
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(express.static(path.join(__dirname, 'public')));
+app.use(session({
+  secret: process.env.SECRET_KEY || 'fallback-secret',
+  resave: false,
+  saveUninitialized: true,
+  cookie: {
+    maxAge: 3600000,
+    sameSite: 'lax',
+    secure: false
+  }
+}));
+
 // ✅ ←ここに追記OK！
 app.post('/api/vote', async (req, res) => {
   const { imageUrl, characterId } = req.body;
@@ -43,23 +60,6 @@ app.post('/api/vote', async (req, res) => {
     res.status(500).json({ error: '保存に失敗しました' });
   }
 });
-
-const conn = mongoose.connection;
-let gfs;
-
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use(express.static(path.join(__dirname, 'public')));
-app.use(session({
-  secret: process.env.SECRET_KEY || 'fallback-secret',
-  resave: false,
-  saveUninitialized: true,
-  cookie: {
-    maxAge: 3600000,
-    sameSite: 'lax',
-    secure: false
-  }
-}));
 
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public/index.html'));
@@ -205,11 +205,8 @@ app.get('/api/vote-history', async (req, res) => {
 });
 
   app.post('/vote-photo', async (req, res) => {
-    const { photoId } = req.body;
-    if (!photoId) return res.status(400).json({ message: 'Invalid vote' });
-    await new VoteLog({ photoId }).save();
-    res.json({ message: 'Vote submitted' });
-  });
+  res.json({ message: 'Vote received' }); // 👍 これでOK
+});
 
   app.post('/api/chat', async (req, res) => {
   const { messages } = req.body;
@@ -242,7 +239,7 @@ app.get('/api/vote-history', async (req, res) => {
     const photos = await Photo.find({ approved: true });
     const logs = await VoteLog.find();
     const counts = logs.reduce((acc, l) => {
-      acc[l.photoId] = (acc[l.photoId] || 0) + 1;
+      acc[l.imageUrl] = (acc[l.imageUrl] || 0) + 1;
       return acc;
     }, {});
     res.json(photos.map(p => ({
