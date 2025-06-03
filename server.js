@@ -252,28 +252,34 @@ app.get('/api/vote-history', async (req, res) => {
     res.status(500).json({ prompt: "あなたは優しいAI美女です。" });
   }
 });
-
+  
   app.post('/api/chat', async (req, res) => {
   const { messages } = req.body;
 
   try {
     const model = gemini.getGenerativeModel({ model: 'models/gemini-1.5-flash-latest' });
 
+    // ✅ systemメッセージ1個だけ抽出
+    const systemText = messages.find(m => m.role === "system")?.content || "あなたは優しいAI美女です。";
+
+    // ✅ userとassistantだけ抽出
+    const chatMessages = messages.filter(m => m.role === "user" || m.role === "assistant");
+
+    // ✅ Gemini APIに送信する構造を作成
     const result = await model.generateContent({
       contents: [
         {
           role: "system",
-          parts: [{ text: messages.find(m => m.role === "system")?.content || "あなたは優しいAI美女です。" }]
+          parts: [{ text: systemText }]
         },
-        ...messages
-          .filter(m => m.role !== "system")
-          .map(m => ({
-            role: m.role,
-            parts: [{ text: m.content }]
-          }))
+        ...chatMessages.map(m => ({
+          role: m.role,
+          parts: [{ text: m.content }]
+        }))
       ]
     });
 
+    // ✅ 応答テキストを安全に取り出す
     const reply = result.response?.candidates?.[0]?.content?.parts?.[0]?.text || "返答がありませんでした。";
     res.json({ reply });
 
