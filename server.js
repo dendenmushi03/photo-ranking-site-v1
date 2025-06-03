@@ -269,7 +269,7 @@ app.get('/api/vote-history', async (req, res) => {
     const result = await model.generateContent({
       contents: [
         {
-          role: "system",
+          role: "user",
           parts: [{ text: systemText }]
         },
         ...chatMessages.map(m => ({
