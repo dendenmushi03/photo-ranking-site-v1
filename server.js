@@ -254,28 +254,34 @@ app.get('/api/vote-history', async (req, res) => {
 });
 
   app.post('/api/chat', async (req, res) => {
-
   const { messages } = req.body;
+
   try {
     const model = gemini.getGenerativeModel({ model: 'models/gemini-1.5-flash-latest' });
 
-const result = await model.generateContent({
-  contents: [
-    {
-      role: "system",
-      parts: [{ text: messages.find(m => m.role === "system")?.content || "あなたは優しいAI美女です。" }]
-    },
-    ...messages
-      .filter(m => m.role !== "system")
-      .map(m => ({
-        role: m.role,
-        parts: [{ text: m.content }]
-      }))
-  ]
-});
+    const result = await model.generateContent({
+      contents: [
+        {
+          role: "system",
+          parts: [{ text: messages.find(m => m.role === "system")?.content || "あなたは優しいAI美女です。" }]
+        },
+        ...messages
+          .filter(m => m.role !== "system")
+          .map(m => ({
+            role: m.role,
+            parts: [{ text: m.content }]
+          }))
+      ]
+    });
 
-const reply = result.response?.candidates?.[0]?.content?.parts?.[0]?.text || "返答がありませんでした。";
-res.json({ reply });
+    const reply = result.response?.candidates?.[0]?.content?.parts?.[0]?.text || "返答がありませんでした。";
+    res.json({ reply });
+
+  } catch (err) {
+    console.error("Gemini API error:", err);
+    res.status(500).json({ error: "Chat failed" });
+  }
+});
 
   app.get('/api/rankings', async (req, res) => {
     const photos = await Photo.find({ approved: true });
