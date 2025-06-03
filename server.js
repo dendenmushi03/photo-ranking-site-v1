@@ -211,7 +211,7 @@ app.get('/api/vote-history', async (req, res) => {
   app.post('/api/chat', async (req, res) => {
   const { messages } = req.body;
   try {
-    const model = gemini.getGenerativeModel({ model: 'models/gemini-1.5-pro-latest' });
+    const model = gemini.getGenerativeModel({ model: 'models/gemini-1.5-flash-latest' });
 
     const userInput = messages
       .filter(m => m.role === 'user')
