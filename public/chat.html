@@ -26,95 +26,89 @@
   </form>
 
   <script>
-    const characterId = localStorage.getItem('chatCharacterId') || '001';
-    const chatBox = document.getElementById('chat-box');
-    const form = document.getElementById('chat-form');
-    const input = document.getElementById('chat-input');
-    let messages = [];  // ← let にしてあとで代入可能にする
+  const characterId = localStorage.getItem('chatCharacterId') || '001';
+  const chatBox = document.getElementById('chat-box');
+  const form = document.getElementById('chat-form');
+  const input = document.getElementById('chat-input');
+  let messages = [];
 
-async function initializeChat() {
-  try {
-    const res = await fetch(`/api/photo-prompt/${characterId}`);
-    const data = await res.json();
-    const systemPrompt = data.prompt || "あなたはかわいらしいAI美女です。";
+  function addMessage(text, type) {
+    const div = document.createElement("div");
+    div.className = `message ${type}`;
+    div.textContent = text;
+    chatBox.appendChild(div);
+    chatBox.scrollTop = chatBox.scrollHeight;
+  }
 
-    messages = [{ role: "system", content: systemPrompt }];
+  async function initializeChat() {
+    try {
+      const res = await fetch(`/api/photo-prompt/${characterId}`);
+      const data = await res.json();
+      const systemPrompt = data.prompt || "あなたはかわいらしいAI美女です。";
 
-    function addMessage(text, type) {
-      const div = document.createElement("div");
-      div.className = `message ${type}`;
-      div.textContent = text;
-      chatBox.appendChild(div);
-      chatBox.scrollTop = chatBox.scrollHeight;
-    }
+      // ✅ systemメッセージで初期化
+      messages = [{ role: "system", content: systemPrompt }];
 
-    async function initializeChat() {
-      try {
-        const res = await fetch(`/api/photo-prompt/${characterId}`);
-        const data = await res.json();
-        const systemPrompt = data.prompt || "あなたはかわいらしいAI美女です。";
-
-        messages.push({ role: "system", content: systemPrompt });
-
-        // 履歴復元
-        const saved = localStorage.getItem("chatLog_" + characterId);
-        if (saved) {
-          const oldMessages = JSON.parse(saved);
-          oldMessages.forEach(msg => {
-            if (msg.role !== "system") {
-              addMessage(msg.content, msg.role === "user" ? "user" : "bot");
-            }
-            messages.push(msg);
-          });
-        }
-
-      } catch (err) {
-        console.error("プロンプト取得エラー:", err);
-        messages.push({ role: "system", content: "あなたは優しいAI美女です。" });
-      }
-    }
-
-    form.addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const userMsg = input.value.trim();
-      if (!userMsg) return;
-      input.value = "";
-      addMessage(userMsg, "user");
-      messages.push({ role: "user", content: userMsg });
-
-      const loadingMsg = document.createElement("div");
-      loadingMsg.className = "message bot";
-      loadingMsg.textContent = "考え中...";
-      chatBox.appendChild(loadingMsg);
-      chatBox.scrollTop = chatBox.scrollHeight;
-
-      try {
-        const res = await fetch("/api/chat", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ messages })
+      // ✅ チャット履歴があれば表示
+      const saved = localStorage.getItem("chatLog_" + characterId);
+      if (saved) {
+        const oldMessages = JSON.parse(saved);
+        oldMessages.forEach(msg => {
+          if (msg.role !== "system") {
+            addMessage(msg.content, msg.role === "user" ? "user" : "bot");
+          }
+          messages.push(msg);
         });
-
-        const data = await res.json();
-        chatBox.removeChild(loadingMsg);
-
-        if (data.reply) {
-          const reply = data.reply;
-          messages.push({ role: "assistant", content: reply });
-          addMessage(reply, "bot");
-          localStorage.setItem("chatLog_" + characterId, JSON.stringify(messages));
-        } else {
-          addMessage("返答に失敗しました。", "bot");
-        }
-      } catch (err) {
-        chatBox.removeChild(loadingMsg);
-        addMessage("通信エラーが発生しました。", "bot");
-        console.error(err);
       }
-    });
 
-    initializeChat();
-  </script>
+      // ✅ 初期化が終わってから送信処理を設定
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const userMsg = input.value.trim();
+        if (!userMsg) return;
+        input.value = "";
+        addMessage(userMsg, "user");
+        messages.push({ role: "user", content: userMsg });
+
+        const loadingMsg = document.createElement("div");
+        loadingMsg.className = "message bot";
+        loadingMsg.textContent = "考え中...";
+        chatBox.appendChild(loadingMsg);
+        chatBox.scrollTop = chatBox.scrollHeight;
+
+        try {
+          const res = await fetch("/api/chat", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ messages })
+          });
+
+          const data = await res.json();
+          chatBox.removeChild(loadingMsg);
+
+          if (data.reply) {
+            messages.push({ role: "assistant", content: data.reply });
+            addMessage(data.reply, "bot");
+            localStorage.setItem("chatLog_" + characterId, JSON.stringify(messages));
+          } else {
+            addMessage("返答に失敗しました。", "bot");
+          }
+        } catch (err) {
+          chatBox.removeChild(loadingMsg);
+          addMessage("通信エラーが発生しました。", "bot");
+          console.error(err);
+        }
+      });
+
+    } catch (err) {
+      console.error("プロンプト取得エラー:", err);
+      messages = [{ role: "system", content: "あなたは優しいAI美女です。" }];
+    }
+  }
+
+  // ✅ 初期化を呼び出す（送信設定は初期化完了後にしか動かないようにしている）
+  initializeChat();
+</script>
 
   <div class="nav-links">
     <a href="history.html" class="nav-button">← 投票履歴に戻る</a>
