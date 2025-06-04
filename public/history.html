@@ -57,10 +57,13 @@
       .then(data => {
         const container = document.getElementById('history');
         const girlfriends = JSON.parse(localStorage.getItem("girlfriends") || "[]");
-        const girlfriendIds = girlfriends.map(g => g.characterId);
 
-        // ✅ 彼女にした子は履歴から除外
-        const filtered = data.filter(entry => !girlfriendIds.includes(entry.characterId));
+        // characterId をすべて文字列にして比較の厳密性を確保
+        const girlfriendIds = girlfriends.map(g => String(g.characterId));
+
+        const filtered = data.filter(entry =>
+          !girlfriendIds.includes(String(entry.characterId))
+        );
 
         if (filtered.length === 0) {
           container.innerHTML = '<p style="text-align:center;">表示できる履歴がありません。</p>';
@@ -98,7 +101,7 @@
         return;
       }
 
-      const exists = girlfriends.some(g => g.characterId === characterId);
+      const exists = girlfriends.some(g => String(g.characterId) === String(characterId));
       if (exists) {
         alert("すでに彼女リストに追加されています！");
         return;
@@ -107,7 +110,7 @@
       girlfriends.push({ characterId, imageUrl, timestamp });
       localStorage.setItem("girlfriends", JSON.stringify(girlfriends));
       alert("彼女リストに追加しました💘");
-      location.reload(); // 💡 即反映
+      location.reload();
     }
   </script>
 
