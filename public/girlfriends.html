@@ -84,10 +84,10 @@
     if (data.length === 0) {
       container.innerHTML = '<p class="empty">まだ彼女がいません。</p>';
     } else {
-      // 最大3人までに制限
+      // 最大3人まで表示
       data = data.slice(0, 3);
 
-      data.forEach((entry, index) => {
+      data.forEach(entry => {
         const div = document.createElement("div");
         div.className = "card";
         div.innerHTML = `
@@ -112,6 +112,7 @@
       const girlfriends = JSON.parse(localStorage.getItem("girlfriends") || "[]");
       const updated = girlfriends.filter(g => g.characterId !== characterId);
       localStorage.setItem("girlfriends", JSON.stringify(updated));
+      // ✅ 履歴画面に戻れば自動的に再表示される
       window.location.href = "history.html";
     }
   </script>
