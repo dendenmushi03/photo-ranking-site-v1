@@ -21,6 +21,7 @@
       text-align: center;
       width: 180px;
       box-shadow: 2px 2px 6px rgba(0,0,0,0.1);
+      position: relative;
     }
     .history-card img {
       width: 100%;
@@ -45,6 +46,16 @@
       border-radius: 6px;
       cursor: pointer;
     }
+    .close-btn {
+      position: absolute;
+      top: 6px;
+      right: 8px;
+      background: none;
+      border: none;
+      font-size: 1.2rem;
+      color: #888;
+      cursor: pointer;
+    }
   </style>
 </head>
 <body>
@@ -56,15 +67,26 @@
       .then(res => res.ok ? res.json() : Promise.reject('取得失敗'))
       .then(data => {
         const container = document.getElementById('history');
-        if (data.length === 0) {
-          container.innerHTML = '<p style="text-align:center;">履歴がありません。</p>';
+        const girlfriends = JSON.parse(localStorage.getItem("girlfriends") || "[]");
+        const girlfriendIds = girlfriends.map(g => g.characterId);
+
+        const hiddenCharacters = JSON.parse(localStorage.getItem("hiddenCharacters") || "[]");
+
+        const filtered = data.filter(entry =>
+          !girlfriendIds.includes(entry.characterId) &&
+          !hiddenCharacters.includes(entry.characterId)
+        );
+
+        if (filtered.length === 0) {
+          container.innerHTML = '<p style="text-align:center;">表示できる履歴がありません。</p>';
           return;
         }
 
-        data.forEach(entry => {
+        filtered.forEach(entry => {
           const div = document.createElement('div');
           div.className = 'history-card';
           div.innerHTML = `
+            <button class="close-btn" onclick="hideCard('${entry.characterId}')">×</button>
             <img src="/image/${entry.imageUrl}" alt="履歴画像">
             <p>${new Date(entry.timestamp).toLocaleString()}</p>
             <button class="chat-btn" onclick="startChat('${entry.characterId}')">この子と話す</button>
@@ -101,6 +123,16 @@
       girlfriends.push({ characterId, imageUrl, timestamp });
       localStorage.setItem("girlfriends", JSON.stringify(girlfriends));
       alert("彼女リストに追加しました💘");
+      location.reload();
+    }
+
+    function hideCard(characterId) {
+      const hidden = JSON.parse(localStorage.getItem("hiddenCharacters") || "[]");
+      if (!hidden.includes(characterId)) {
+        hidden.push(characterId);
+        localStorage.setItem("hiddenCharacters", JSON.stringify(hidden));
+      }
+      location.reload();
     }
   </script>
 
@@ -108,7 +140,7 @@
     <a href="vote.html" class="nav-button">AI美女に投票する!</a>
     <a href="rankings.html" class="nav-button">ランキングページへ</a>
     <a href="upload.html" class="nav-button">AI画像を投稿して参加!</a>
-    <a href="girlfriends.html" style="display:block; margin-top:2rem; color:#e91e63;">💘 彼女一覧を見る</a>
+    <a href="girlfriends.html" class="nav-button" style="margin-top: 2rem;">彼女一覧</a>
   </div>
 
   <footer>
