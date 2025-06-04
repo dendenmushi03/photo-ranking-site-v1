@@ -36,6 +36,15 @@
       border-radius: 6px;
       cursor: pointer;
     }
+    .love-btn {
+      margin-top: 0.5rem;
+      padding: 0.4rem 1rem;
+      background-color: #2196f3;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
   </style>
 </head>
 <body>
@@ -59,7 +68,7 @@
             <img src="/image/${entry.imageUrl}" alt="履歴画像">
             <p>${new Date(entry.timestamp).toLocaleString()}</p>
             <button class="chat-btn" onclick="startChat('${entry.characterId}')">この子と話す</button>
-            <button class="love-btn" onclick="addToGirlfriends('${entry.characterId}', '${entry.image}', '${entry.timestamp}')" data-character-id="${entry.characterId}">彼女にする</button>
+            <button class="love-btn" onclick="addToGirlfriends('${entry.characterId}', '${entry.imageUrl}', '${entry.timestamp}')">彼女にする</button>
           `;
           container.appendChild(div);
         });
@@ -74,21 +83,39 @@
       localStorage.setItem("chatCharacterId", characterId);
       window.location.href = "chat.html";
     }
+
+    function addToGirlfriends(characterId, imageUrl, timestamp) {
+      const girlfriends = JSON.parse(localStorage.getItem("girlfriends") || "[]");
+
+      if (girlfriends.length >= 3) {
+        alert("彼女は3人までしか登録できません！");
+        return;
+      }
+
+      const exists = girlfriends.some(g => g.characterId === characterId);
+      if (exists) {
+        alert("すでに彼女リストに追加されています！");
+        return;
+      }
+
+      girlfriends.push({ characterId, imageUrl, timestamp });
+      localStorage.setItem("girlfriends", JSON.stringify(girlfriends));
+      alert("彼女リストに追加しました💘");
+    }
   </script>
 
   <div class="nav-links">
-  <a href="vote.html" class="nav-button">AI美女に投票する!</a>
-  <a href="rankings.html" class="nav-button">ランキングページへ</a>
-  <a href="upload.html" class="nav-button">AI画像を投稿して参加!</a>
-  <a href="girlfriends.html" style="display:block; margin-top:2rem; color:#e91e63;">💘 彼女一覧を見る</a>
-</div>
+    <a href="vote.html" class="nav-button">AI美女に投票する!</a>
+    <a href="rankings.html" class="nav-button">ランキングページへ</a>
+    <a href="upload.html" class="nav-button">AI画像を投稿して参加!</a>
+    <a href="girlfriends.html" style="display:block; margin-top:2rem; color:#e91e63;">💘 彼女一覧を見る</a>
+  </div>
 
-<footer>
-  <p>
-    <a href="/privacy.html">プライバシーポリシー</a> |
-    <a href="/terms.html">利用規約</a>
-  </p>
-</footer>
-<script src="history.js"></script>
+  <footer>
+    <p>
+      <a href="/privacy.html">プライバシーポリシー</a> |
+      <a href="/terms.html">利用規約</a>
+    </p>
+  </footer>
 </body>
 </html>
