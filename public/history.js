@@ -1,4 +1,5 @@
 // 各「彼女にする」ボタンにイベントを追加
+document.addEventListener("DOMContentLoaded", () => {
 document.querySelectorAll(".love-btn").forEach(btn => {
   btn.addEventListener("click", () => {
     const card = btn.closest(".photo-card");
