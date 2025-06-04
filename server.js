@@ -74,14 +74,14 @@ app.use(session({
 // ✅ ←ここに追記OK！
 app.post('/api/vote', async (req, res) => {
   const { imageUrl, characterId } = req.body;
-  const ip = req.ip;
+  const userId = req.session.userId || (req.session.userId = crypto.randomUUID());
 
   try {
     await VoteLog.create({
       imageUrl,
       characterId,
       timestamp: new Date(),
-      ip
+      userId: req.session.userId
     });
     res.json({ success: true });
   } catch (err) {
@@ -224,10 +224,10 @@ conn.once('open', () => {
   });
 
 app.get('/api/vote-history', async (req, res) => {
-  const ip = req.ip;
+  const userId = req.session.userId || (req.session.userId = crypto.randomUUID());
 
   try {
-    const history = await VoteLog.find({ ip }).sort({ timestamp: -1 }).limit(30);
+    const history = await VoteLog.find({ userId }).sort({ timestamp: -1 }).limit(30);
     res.json(history);
   } catch (err) {
     console.error('履歴取得エラー:', err);
