@@ -50,7 +50,9 @@
       messages = [{ role: "system", content: systemPrompt }];
 
       // ✅ チャット履歴があれば表示
-      const saved = localStorage.getItem("chatLog_" + characterId);
+      const storageKey = `chatLog_${characterId}`;
+      const saved = localStorage.getItem(storageKey);
+
       if (saved) {
         const oldMessages = JSON.parse(saved);
         oldMessages.forEach(msg => {
@@ -89,7 +91,9 @@
           if (data.reply) {
             messages.push({ role: "assistant", content: data.reply });
             addMessage(data.reply, "bot");
-            localStorage.setItem("chatLog_" + characterId, JSON.stringify(messages));
+            const storageKey = `chatLog_${characterId}`;
+            localStorage.setItem(storageKey, JSON.stringify(messages));
+
           } else {
             addMessage("返答に失敗しました。", "bot");
           }

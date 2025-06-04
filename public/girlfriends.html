@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>彼女一覧</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background-color: #fdf6f8;
+      padding: 2rem;
+      text-align: center;
+    }
+
+    h1 {
+      color: #e91e63;
+    }
+
+    .grid {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+
+    .card {
+      background-color: #fff;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      width: 220px;
+      padding: 1rem;
+    }
+
+    .card img {
+      width: 100%;
+      border-radius: 8px;
+    }
+
+    .card p {
+      margin: 0.5rem 0;
+      font-size: 0.9rem;
+      color: #555;
+    }
+
+    .chat-btn {
+      padding: 0.4rem 1rem;
+      margin-top: 0.5rem;
+      background-color: #e91e63;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .chat-btn:hover {
+      background-color: #d81b60;
+    }
+
+    .empty {
+      margin-top: 3rem;
+      color: #888;
+    }
+  </style>
+</head>
+<body>
+  <h1>💕 彼女一覧</h1>
+  <div id="girlfriend-container" class="grid"></div>
+
+  <script>
+    const container = document.getElementById("girlfriend-container");
+    const data = JSON.parse(localStorage.getItem("girlfriends") || "[]");
+
+    if (data.length === 0) {
+      container.innerHTML = '<p class="empty">まだ彼女がいません。</p>';
+    } else {
+      data.forEach(entry => {
+        const div = document.createElement("div");
+        div.className = "card";
+        div.innerHTML = `
+          <img src="${entry.image}" alt="彼女画像">
+          <p>${new Date(entry.timestamp).toLocaleString()}</p>
+          <button class="chat-btn" onclick="startChat('${entry.characterId}')">この子と話す</button>
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    function startChat(characterId) {
+      window.location.href = `chat.html?characterId=${characterId}`;
+    }
+  </script>
+</body>
+</html>

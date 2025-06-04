@@ -59,6 +59,7 @@
             <img src="/image/${entry.imageUrl}" alt="履歴画像">
             <p>${new Date(entry.timestamp).toLocaleString()}</p>
             <button class="chat-btn" onclick="startChat('${entry.characterId}')">この子と話す</button>
+            <button class="love-btn" onclick="addToGirlfriends('${entry.characterId}', '${entry.image}', '${entry.timestamp}')" data-character-id="${entry.characterId}">彼女にする</button>
           `;
           container.appendChild(div);
         });
@@ -79,6 +80,7 @@
   <a href="vote.html" class="nav-button">AI美女に投票する!</a>
   <a href="rankings.html" class="nav-button">ランキングページへ</a>
   <a href="upload.html" class="nav-button">AI画像を投稿して参加!</a>
+  <a href="girlfriends.html" style="display:block; margin-top:2rem; color:#e91e63;">💘 彼女一覧を見る</a>
 </div>
 
 <footer>
