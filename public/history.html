@@ -58,12 +58,13 @@
         const container = document.getElementById('history');
         const girlfriends = JSON.parse(localStorage.getItem("girlfriends") || "[]");
 
-        // characterId をすべて文字列にして比較の厳密性を確保
-        const girlfriendIds = girlfriends.map(g => String(g.characterId));
+        const girlfriendKeys = new Set(
+          girlfriends.map(g => `${g.characterId}-${g.timestamp}`)
+          );
 
         const filtered = data.filter(entry =>
-          !girlfriendIds.includes(String(entry.characterId))
-        );
+          !girlfriendKeys.has(`${entry.characterId}-${entry.timestamp}`)
+          );
 
         if (filtered.length === 0) {
           container.innerHTML = '<p style="text-align:center;">表示できる履歴がありません。</p>';
