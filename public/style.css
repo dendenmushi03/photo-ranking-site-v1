@@ -356,3 +356,42 @@ input[type="radio"] {
 .card:hover img {
   transform: translateY(-4px);
 }
+
+.grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;   /* ✅ 中央寄せ */
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.chat-btn, .break-btn {
+  padding: 0.5rem 1.2rem;
+  margin-top: 0.6rem;
+  border: none;
+  border-radius: 30px;
+  cursor: pointer;
+  color: white;
+  font-weight: bold;
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+
+.chat-btn {
+  background: linear-gradient(to right, #ff5e8e, #ff84a3);
+}
+
+.chat-btn:hover {
+  background: linear-gradient(to right, #ff3e78, #ff6899);
+  transform: scale(1.05);
+}
+
+.break-btn {
+  background: linear-gradient(to right, #666, #999);
+}
+
+.break-btn:hover {
+  background: linear-gradient(to right, #444, #777);
+  transform: scale(1.05);
+}
