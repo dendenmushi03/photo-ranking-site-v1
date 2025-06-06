@@ -72,17 +72,17 @@
         }
 
         filtered.forEach(entry => {
-          const div = document.createElement('div');
-          div.className = 'history-card';
-          div.innerHTML = `
-            <img src="remove.png" class="remove-icon" onclick="deleteVote('${entry.characterId}', '${entry.timestamp}', this)">
-            <img src="/image/${entry.imageUrl}" alt="履歴画像">
-            <p>${new Date(entry.timestamp).toLocaleString()}</p>
-            <button class="chat-btn" onclick="startChat('${entry.characterId}')">この子と話す</button>
-            <button class="love-btn" onclick="addToGirlfriends('${entry.characterId}', '${entry.imageUrl}', '${entry.timestamp}')">彼女にする</button>
-          `;
-          container.appendChild(div);
-        });
+  const div = document.createElement('div');
+  div.className = 'history-card';
+  div.innerHTML = `
+    <img src="remove.png" class="remove-icon" alt="削除" onclick="deleteVote('${entry.characterId}', '${entry.timestamp}', this)">
+    <img src="/image/${entry.imageUrl}" alt="履歴画像">
+    <p>${new Date(entry.timestamp).toLocaleString()}</p>
+    <button class="chat-btn" onclick="startChat('${entry.characterId}')">この子と話す</button>
+    <button class="love-btn" onclick="addToGirlfriends('${entry.characterId}', '${entry.imageUrl}', '${entry.timestamp}')">彼女にする</button>
+  `;
+  container.appendChild(div);
+});
       })
       .catch(err => {
         console.error(err);
@@ -95,15 +95,12 @@
   if (!confirmed) return;
 
   fetch(`/api/delete-vote`, {
-  method: "POST",
-  headers: {
-    "Content-Type": "application/json"
-  },
-  body: JSON.stringify({ characterId, timestamp })
-})
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ characterId, timestamp })
+  })
   .then(res => {
     if (res.ok) {
-      // DOMから削除
       const card = button.closest(".history-card");
       if (card) card.remove();
     } else {
@@ -116,7 +113,7 @@
   });
 }
 
-    function startChat(characterId) {
+function startChat(characterId) {
       localStorage.setItem("chatCharacterId", characterId);
       window.location.href = "chat.html";
     }

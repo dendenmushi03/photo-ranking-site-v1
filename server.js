@@ -235,6 +235,26 @@ app.get('/api/vote-history', async (req, res) => {
   }
 });
 
+app.post('/api/delete-vote', async (req, res) => {
+  const { characterId, timestamp } = req.body;
+  const userId = req.session.userId;
+
+  if (!userId || !characterId || !timestamp) {
+    return res.status(400).json({ error: 'Missing parameters' });
+  }
+
+  try {
+    const result = await VoteLog.deleteOne({ characterId, timestamp, userId });
+    if (result.deletedCount === 0) {
+      return res.status(404).json({ error: 'Vote not found' });
+    }
+    res.json({ message: 'Vote deleted' });
+  } catch (err) {
+    console.error('削除エラー:', err);
+    res.status(500).json({ error: '削除に失敗しました' });
+  }
+});
+
   app.post('/vote-photo', async (req, res) => {
   res.json({ message: 'Vote received' }); // 👍 これでOK
 });
