@@ -87,14 +87,25 @@ app.use(session({
 // ✅ ←ここに追記OK！
 app.post('/api/vote', async (req, res) => {
   const { imageUrl, characterId } = req.body;
-  const userId = req.userId;
+
+  // Cookie または session から userId を取得（なければ新規発行）
+  let userId = req.cookies.userId || req.session.userId;
+  if (!userId) {
+    userId = crypto.randomUUID();
+    res.cookie('userId', userId, {
+      maxAge: 365 * 24 * 60 * 60 * 1000, // 1年
+      httpOnly: false,
+      sameSite: 'lax',
+    });
+    req.session.userId = userId;
+  }
 
   try {
     await VoteLog.create({
       imageUrl,
       characterId,
       timestamp: new Date(),
-      userId: req.session.userId
+      userId: userId
     });
     res.json({ success: true });
   } catch (err) {
@@ -236,8 +247,38 @@ conn.once('open', () => {
     res.json({ message: 'Photo deleted' });
   });
 
+app.post('/api/vote', async (req, res) => {
+  const { imageUrl, characterId } = req.body;
+
+  // Cookie または session から userId を取得（なければ新規発行）
+  let userId = req.cookies.userId || req.session.userId;
+  if (!userId) {
+    userId = crypto.randomUUID();
+    res.cookie('userId', userId, {
+      maxAge: 365 * 24 * 60 * 60 * 1000, // 1年
+      httpOnly: false,
+      sameSite: 'lax',
+    });
+    req.session.userId = userId;
+  }
+
+  try {
+    await VoteLog.create({
+      imageUrl,
+      characterId,
+      timestamp: new Date(),
+      userId: userId
+    });
+    res.json({ success: true });
+  } catch (err) {
+    console.error('投票履歴の保存エラー:', err);
+    res.status(500).json({ error: '保存に失敗しました' });
+  }
+});
+
 app.get('/api/vote-history', async (req, res) => {
-  const userId = req.userId;
+  const userId = req.cookies.userId || req.session.userId;
+  if (!userId) return res.json([]); // IDがなければ空配列返す
 
   try {
     const history = await VoteLog.find({ userId }).sort({ timestamp: -1 }).limit(30);
