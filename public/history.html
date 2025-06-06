@@ -76,8 +76,8 @@
   div.className = 'history-card';
   div.innerHTML = `
   <div class="image-wrapper">
-    <img src="remove.png" class="remove-icon" alt="削除" onclick="deleteVote('${entry.characterId}', '${entry.timestamp}', this)">
-    <img src="/image/${entry.imageUrl}" alt="履歴画像" class="photo">
+    <button class="remove-btn" onclick="deleteVote('${entry.characterId}', '${entry.timestamp}', this)">×</button>
+    <img src="/image/${entry.imageUrl}" class="photo" alt="履歴画像">
   </div>
   <p>${new Date(entry.timestamp).toLocaleString()}</p>
   <button class="chat-btn" onclick="startChat('${entry.characterId}')">この子と話す</button>
