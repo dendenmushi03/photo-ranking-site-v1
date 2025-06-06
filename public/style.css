@@ -419,3 +419,18 @@ input[type="radio"] {
 .history-card {
   position: relative; /* ← 必須：×の絶対配置用 */
 }
+
+.remove-icon {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 28px;
+  height: 28px;
+  cursor: pointer;
+  z-index: 2;
+  transition: transform 0.2s ease;
+}
+
+.remove-icon:hover {
+  transform: scale(1.1);
+}
