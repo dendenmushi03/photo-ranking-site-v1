@@ -95,10 +95,12 @@
   if (!confirmed) return;
 
   fetch(`/api/delete-vote`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ characterId, timestamp })
-  })
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json"
+  },
+  body: JSON.stringify({ characterId, timestamp })
+})
   .then(res => {
     if (res.ok) {
       // DOMから削除
