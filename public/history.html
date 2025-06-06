@@ -75,6 +75,7 @@
           const div = document.createElement('div');
           div.className = 'history-card';
           div.innerHTML = `
+            <button class="delete-btn" onclick="deleteVote('${entry.characterId}', '${entry.timestamp}', this)">×</button>
             <img src="/image/${entry.imageUrl}" alt="履歴画像">
             <p>${new Date(entry.timestamp).toLocaleString()}</p>
             <button class="chat-btn" onclick="startChat('${entry.characterId}')">この子と話す</button>
@@ -88,6 +89,30 @@
         document.getElementById('history').innerHTML =
           '<p style="color:red;">履歴の読み込みに失敗しました。</p>';
       });
+
+    function deleteVote(characterId, timestamp, button) {
+  const confirmed = confirm("この投票履歴を削除しますか？");
+  if (!confirmed) return;
+
+  fetch(`/api/delete-vote`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ characterId, timestamp })
+  })
+  .then(res => {
+    if (res.ok) {
+      // DOMから削除
+      const card = button.closest(".history-card");
+      if (card) card.remove();
+    } else {
+      alert("削除に失敗しました。");
+    }
+  })
+  .catch(err => {
+    console.error("削除エラー:", err);
+    alert("通信エラーが発生しました。");
+  });
+}
 
     function startChat(characterId) {
       localStorage.setItem("chatCharacterId", characterId);

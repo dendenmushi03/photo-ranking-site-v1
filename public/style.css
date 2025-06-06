@@ -395,3 +395,27 @@ input[type="radio"] {
   background: linear-gradient(to right, #444, #777);
   transform: scale(1.05);
 }
+
+.remove-btn {
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  background: #ff4d4d;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 22px;
+  height: 22px;
+  font-size: 14px;
+  cursor: pointer;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  transition: background-color 0.2s ease;
+}
+
+.remove-btn:hover {
+  background: #cc0000;
+}
+
+.history-card {
+  position: relative; /* ← 必須：×の絶対配置用 */
+}
