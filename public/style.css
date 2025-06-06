@@ -417,20 +417,22 @@ input[type="radio"] {
 }
 
 .history-card {
-  position: relative; /* ← 必須：×の絶対配置用 */
+  position: relative; /* 削除アイコンの配置に必須 */
+  overflow: hidden;
 }
 
 .remove-icon {
   position: absolute;
-  top: 8px;
-  right: 8px;
-  width: 2px;
-  height: 28px;
-  cursor: pointer;
+  top: 6px;
+  right: 6px;
+  width: 22px;
+  height: 22px;
+  object-fit: contain;
   z-index: 2;
+  cursor: pointer;
   transition: transform 0.2s ease;
 }
 
 .remove-icon:hover {
-  transform: scale(1.1);
+  transform: scale(1.2);
 }
