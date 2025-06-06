@@ -379,12 +379,16 @@ input[type="radio"] {
 }
 
 .chat-btn {
-  background: linear-gradient(to right, #ff5e8e, #ff84a3);
+  background: linear-gradient(to right, #4facfe, #00f2fe); /* 青 */
 }
 
 .chat-btn:hover {
-  background: linear-gradient(to right, #ff3e78, #ff6899);
+  background: linear-gradient(to right, #4facfe, #00f2fe);
   transform: scale(1.05);
+}
+
+.love-btn {
+  background: linear-gradient(to right, #ff5e8e, #ff84a3); /* ピンク */
 }
 
 .break-btn {

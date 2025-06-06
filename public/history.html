@@ -98,12 +98,14 @@
           const div = document.createElement('div');
           div.className = 'history-card';
           div.innerHTML = `
-            <img src="remove.png" class="remove-icon" alt="削除" onclick="deleteVote('${entry.characterId}', '${entry.timestamp}', this)">
-            <img src="/image/${entry.imageUrl}" alt="履歴画像">
-            <p>${new Date(entry.timestamp).toLocaleString()}</p>
-            <button class="love-btn" onclick="startChat('${entry.characterId}')">この子と話す</button>
-            <button class="chat-btn" onclick="addToGirlfriends('${entry.characterId}', '${entry.imageUrl}', '${entry.timestamp}')">彼女にする</button>
-          `;
+  <div class="image-wrapper">
+    <button class="remove-btn" onclick="deleteVote('${entry.characterId}', '${entry.timestamp}', this)">×</button>
+    <img src="/image/${entry.imageUrl}" class="photo" alt="履歴画像">
+  </div>
+  <p>${new Date(entry.timestamp).toLocaleString()}</p>
+  <button class="chat-btn" onclick="startChat('${entry.characterId}')">この子と話す</button>
+  <button class="love-btn" onclick="addToGirlfriends('${entry.characterId}', '${entry.imageUrl}', '${entry.timestamp}')">彼女にする</button>
+`;       
           container.appendChild(div);
         });
       })
