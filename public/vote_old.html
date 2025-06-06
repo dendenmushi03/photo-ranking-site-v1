@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>投票ページ</title>
+  <link rel="stylesheet" href="style.css?v=1" />
+  <meta name="description" content="AIが生成した美女写真の中から、あなたの一票でNo.1を決めよう!毎回ランダムに表示される6枚の写真からお気に入りを選んで投票。ランキングはリアルタイムで更新され、画像投稿も可能!">
+  <meta property="og:title" content="No.1美女を決める投票サイト｜myrankingphoto.com">
+  <meta property="og:description" content="AI美女写真の頂上決戦。あなたの1票がランキングを動かす!投票・投稿どちらもOK。推し美女でNo.1を狙え！">
+  <meta property="og:url" content="https://myrankingphoto.com/vote.html">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="https://myrankingphoto.com/og-image.jpg"> <!-- ※画像パスは必要に応じて差し替え -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="No.1美女を決める投票サイト">
+  <meta name="twitter:description" content="AI美女の中からあなたの推しを選んで投票!今すぐNo.1を決めよう！">
+  <meta name="twitter:image" content="https://myrankingphoto.com/og-image.jpg">
+
+  <!-- ✅ AdSense所有権確認コード -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2449604975433002"
+    crossorigin="anonymous"></script>
+
+  <style>
+    .underline-pink {
+      width: 60%;
+      height: 4px;
+      background: linear-gradient(to right, #ff69b4, #ff1493);
+      margin: 0 auto 2rem;
+      border-radius: 2px;
+    }
+    h1 {
+      background: linear-gradient(to right, #ff8a00, #e52e71);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+  </style>
+</head>
+<body>
+  <div class="site-description fancy-box">
+  <h2>📢 このサイトでできること</h2>
+  <p>
+    AIが生み出した美女の中から、<strong>あなたの推し美女</strong>を選んで投票！<br>
+    ランダムに6枚の画像が表示され、1枚を選んで <span style="color: #ff6600;">No.1決定戦</span> に参加できます。<br>
+    📸 あなた自身のAI美女画像も投稿OK！<br>
+  </p>
+  </div>
+
+  <div class="underline-pink"></div>
+
+  <p style="text-align: center; font-size: 1.1rem; color: #555;">
+    気に入った写真を1枚選んで「投票する」ボタンを押してください 📸✨
+  </p>
+
+  <noscript>
+    <p style="color:red;">JavaScriptが無効になっています。写真の表示と投票にはJavaScriptが必要です。</p>
+  </noscript>
+
+  <form id="voteForm">
+    <div id="photo-container"></div>
+    <div id="vote-container" class="button-wrapper">
+      <button id="vote-button" type="submit">投票する</button>
+      <button id="reload-button" type="button">🔄</button>
+    </div>
+  </form>
+
+  <div class="nav-links">
+    <a href="upload.html" class="nav-button">AI画像を投稿して参加!</a>
+    <a href="rankings.html" class="nav-button">ランキングページへ</a>
+    <a href="history.html" class="nav-button">投票履歴</a>
+  </div>
+
+  <script>
+    fetch('/log-access', { method: 'POST' });
+
+    fetch('/photo-meta')
+      .then(res => res.ok ? res.json() : Promise.reject('写真データ取得失敗'))
+      .then(photos => {
+        const container = document.getElementById('photo-container');
+        container.innerHTML = '';
+
+        const shuffled = photos.sort(() => 0.5 - Math.random()).slice(0, 6);
+
+        shuffled.forEach((photo, index) => {
+          const div = document.createElement('div');
+          div.className = 'photo-card';
+
+          const radioId = `photo${index}`;
+
+          div.innerHTML = `
+            <img src="/image/${photo.filename}" alt="写真${index + 1}">
+            <label for="${radioId}">
+              <input type="radio" id="${radioId}" name="photo" value="${photo.filename}">
+              ${photo.author}さんの写真
+            </label>
+          `;
+
+          container.appendChild(div);
+        });
+      })
+      .catch(err => {
+        console.error("画像読み込みエラー:", err);
+        document.getElementById('photo-container').innerHTML =
+          '<p style="color:red;">写真の読み込みに失敗しました。</p>';
+      });
+
+      document.getElementById("voteForm").addEventListener("submit", function(event) {
+  event.preventDefault();
+
+  const selected = document.querySelector('input[name="photo"]:checked');
+  if (!selected) {
+    alert("投票する写真を選んでください。");
+    return;
+  }
+
+  const photoId = selected.value;
+
+  // 🔽 まず従来の投票処理（ランキング用）
+  fetch('/vote-photo', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ photoId })
+  })
+    .then(res => res.ok ? res.json() : Promise.reject('投票エラー'))
+    .then(data => {
+      // ✅ 追加：MongoDBに履歴を保存する処理
+      return fetch('/api/vote', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          imageUrl: photoId,
+          characterId: "001"
+        })
+      });
+    })
+    .then(res => res.ok ? res.json() : Promise.reject('履歴保存エラー'))
+    .then(() => {
+      alert("投票が完了しました！");
+      location.reload();
+    })
+    .catch(error => {
+      alert("投票中にエラーが発生しました。");
+      console.error(error);
+    });
+});
+  </script>
+
+  <footer>
+    <p>
+      <a href="/privacy.html">プライバシーポリシー</a> |
+      <a href="/terms.html">利用規約</a>
+    </p>
+  </footer>
+
+  <script>
+  document.getElementById("reload-button").addEventListener("click", (event) => {
+    event.stopPropagation(); // ← これが重要
+    location.reload();
+  });
+  </script>
+
+  <!-- admax -->
+  <script src="https://adm.shinobi.jp/s/932c9bf67e636e25d45fea85af67e7cd"></script>
+  <!-- admax -->
+
+</body>
+</html>
+
+

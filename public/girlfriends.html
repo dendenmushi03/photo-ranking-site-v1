@@ -6,7 +6,7 @@
   <style>
     body {
       font-family: sans-serif;
-      background-color: #fdf6f8;
+      background: linear-gradient(to bottom, #fff0f5, #ffe4ec); /* 淡いピンクグラデ */
       padding: 2rem;
       text-align: center;
     }
@@ -25,15 +25,22 @@
 
     .card {
       background-color: #fff;
-      border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      border-radius: 16px;
+      box-shadow: 0 0 12px rgba(255, 105, 180, 0.3); /* ゆるく光るネオン風 */
       width: 220px;
       padding: 1rem;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-5px) scale(1.03); /* ふんわり浮く */
+      box-shadow: 0 0 20px rgba(255, 105, 180, 0.6); /* シャドウ強調 */
     }
 
     .card img {
       width: 100%;
-      border-radius: 8px;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
     }
 
     .card p {
@@ -84,9 +91,7 @@
     if (data.length === 0) {
       container.innerHTML = '<p class="empty">まだ彼女がいません。</p>';
     } else {
-      // 最大3人まで表示
       data = data.slice(0, 3);
-
       data.forEach(entry => {
         const div = document.createElement("div");
         div.className = "card";
@@ -112,9 +117,26 @@
       const girlfriends = JSON.parse(localStorage.getItem("girlfriends") || "[]");
       const updated = girlfriends.filter(g => g.characterId !== characterId);
       localStorage.setItem("girlfriends", JSON.stringify(updated));
-      // ✅ 履歴画面に戻れば自動的に再表示される
       window.location.href = "history.html";
     }
   </script>
+
+  <div class="nav-links">
+    <a href="vote.html" class="nav-button">AI美女に投票する!</a>
+    <a href="rankings.html" class="nav-button">ランキングページへ</a>
+    <a href="upload.html" class="nav-button">AI画像を投稿して参加!</a>
+    <a href="girlfriends.html" class="nav-button">💖彼女💖</a>
+  </div>
+
+  <footer>
+    <p>
+      <a href="/privacy.html">プライバシーポリシー</a> |
+      <a href="/terms.html">利用規約</a>
+    </p>
+  </footer>
+
+  <!-- admax -->
+  <script src="https://adm.shinobi.jp/s/b9d2c8f63d3d859f79bc25a0b873b6ea"></script>
+  <!-- admax -->
 </body>
 </html>
