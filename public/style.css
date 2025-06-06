@@ -325,3 +325,9 @@ input[type="radio"] {
   color: #333;
 }
 
+/* 写真カード選択時の枠色を水色に */
+.photo-card.selected img {
+  border: 3px solid #3388ff;
+  transform: scale(1.05);
+  box-shadow: 0 0 12px #3388ff;
+}
