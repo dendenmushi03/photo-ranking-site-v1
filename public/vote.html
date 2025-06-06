@@ -39,6 +39,16 @@
       display: inline-block;
       cursor: pointer;
     }
+
+     .photo-wrapper {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+      max-width: 960px;
+      margin: 2rem auto;
+    }
+
     .photo-card img {
       width: 100%;
       border-radius: 12px;
@@ -47,9 +57,9 @@
       pointer-events: none;
     }
     .photo-card.selected img {
-      border: 3px solid #ff69b4;
+      border: 3px solid #3388ff;
       transform: scale(1.05);
-      box-shadow: 0 0 12px #ff69b4;
+      box-shadow: 0 0 12px #3388ff;
     }
   </style>
 </head>
@@ -74,7 +84,7 @@
   </noscript>
 
   <form id="voteForm">
-    <div id="photo-container"></div>
+    <div id="photo-container" class="photo-wrapper"></div>
     <div id="vote-container" class="button-wrapper">
       <button id="vote-button" type="submit">投票する</button>
       <button id="reload-button" type="button">🔄</button>
