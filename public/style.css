@@ -296,4 +296,32 @@ form {
   transform: scale(1.1);
 }
 
+/* 📸 投票画像：選択された画像に青い枠＋光る影を表示 */
+input[type="radio"]:checked + img {
+  outline: 4px solid #3388ff;
+  outline-offset: 4px;
+  box-shadow: 0 0 12px rgba(51, 136, 255, 0.6);
+  border-radius: 8px;
+  transition: 0.3s ease;
+}
+
+/* ラジオボタンを非表示に（画像のみクリック可能に） */
+input[type="radio"] {
+  display: none;
+}
+
+/* ラベル全体が選択範囲になるように */
+.photo-card label {
+  display: block;
+  cursor: pointer;
+  text-align: center;
+}
+
+/* 作者名は下に余白を */
+.photo-card label span {
+  display: block;
+  margin-top: 0.5rem;
+  font-weight: bold;
+  color: #333;
+}
 
