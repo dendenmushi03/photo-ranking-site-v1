@@ -102,6 +102,16 @@
       font-size: 0.9rem;
     }
 
+    .vote-btn {
+      margin-top: 0.5rem;
+      padding: 6px 12px;
+      background-color: #ff69b4;
+      color: white;
+      border: none;
+      border-radius: 20px;
+      cursor: pointer;
+    }
+
     .nav-links {
       margin-top: 2rem;
     }
@@ -129,7 +139,6 @@
   <h1 class="one-line-title">💖 AI美女ランキング 💖</h1>
   <div class="underline"></div>
 
-  <!-- ✅ 新設したボタン -->
   <div class="nav-links">
     <a href="vote.html" class="nav-button">投票に参加する！</a>
   </div>
@@ -175,47 +184,60 @@
             <div style="font-size: 2rem;">${['🥇', '🥈', '🥉'][index]}</div>
             <img src="/image/${item.fileId}" alt="画像">
             <div>${item.author}さん<br>得票数：${item.votes}票</div>
+            <button class="vote-btn" onclick="vote('${item.fileId}')">投票する</button>
           `;
           topContainer.appendChild(div);
         }
       });
 
-      const secondRow = document.createElement('div');
-      secondRow.className = 'rank-list';
-      top10.slice(3, 6).forEach((item, index) => {
-        const div = document.createElement('div');
-        div.className = 'rank-card';
-        div.innerHTML = `
-          <img src="/image/${item.fileId}" alt="画像">
-          <h4>第${index + 4}位：${item.author}さん</h4>
-          <p>得票数：${item.votes}票</p>
-        `;
-        secondRow.appendChild(div);
-      });
-      listContainer.appendChild(secondRow);
+      const renderRankCards = (items, startRank) => {
+        const row = document.createElement('div');
+        row.className = 'rank-list';
+        items.forEach((item, i) => {
+          const div = document.createElement('div');
+          div.className = 'rank-card';
+          div.innerHTML = `
+            <img src="/image/${item.fileId}" alt="画像">
+            <h4>第${startRank + i}位：${item.author}さん</h4>
+            <p>得票数：${item.votes}票</p>
+            <button class="vote-btn" onclick="vote('${item.fileId}')">投票する</button>
+          `;
+          row.appendChild(div);
+        });
+        listContainer.appendChild(row);
+      };
 
-      const thirdRow = document.createElement('div');
-      thirdRow.className = 'rank-list';
-      top10.slice(6, 10).forEach((item, index) => {
-        const div = document.createElement('div');
-        div.className = 'rank-card';
-        div.innerHTML = `
-          <img src="/image/${item.fileId}" alt="画像">
-          <h4>第${index + 7}位：${item.author}さん</h4>
-          <p>得票数：${item.votes}票</p>
-        `;
-        thirdRow.appendChild(div);
-      });
-      listContainer.appendChild(thirdRow);
+      renderRankCards(top10.slice(3, 6), 4);
+      renderRankCards(top10.slice(6, 10), 7);
     });
+
+    function vote(fileId) {
+      fetch('/api/vote', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ imageUrl: fileId, characterId: fileId })
+      })
+      .then(res => res.json())
+      .then(result => {
+        if (result.success) {
+          alert('投票しました！');
+          location.reload();
+        } else {
+          alert('投票に失敗しました。');
+        }
+      })
+      .catch(err => {
+        console.error('投票エラー:', err);
+        alert('通信エラーが発生しました。');
+      });
+    }
   </script>
-  
+
   <footer>
     <p>
       <a href="/privacy.html">プライバシーポリシー</a> |
       <a href="/terms.html">利用規約</a>
     </p>
   </footer>
-
 </body>
 </html>
