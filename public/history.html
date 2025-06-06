@@ -19,38 +19,60 @@
       border-radius: 12px;
       padding: 1rem;
       text-align: center;
-      width: 180px;
+      width: 220px;
       box-shadow: 2px 2px 6px rgba(0,0,0,0.1);
+      background: #fff;
     }
     .history-card img {
       width: 100%;
       height: auto;
       border-radius: 8px;
     }
-    .chat-btn {
-      margin-top: 0.5rem;
-      padding: 0.4rem 1rem;
-      background-color: #ff69b4;
-      color: white;
+    .chat-btn, .love-btn {
+      padding: 0.5rem 1.2rem;
+      margin-top: 0.6rem;
       border: none;
-      border-radius: 6px;
+      border-radius: 30px;
       cursor: pointer;
+      color: white;
+      font-weight: bold;
+      font-size: 0.95rem;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    }
+    .chat-btn {
+      background: linear-gradient(to right, #2196f3, #42a5f5);
+    }
+    .chat-btn:hover {
+      background: linear-gradient(to right, #1976d2, #42a5f5);
+      transform: scale(1.05);
     }
     .love-btn {
-      margin-top: 0.5rem;
-      padding: 0.4rem 1rem;
-      background-color: #2196f3;
-      color: white;
-      border: none;
-      border-radius: 6px;
+      background: linear-gradient(to right, #ff5e8e, #ff84a3);
+    }
+    .love-btn:hover {
+      background: linear-gradient(to right, #ff3e78, #ff6899);
+      transform: scale(1.05);
+    }
+    .remove-icon {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      width: 28px;
+      height: 28px;
       cursor: pointer;
+      z-index: 2;
+      transition: transform 0.2s ease;
+    }
+    .remove-icon:hover {
+      transform: scale(1.1);
     }
   </style>
 </head>
 <body>
-  <h1 style="text-align:center;" class="gradient-text">🗳 あなたの投票履歴</h1>
+  <h1 style="text-align:center;" class="gradient-text">📮 あなたの投票履歴</h1>
   <div class="underline"></div>
-  <div id="history" class="history-container"></div>
+  <div class="history-container" id="history"></div>
 
   <script>
     fetch('/api/vote-history')
@@ -61,11 +83,11 @@
 
         const girlfriendKeys = new Set(
           girlfriends.map(g => `${g.characterId}-${g.timestamp}`)
-          );
+        );
 
         const filtered = data.filter(entry =>
           !girlfriendKeys.has(`${entry.characterId}-${entry.timestamp}`)
-          );
+        );
 
         if (filtered.length === 0) {
           container.innerHTML = '<p style="text-align:center;">表示できる履歴がありません。</p>';
@@ -73,20 +95,17 @@
         }
 
         filtered.forEach(entry => {
-  const div = document.createElement('div');
-  div.className = 'history-card';
-  div.innerHTML = `
-  <div class="image-wrapper">
-    <button class="remove-btn" onclick="deleteVote('${entry.characterId}', '${entry.timestamp}', this)">×</button>
-    <img src="/image/${entry.imageUrl}" class="photo" alt="履歴画像">
-  </div>
-  <p>${new Date(entry.timestamp).toLocaleString()}</p>
-  <button class="chat-btn" onclick="startChat('${entry.characterId}')">この子と話す</button>
-  <button class="love-btn" onclick="addToGirlfriends('${entry.characterId}', '${entry.imageUrl}', '${entry.timestamp}')">彼女にする</button>
-`;
-
-  container.appendChild(div);
-});
+          const div = document.createElement('div');
+          div.className = 'history-card';
+          div.innerHTML = `
+            <img src="remove.png" class="remove-icon" alt="削除" onclick="deleteVote('${entry.characterId}', '${entry.timestamp}', this)">
+            <img src="/image/${entry.imageUrl}" alt="履歴画像">
+            <p>${new Date(entry.timestamp).toLocaleString()}</p>
+            <button class="love-btn" onclick="startChat('${entry.characterId}')">この子と話す</button>
+            <button class="chat-btn" onclick="addToGirlfriends('${entry.characterId}', '${entry.imageUrl}', '${entry.timestamp}')">彼女にする</button>
+          `;
+          container.appendChild(div);
+        });
       })
       .catch(err => {
         console.error(err);
@@ -95,29 +114,29 @@
       });
 
     function deleteVote(characterId, timestamp, button) {
-  const confirmed = confirm("この投票履歴を削除しますか？");
-  if (!confirmed) return;
+      const confirmed = confirm("この投票履歴を削除しますか？");
+      if (!confirmed) return;
 
-  fetch(`/api/delete-vote`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ characterId, timestamp })
-  })
-  .then(res => {
-    if (res.ok) {
-      const card = button.closest(".history-card");
-      if (card) card.remove();
-    } else {
-      alert("削除に失敗しました。");
+      fetch(`/api/delete-vote`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ characterId, timestamp })
+      })
+      .then(res => {
+        if (res.ok) {
+          const card = button.closest(".history-card");
+          if (card) card.remove();
+        } else {
+          alert("削除に失敗しました。");
+        }
+      })
+      .catch(err => {
+        console.error("削除エラー:", err);
+        alert("通信エラーが発生しました。");
+      });
     }
-  })
-  .catch(err => {
-    console.error("削除エラー:", err);
-    alert("通信エラーが発生しました。");
-  });
-}
 
-function startChat(characterId) {
+    function startChat(characterId) {
       localStorage.setItem("chatCharacterId", characterId);
       window.location.href = "chat.html";
     }
