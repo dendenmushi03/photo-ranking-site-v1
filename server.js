@@ -12,6 +12,7 @@ const { GridFSBucket } = require('mongodb');
 const session = require('express-session');
 const bcrypt = require('bcryptjs');
 const imghash = require('imghash');
+const cookieParser = require('cookie-parser');
 
 const { GoogleGenerativeAI } = require('@google/generative-ai');
 const gemini = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
@@ -59,6 +60,18 @@ let gfs;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
+app.use((req, res, next) => {
+  if (!req.cookies.userId) {
+    const newId = crypto.randomUUID();
+    res.cookie('userId', newId, { maxAge: 365 * 24 * 60 * 60 * 1000 }); // 1年保持
+    req.userId = newId;
+  } else {
+    req.userId = req.cookies.userId;
+  }
+  next();
+});
+
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(session({
   secret: process.env.SECRET_KEY || 'fallback-secret',
@@ -74,7 +87,7 @@ app.use(session({
 // ✅ ←ここに追記OK！
 app.post('/api/vote', async (req, res) => {
   const { imageUrl, characterId } = req.body;
-  const userId = req.session.userId || (req.session.userId = crypto.randomUUID());
+  const userId = req.userId;
 
   try {
     await VoteLog.create({
@@ -224,7 +237,7 @@ conn.once('open', () => {
   });
 
 app.get('/api/vote-history', async (req, res) => {
-  const userId = req.session.userId || (req.session.userId = crypto.randomUUID());
+  const userId = req.userId;
 
   try {
     const history = await VoteLog.find({ userId }).sort({ timestamp: -1 }).limit(30);
@@ -237,7 +250,7 @@ app.get('/api/vote-history', async (req, res) => {
 
 app.post('/api/delete-vote', async (req, res) => {
   const { characterId, timestamp } = req.body;
-  const userId = req.session.userId;
+  const userId = req.userId;
 
   if (!userId || !characterId || !timestamp) {
     return res.status(400).json({ error: 'Missing parameters' });
