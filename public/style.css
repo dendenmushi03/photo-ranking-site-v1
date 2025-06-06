@@ -7,8 +7,9 @@ body {
 }
 
 h1 {
-  color: #333;
-  margin-top: 20px;
+  font-size: 2rem;
+  color: #ff3399;
+  text-shadow: 0 0 6px #ffb6c1;
 }
 
 button {
@@ -330,4 +331,28 @@ input[type="radio"] {
   border: 3px solid #3388ff;
   transform: scale(1.05);
   box-shadow: 0 0 12px #3388ff;
+}
+
+.card {
+  background-color: #fff;
+  border-radius: 16px;
+  box-shadow: 0 0 16px rgba(255, 105, 180, 0.5); /* ピンク系ネオン感 */
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  padding: 1rem;
+  width: 240px;
+}
+
+.card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 24px rgba(255, 105, 180, 0.8);
+}
+
+.card img {
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); /* 画像を浮かせる */
+  transition: transform 0.3s ease;
+}
+
+.card:hover img {
+  transform: translateY(-4px);
 }
