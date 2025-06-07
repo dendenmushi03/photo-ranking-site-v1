@@ -1,14 +1,11 @@
-// ✅ chat.js 完全修正版（キャラ画像単位でチャット履歴を保存）
+// ✅ chat.js 完全修正版（画像URLごとに履歴を分離）
 
 const characterId = localStorage.getItem('chatCharacterId') || '001';
-const characterImage = localStorage.getItem('chatCharacterImage') || 'default.jpg';
+const imageUrl = localStorage.getItem("chatCharacterImage") || "/image/default.jpg";
 const chatBox = document.getElementById('chat-box');
 const form = document.getElementById('chat-form');
 const input = document.getElementById('chat-input');
 let messages = [];
-
-// 🔑 画像URL（ファイル名）をキーに含めることでキャラごとの履歴を分離
-const storageKey = `chatLog_${characterImage.replace(/[^\w\-]/g, '_')}`;
 
 function addMessage(text, type) {
   const div = document.createElement("div");
@@ -16,7 +13,7 @@ function addMessage(text, type) {
 
   if (type === "bot") {
     const img = document.createElement("img");
-    img.src = localStorage.getItem('chatCharacterImage');
+    img.src = imageUrl;
     img.alt = "bot";
     img.style.width = "56px";
     img.style.height = "56px";
@@ -42,6 +39,14 @@ function addMessage(text, type) {
   chatBox.scrollTop = chatBox.scrollHeight;
 }
 
+function generateStorageKeyFromImage(imageUrl) {
+  const hash = new TextEncoder().encode(imageUrl);
+  return crypto.subtle.digest("SHA-256", hash).then(buffer => {
+    const hex = Array.from(new Uint8Array(buffer)).map(b => b.toString(16).padStart(2, '0')).join('');
+    return 'chatLog_' + hex.slice(0, 12);
+  });
+}
+
 async function initializeChat() {
   try {
     const res = await fetch(`/api/photo-prompt/${characterId}`);
@@ -50,7 +55,9 @@ async function initializeChat() {
 
     messages = [{ role: "system", content: systemPrompt }];
 
+    const storageKey = await generateStorageKeyFromImage(imageUrl);
     const saved = localStorage.getItem(storageKey);
+
     if (saved) {
       const oldMessages = JSON.parse(saved);
       oldMessages.forEach(msg => {
