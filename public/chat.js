@@ -1,12 +1,21 @@
-// ✅ chat.js 完全修正版（画像URLごとに履歴を分離）
+// chat.js（完全版）
 
 const characterId = localStorage.getItem('chatCharacterId') || '001';
-const imageUrl = localStorage.getItem("chatCharacterImage") || "/image/default.jpg";
+const imageUrl = localStorage.getItem('chatCharacterImage') || '';
 const chatBox = document.getElementById('chat-box');
 const form = document.getElementById('chat-form');
 const input = document.getElementById('chat-input');
 let messages = [];
 
+// ハッシュ化関数（SHA-256）
+async function sha256(str) {
+  const encoder = new TextEncoder();
+  const data = encoder.encode(str);
+  const hashBuffer = await crypto.subtle.digest("SHA-256", data);
+  return Array.from(new Uint8Array(hashBuffer)).map(b => b.toString(16).padStart(2, "0")).join("");
+}
+
+// メッセージ描画関数
 function addMessage(text, type) {
   const div = document.createElement("div");
   div.className = `message ${type}`;
@@ -39,25 +48,19 @@ function addMessage(text, type) {
   chatBox.scrollTop = chatBox.scrollHeight;
 }
 
-function generateStorageKeyFromImage(imageUrl) {
-  const hash = new TextEncoder().encode(imageUrl);
-  return crypto.subtle.digest("SHA-256", hash).then(buffer => {
-    const hex = Array.from(new Uint8Array(buffer)).map(b => b.toString(16).padStart(2, '0')).join('');
-    return 'chatLog_' + hex.slice(0, 12);
-  });
-}
-
+// 初期化関数
 async function initializeChat() {
   try {
+    const hashKey = await sha256(imageUrl);
+    const storageKey = `chatLog_${hashKey}`;
+
     const res = await fetch(`/api/photo-prompt/${characterId}`);
     const data = await res.json();
     const systemPrompt = data.prompt || "あなたはかわいらしいAI美女です。";
 
     messages = [{ role: "system", content: systemPrompt }];
 
-    const storageKey = await generateStorageKeyFromImage(imageUrl);
     const saved = localStorage.getItem(storageKey);
-
     if (saved) {
       const oldMessages = JSON.parse(saved);
       oldMessages.forEach(msg => {
@@ -105,9 +108,8 @@ async function initializeChat() {
         console.error(err);
       }
     });
-
   } catch (err) {
-    console.error("プロンプト取得エラー:", err);
+    console.error("初期化エラー:", err);
     messages = [{ role: "system", content: "あなたは優しいAI美女です。" }];
   }
 }
