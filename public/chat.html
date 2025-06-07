@@ -8,10 +8,16 @@
   <style>
     body { font-family: sans-serif; max-width: 600px; margin: 2rem auto; }
     .chat-box { border: 1px solid #ccc; padding: 1rem; border-radius: 10px; height: 400px; overflow-y: auto; }
-    .message { margin: 0.5rem 0; padding: 0.5rem; border-radius: 10px; max-width: 80%; }
-    .user { background-color: #dff0ff; align-self: flex-end; text-align: right; }
+    .message { margin: 0.5rem 0; padding: 0.5rem; border-radius: 10px; max-width: 80%; display: flex; align-items: flex-start; }
+    .user { background-color: #dff0ff; align-self: flex-end; text-align: right; justify-content: flex-end; }
     .bot { background-color: #ffe4ec; align-self: flex-start; text-align: left; }
     .chat-container { display: flex; flex-direction: column; gap: 0.5rem; }
+    .bot img.avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      margin-right: 8px;
+    }
     #chat-form { display: flex; margin-top: 1rem; gap: 0.5rem; }
     #chat-input { flex: 1; padding: 0.5rem; }
   </style>
@@ -25,97 +31,11 @@
     <button type="submit">送信</button>
   </form>
 
-  <script>
-  const characterId = localStorage.getItem('chatCharacterId') || '001';
-  const chatBox = document.getElementById('chat-box');
-  const form = document.getElementById('chat-form');
-  const input = document.getElementById('chat-input');
-  let messages = [];
-
-  function addMessage(text, type) {
-    const div = document.createElement("div");
-    div.className = `message ${type}`;
-    div.textContent = text;
-    chatBox.appendChild(div);
-    chatBox.scrollTop = chatBox.scrollHeight;
-  }
-
-  async function initializeChat() {
-    try {
-      const res = await fetch(`/api/photo-prompt/${characterId}`);
-      const data = await res.json();
-      const systemPrompt = data.prompt || "あなたはかわいらしいAI美女です。";
-
-      // ✅ systemメッセージで初期化
-      messages = [{ role: "system", content: systemPrompt }];
-
-      // ✅ チャット履歴があれば表示
-      const storageKey = `chatLog_${characterId}`;
-      const saved = localStorage.getItem(storageKey);
-
-      if (saved) {
-        const oldMessages = JSON.parse(saved);
-        oldMessages.forEach(msg => {
-          if (msg.role !== "system") {
-            addMessage(msg.content, msg.role === "user" ? "user" : "bot");
-          }
-          messages.push(msg);
-        });
-      }
-
-      // ✅ 初期化が終わってから送信処理を設定
-      form.addEventListener("submit", async (e) => {
-        e.preventDefault();
-        const userMsg = input.value.trim();
-        if (!userMsg) return;
-        input.value = "";
-        addMessage(userMsg, "user");
-        messages.push({ role: "user", content: userMsg });
-
-        const loadingMsg = document.createElement("div");
-        loadingMsg.className = "message bot";
-        loadingMsg.textContent = "考え中...";
-        chatBox.appendChild(loadingMsg);
-        chatBox.scrollTop = chatBox.scrollHeight;
-
-        try {
-          const res = await fetch("/api/chat", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ messages })
-          });
-
-          const data = await res.json();
-          chatBox.removeChild(loadingMsg);
-
-          if (data.reply) {
-            messages.push({ role: "assistant", content: data.reply });
-            addMessage(data.reply, "bot");
-            const storageKey = `chatLog_${characterId}`;
-            localStorage.setItem(storageKey, JSON.stringify(messages));
-
-          } else {
-            addMessage("返答に失敗しました。", "bot");
-          }
-        } catch (err) {
-          chatBox.removeChild(loadingMsg);
-          addMessage("通信エラーが発生しました。", "bot");
-          console.error(err);
-        }
-      });
-
-    } catch (err) {
-      console.error("プロンプト取得エラー:", err);
-      messages = [{ role: "system", content: "あなたは優しいAI美女です。" }];
-    }
-  }
-
-  // ✅ 初期化を呼び出す（送信設定は初期化完了後にしか動かないようにしている）
-  initializeChat();
-</script>
-
   <div class="nav-links">
     <a href="history.html" class="nav-button">← 投票履歴に戻る</a>
   </div>
+
+  <!-- JavaScriptは別ファイルとして読み込む -->
+  <script src="chat.js?v=1" defer></script>
 </body>
 </html>
