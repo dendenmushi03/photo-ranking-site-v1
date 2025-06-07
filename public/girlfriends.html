@@ -24,21 +24,19 @@
         div.innerHTML = `
           <img src="/image/${entry.imageUrl}" alt="彼女画像">
           <p>${new Date(entry.timestamp).toLocaleString()}</p>
-          <button class="chat-btn" onclick="startChat('${entry.characterId}')">この子と話す</button>
+          <button class="chat-btn" onclick="startChat('${entry.characterId}', '${entry.imageUrl}')">この子と話す</button>
           <button class="break-btn" onclick="breakUp('${entry.characterId}')">別れる</button>
         `;
         container.appendChild(div);
       });
     }
 
-    function startChat(characterId) {
-    const girlfriend = data.find(g => g.characterId === characterId);
-    if (girlfriend) {
-      localStorage.setItem("chatCharacterId", characterId);
-      localStorage.setItem("chatCharacterImage", `/image/${girlfriend.imageUrl}`); // ✅ 追加
-      window.location.href = "chat.html";
-    }
-  }
+    function startChat(characterId, imageUrl) {
+  localStorage.setItem("chatCharacterId", characterId);
+  localStorage.setItem("chatCharacterImage", `/image/${imageUrl}`);
+  localStorage.setItem("chatStorageKey", `chatLog_${characterId}_${imageUrl}`);
+  window.location.href = "chat.html";
+}
 
     function breakUp(characterId) {
       const confirmBreakup = confirm("本当にこの子と別れますか？");
