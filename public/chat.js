@@ -1,5 +1,5 @@
 const characterId = localStorage.getItem('chatCharacterId') || '001';
-const storageKey = `chatLog_${characterId}`;  // ✅ 追加：保存キーを一意化
+const storageKey = `chatLog_${characterId}`;
 const chatBox = document.getElementById('chat-box');
 const form = document.getElementById('chat-form');
 const input = document.getElementById('chat-input');
@@ -43,18 +43,19 @@ async function initializeChat() {
     const data = await res.json();
     const systemPrompt = data.prompt || "あなたはかわいらしいAI美女です。";
 
-    messages = [{ role: "system", content: systemPrompt }];
+    messages = [];
 
     const saved = localStorage.getItem(storageKey);
     if (saved) {
       const oldMessages = JSON.parse(saved);
       oldMessages.forEach(msg => {
-        if (msg.role !== "system") {
-          addMessage(msg.content, msg.role === "user" ? "user" : "bot");
-        }
+        addMessage(msg.content, msg.role === "user" ? "user" : "bot");
         messages.push(msg);
       });
     }
+
+    // systemメッセージは毎回頭に追加（保存時は除外）
+    messages.unshift({ role: "system", content: systemPrompt });
 
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
@@ -83,7 +84,10 @@ async function initializeChat() {
         if (data.reply) {
           messages.push({ role: "assistant", content: data.reply });
           addMessage(data.reply, "bot");
-          localStorage.setItem(storageKey, JSON.stringify(messages));  // ✅ 修正：保存キーを個別化
+
+          // ✅ 保存時は system メッセージを除いて保存する
+          const toSave = messages.filter(m => m.role !== "system");
+          localStorage.setItem(storageKey, JSON.stringify(toSave));
         } else {
           addMessage("返答に失敗しました。", "bot");
         }
