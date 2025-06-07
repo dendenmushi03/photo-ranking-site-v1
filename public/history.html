@@ -103,7 +103,7 @@
     <img src="/image/${entry.imageUrl}" class="photo" alt="履歴画像">
   </div>
   <p>${new Date(entry.timestamp).toLocaleString()}</p>
-  <button class="chat-btn" onclick="startChat('${entry.characterId}')">この子と話す</button>
+  <button class="chat-btn" onclick="startChat('${entry.characterId}', '${entry.imageUrl}')">この子と話す</button>
   <button class="love-btn" onclick="addToGirlfriends('${entry.characterId}', '${entry.imageUrl}', '${entry.timestamp}')">彼女にする</button>
 `;       
           container.appendChild(div);
