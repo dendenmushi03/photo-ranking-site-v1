@@ -1,13 +1,12 @@
+// 修正内容を反映したchat.js
 const characterId = localStorage.getItem('chatCharacterId') || '001';
-const imageUrl = localStorage.getItem('chatCharacterImage') || '/default.png';
 const chatBox = document.getElementById('chat-box');
 const form = document.getElementById('chat-form');
 const input = document.getElementById('chat-input');
 let messages = [];
 
-function getStorageKey(id) {
-  return `chatLog_${id}`;
-}
+// キャラIDに基づいたチャットキーを使う
+const storageKey = `chatLog_${characterId}`;
 
 function addMessage(text, type) {
   const div = document.createElement("div");
@@ -15,7 +14,7 @@ function addMessage(text, type) {
 
   if (type === "bot") {
     const img = document.createElement("img");
-    img.src = imageUrl;
+    img.src = localStorage.getItem('chatCharacterImage');
     img.alt = "bot";
     img.style.width = "56px";
     img.style.height = "56px";
@@ -47,20 +46,21 @@ async function initializeChat() {
     const data = await res.json();
     const systemPrompt = data.prompt || "あなたはかわいらしいAI美女です。";
 
-    messages = [{ role: "system", content: systemPrompt }];
-
-    const storageKey = getStorageKey(characterId);
+    // ローカルストレージにチャット履歴があるか確認
     const saved = localStorage.getItem(storageKey);
 
     if (saved) {
-      const oldMessages = JSON.parse(saved);
-      oldMessages.forEach(msg => {
-        if (msg.role !== "system") {
-          addMessage(msg.content, msg.role === "user" ? "user" : "bot");
-        }
-        messages.push(msg);
-      });
+      messages = JSON.parse(saved);
+    } else {
+      messages = [{ role: "system", content: systemPrompt }];
     }
+
+    // 表示のみ：履歴の再描画
+    messages.forEach(msg => {
+      if (msg.role !== "system") {
+        addMessage(msg.content, msg.role === "user" ? "user" : "bot");
+      }
+    });
 
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
