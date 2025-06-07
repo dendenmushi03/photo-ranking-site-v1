@@ -139,7 +139,9 @@
     }
 
     function startChat(characterId) {
+      const imageUrl = `/image/${characterId}`;
       localStorage.setItem("chatCharacterId", characterId);
+      localStorage.setItem("chatCharacterImage", imageUrl); // ✅ 追加
       window.location.href = "chat.html";
     }
 

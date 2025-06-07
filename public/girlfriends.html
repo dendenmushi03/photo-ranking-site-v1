@@ -32,9 +32,13 @@
     }
 
     function startChat(characterId) {
+    const girlfriend = data.find(g => g.characterId === characterId);
+    if (girlfriend) {
       localStorage.setItem("chatCharacterId", characterId);
+      localStorage.setItem("chatCharacterImage", `/image/${girlfriend.imageUrl}`); // ✅ 追加
       window.location.href = "chat.html";
     }
+  }
 
     function breakUp(characterId) {
       const confirmBreakup = confirm("本当にこの子と別れますか？");

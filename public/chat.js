@@ -10,15 +10,27 @@ function addMessage(text, type) {
 
   if (type === "bot") {
     const img = document.createElement("img");
-    img.src = `/image/${characterId}`;
-    img.alt = "Bot Avatar";
-    img.className = "avatar";
-    div.appendChild(img);
-  }
+    img.src = localStorage.getItem('chatCharacterImage');
+    img.alt = "bot";
+    img.style.width = "30px";
+    img.style.height = "30px";
+    img.style.borderRadius = "50%";
+    img.style.marginRight = "8px";
+    img.style.verticalAlign = "middle";
 
-  const span = document.createElement("span");
-  span.textContent = text;
-  div.appendChild(span);
+    const wrapper = document.createElement("div");
+    wrapper.style.display = "flex";
+    wrapper.style.alignItems = "flex-start";
+    wrapper.appendChild(img);
+
+    const span = document.createElement("span");
+    span.textContent = text;
+    wrapper.appendChild(span);
+
+    div.appendChild(wrapper);
+  } else {
+    div.textContent = text;
+  }
 
   chatBox.appendChild(div);
   chatBox.scrollTop = chatBox.scrollHeight;
