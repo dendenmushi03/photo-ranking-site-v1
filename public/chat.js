@@ -1,8 +1,14 @@
+// ✅ chat.js 完全修正版（キャラ画像単位でチャット履歴を保存）
+
 const characterId = localStorage.getItem('chatCharacterId') || '001';
+const characterImage = localStorage.getItem('chatCharacterImage') || 'default.jpg';
 const chatBox = document.getElementById('chat-box');
 const form = document.getElementById('chat-form');
 const input = document.getElementById('chat-input');
 let messages = [];
+
+// 🔑 画像URL（ファイル名）をキーに含めることでキャラごとの履歴を分離
+const storageKey = `chatLog_${characterImage.replace(/[^\w\-]/g, '_')}`;
 
 function addMessage(text, type) {
   const div = document.createElement("div");
@@ -44,10 +50,7 @@ async function initializeChat() {
 
     messages = [{ role: "system", content: systemPrompt }];
 
-    // ✅ キャラごとのストレージキーを使う
-    const storageKey = `chatLog_${characterId}`;
     const saved = localStorage.getItem(storageKey);
-
     if (saved) {
       const oldMessages = JSON.parse(saved);
       oldMessages.forEach(msg => {
