@@ -453,11 +453,3 @@ input[type="radio"] {
 .remove-icon:hover {
   transform: scale(1.2);
 }
-
-.bot-icon {
-  width: 56px;
-  height: 56px;
-  border-radius: 50%;
-  object-fit: cover;
-  margin-right: 0.5rem;
-}

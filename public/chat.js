@@ -1,4 +1,5 @@
 const characterId = localStorage.getItem('chatCharacterId') || '001';
+const storageKey = `chatLog_${characterId}`;  // ✅ 追加：保存キーを一意化
 const chatBox = document.getElementById('chat-box');
 const form = document.getElementById('chat-form');
 const input = document.getElementById('chat-input');
@@ -12,8 +13,8 @@ function addMessage(text, type) {
     const img = document.createElement("img");
     img.src = localStorage.getItem('chatCharacterImage');
     img.alt = "bot";
-    img.style.width = "30px";
-    img.style.height = "30px";
+    img.style.width = "56px";
+    img.style.height = "56px";
     img.style.borderRadius = "50%";
     img.style.marginRight = "8px";
     img.style.verticalAlign = "middle";
@@ -44,9 +45,7 @@ async function initializeChat() {
 
     messages = [{ role: "system", content: systemPrompt }];
 
-    const storageKey = `chatLog_${characterId}`;
     const saved = localStorage.getItem(storageKey);
-
     if (saved) {
       const oldMessages = JSON.parse(saved);
       oldMessages.forEach(msg => {
@@ -84,7 +83,7 @@ async function initializeChat() {
         if (data.reply) {
           messages.push({ role: "assistant", content: data.reply });
           addMessage(data.reply, "bot");
-          localStorage.setItem(storageKey, JSON.stringify(messages));
+          localStorage.setItem(storageKey, JSON.stringify(messages));  // ✅ 修正：保存キーを個別化
         } else {
           addMessage("返答に失敗しました。", "bot");
         }
