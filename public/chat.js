@@ -1,9 +1,13 @@
 const characterId = localStorage.getItem('chatCharacterId') || '001';
-const storageKey = `chatLog_${characterId}`;
+const imageUrl = localStorage.getItem('chatCharacterImage') || '/default.png';
 const chatBox = document.getElementById('chat-box');
 const form = document.getElementById('chat-form');
 const input = document.getElementById('chat-input');
 let messages = [];
+
+function getStorageKey(id) {
+  return `chatLog_${id}`;
+}
 
 function addMessage(text, type) {
   const div = document.createElement("div");
@@ -11,7 +15,7 @@ function addMessage(text, type) {
 
   if (type === "bot") {
     const img = document.createElement("img");
-    img.src = localStorage.getItem('chatCharacterImage');
+    img.src = imageUrl;
     img.alt = "bot";
     img.style.width = "56px";
     img.style.height = "56px";
@@ -43,19 +47,20 @@ async function initializeChat() {
     const data = await res.json();
     const systemPrompt = data.prompt || "あなたはかわいらしいAI美女です。";
 
-    messages = [];
+    messages = [{ role: "system", content: systemPrompt }];
 
+    const storageKey = getStorageKey(characterId);
     const saved = localStorage.getItem(storageKey);
+
     if (saved) {
       const oldMessages = JSON.parse(saved);
       oldMessages.forEach(msg => {
-        addMessage(msg.content, msg.role === "user" ? "user" : "bot");
+        if (msg.role !== "system") {
+          addMessage(msg.content, msg.role === "user" ? "user" : "bot");
+        }
         messages.push(msg);
       });
     }
-
-    // systemメッセージは毎回頭に追加（保存時は除外）
-    messages.unshift({ role: "system", content: systemPrompt });
 
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
@@ -84,10 +89,7 @@ async function initializeChat() {
         if (data.reply) {
           messages.push({ role: "assistant", content: data.reply });
           addMessage(data.reply, "bot");
-
-          // ✅ 保存時は system メッセージを除いて保存する
-          const toSave = messages.filter(m => m.role !== "system");
-          localStorage.setItem(storageKey, JSON.stringify(toSave));
+          localStorage.setItem(storageKey, JSON.stringify(messages));
         } else {
           addMessage("返答に失敗しました。", "bot");
         }
