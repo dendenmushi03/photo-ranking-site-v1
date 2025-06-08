@@ -145,24 +145,39 @@
     }
 
     function addToGirlfriends(characterId, imageUrl, timestamp) {
-      const girlfriends = JSON.parse(localStorage.getItem("girlfriends") || "[]");
+  const girlfriends = JSON.parse(localStorage.getItem("girlfriends") || "[]");
 
-      if (girlfriends.length >= 3) {
-        alert("彼女は3人までしか登録できません！");
-        return;
-      }
+  if (girlfriends.length >= 3) {
+    alert("彼女は3人までしか登録できません！");
+    return;
+  }
 
-      const exists = girlfriends.some(g => String(g.characterId) === String(characterId));
-      if (exists) {
-        alert("すでに彼女リストに追加されています！");
-        return;
-      }
+  const exists = girlfriends.some(g => String(g.characterId) === String(characterId));
+  if (exists) {
+    alert("すでに彼女リストに追加されています！");
+    return;
+  }
 
-      girlfriends.push({ characterId, imageUrl, timestamp });
-      localStorage.setItem("girlfriends", JSON.stringify(girlfriends));
-      alert("彼女リストに追加しました💘");
-      location.reload();
-    }
+  // ✅ ここで30%の成功判定
+  const success = Math.random() < 0.3;
+
+  if (success) {
+    girlfriends.push({ characterId, imageUrl, timestamp });
+    localStorage.setItem("girlfriends", JSON.stringify(girlfriends));
+    alert("告白成功！彼女リストに追加しました💘");
+  } else {
+    alert("告白失敗…フラれてしまいました😢");
+  }
+
+  // ✅ DB側の履歴も削除
+  fetch('/api/vote-history', {
+    method: 'DELETE',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ imageUrl })
+  }).catch(err => console.error("履歴削除失敗:", err));
+
+  location.reload(); // 失敗でも成功でもカードは消える
+}
   </script>
 
   <div class="nav-links">
