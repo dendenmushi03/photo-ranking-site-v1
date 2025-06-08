@@ -9,7 +9,6 @@ document.addEventListener("DOMContentLoaded", () => {
       const success = Math.random() < 0.3;
 
       if (success) {
-        // ✅ DBに彼女として追加
         try {
           await fetch('/api/girlfriends', {
             method: 'POST',
@@ -36,7 +35,6 @@ document.addEventListener("DOMContentLoaded", () => {
         console.error("履歴削除失敗:", err);
       }
 
-      // ✅ 画面上からカード削除
       card.remove();
     });
   });
