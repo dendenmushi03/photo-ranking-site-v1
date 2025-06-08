@@ -130,7 +130,7 @@ img {
 
 @media screen and (max-width: 480px) {
   #photo-container {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(3, 1fr);
   }
   .rank-item img {
     width: 100%;
