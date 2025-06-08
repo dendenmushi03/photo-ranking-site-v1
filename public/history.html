@@ -140,9 +140,8 @@
 
     function startChat(characterId, imageUrl) {
       localStorage.setItem("chatCharacterId", characterId);
-      localStorage.setItem("chatCharacterImage", imageUrl);
-      localStorage.setItem("chatStorageKey", `chatLog_${characterId}_${imageUrl}`);
-      window.location.href = "chat.html";
+      localStorage.setItem("chatCharacterImage", `/image/${imageUrl}`); // ← ✅ここが重要
+    window.location.href = "chat.html";
     }
 
     function addToGirlfriends(characterId, imageUrl, timestamp) {

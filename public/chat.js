@@ -52,7 +52,7 @@ function addMessage(text, type) {
 async function initializeChat() {
   try {
     const hashKey = await sha256(imageUrl);
-    const storageKey = localStorage.getItem("chatStorageKey") || `chatLog_${characterId}`;
+    const storageKey = `chatLog_${characterId}_${imageUrl}`;
 
     const res = await fetch(`/api/photo-prompt/${characterId}`);
     const data = await res.json();
