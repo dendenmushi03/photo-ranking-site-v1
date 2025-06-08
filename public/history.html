@@ -78,16 +78,17 @@
     fetch('/api/vote-history')
       .then(res => res.ok ? res.json() : Promise.reject('取得失敗'))
       .then(data => {
-        const container = document.getElementById('history');
-        const girlfriends = JSON.parse(localStorage.getItem("girlfriends") || "[]");
+  const container = document.getElementById('history');
+  const girlfriends = JSON.parse(localStorage.getItem("girlfriends") || "[]");
+  const rejected = JSON.parse(localStorage.getItem("rejectedGirls") || "[]");
 
-        const girlfriendKeys = new Set(
-          girlfriends.map(g => `${g.characterId}-${g.timestamp}`)
-        );
+  const girlfriendKeys = new Set(girlfriends.map(g => `${g.characterId}-${g.timestamp}`));
+  const rejectedKeys = new Set(rejected);
 
-        const filtered = data.filter(entry =>
-          !girlfriendKeys.has(`${entry.characterId}-${entry.timestamp}`)
-        );
+  const filtered = data.filter(entry => {
+    const key = `${entry.characterId}-${entry.timestamp}`;
+    return !(girlfriendKeys.has(key) || rejectedKeys.has(key));
+  });
 
         if (filtered.length === 0) {
           container.innerHTML = '<p style="text-align:center;">表示できる履歴がありません。</p>';
@@ -141,6 +142,7 @@
     function startChat(characterId, imageUrl) {
       localStorage.setItem("chatCharacterId", characterId);
       localStorage.setItem("chatCharacterImage", `/image/${imageUrl}`); // ← ✅ここが重要
+      localStorage.setItem("chatContext", "history");
     window.location.href = "chat.html";
     }
 
@@ -158,7 +160,6 @@
     return;
   }
 
-  // ✅ ここで30%の成功判定
   const success = Math.random() < 0.3;
 
   if (success) {
@@ -166,18 +167,22 @@
     localStorage.setItem("girlfriends", JSON.stringify(girlfriends));
     alert("告白成功！彼女リストに追加しました💘");
   } else {
+    // ❗失敗した子を記録
+    const rejected = JSON.parse(localStorage.getItem("rejectedGirls") || "[]");
+    rejected.push(`${characterId}-${timestamp}`);
+    localStorage.setItem("rejectedGirls", JSON.stringify(rejected));
     alert("告白失敗…フラれてしまいました😢");
   }
 
-  // ✅ DB側の履歴も削除
   fetch('/api/vote-history', {
     method: 'DELETE',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ imageUrl })
   }).catch(err => console.error("履歴削除失敗:", err));
 
-  location.reload(); // 失敗でも成功でもカードは消える
+  location.reload();
 }
+
   </script>
 
   <div class="nav-links">

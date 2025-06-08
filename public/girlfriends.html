@@ -34,6 +34,7 @@
     function startChat(characterId, imageUrl) {
   localStorage.setItem("chatCharacterId", characterId);
   localStorage.setItem("chatCharacterImage", `/image/${imageUrl}`);
+  localStorage.setItem("chatContext", "girlfriend");
   localStorage.setItem("chatStorageKey", `chatLog_${characterId}_${imageUrl}`);
   window.location.href = "chat.html";
 }

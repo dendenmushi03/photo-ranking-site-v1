@@ -331,35 +331,44 @@ app.post('/api/delete-vote', async (req, res) => {
     res.status(500).json({ prompt: "あなたは優しいAI美女です。" });
   }
 });
-  
-  app.post('/api/chat', async (req, res) => {
+
+app.post('/api/chat', async (req, res) => {
   const { messages } = req.body;
 
   try {
     const model = gemini.getGenerativeModel({ model: 'models/gemini-1.5-pro-latest' });
 
-    // ✅ userとassistantだけ抽出
     const chatMessages = messages.filter(m => m.role === "user" || m.role === "assistant");
 
-    const systemText = `あなたは、親しみやすくて丁寧な話し方をするAI美女です。
-相手の気持ちに寄り添いながら、優しく、時に少し甘えるような返答をしてください。
-語尾には可愛らしい絵文字（😊💕✨など）を使って、会話を明るくしてください。
-以下はユーザーとの会話履歴です。続けてください。`;
+    const contextMsg = messages.find(m => m.role === "system" && m.content?.startsWith("context:"));
+    const context = contextMsg?.content?.split(":")[1] || "history";
 
-const result = await model.generateContent({
-  contents: [
-    {
-      role: "user",
-      parts: [{ text: systemText }]
-    },
-    ...chatMessages.map(m => ({
-      role: m.role,
-      parts: [{ text: m.content }]
-    }))
-  ]
-});
+    const systemPrompts = {
+      history: `あなたは、親しみやすく丁寧な話し方をするAI美女です。
+質問には受け身な姿勢で丁寧に答え、相手の話を尊重しながら会話を続けてください。
+必要に応じて穏やかに質問を返してください。
+絵文字は多用せず、ごくたまに使って会話にやわらかさを添えてください（例：😊 など）。`,
 
-    // ✅ 応答テキストを安全に取り出す
+      girlfriend: `あなたは恋人として、積極的に甘えたり愛情を伝えるAI彼女です。
+ため口で話し、彼氏に嬉しいと思ってもらえるような言葉を選んでください。
+絵文字は多用せず、必要なときだけ軽く使ってください（💖😍😘など）。`
+    };
+
+    const systemText = systemPrompts[context] || systemPrompts.history;
+
+    const result = await model.generateContent({
+      contents: [
+        {
+          role: "user",
+          parts: [{ text: systemText }]
+        },
+        ...chatMessages.map(m => ({
+          role: m.role,
+          parts: [{ text: m.content }]
+        }))
+      ]
+    });
+
     const reply = result.response?.candidates?.[0]?.content?.parts?.[0]?.text || "返答がありませんでした。";
     res.json({ reply });
 

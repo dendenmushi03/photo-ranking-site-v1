@@ -54,11 +54,17 @@ async function initializeChat() {
     const hashKey = await sha256(imageUrl);
     const storageKey = `chatLog_${characterId}_${imageUrl}`;
 
+    const urlParams = new URLSearchParams(window.location.search);
+    const context = urlParams.get("context") || "history";
+
     const res = await fetch(`/api/photo-prompt/${characterId}`);
     const data = await res.json();
     const systemPrompt = data.prompt || "あなたはかわいらしいAI美女です。";
 
-    messages = [{ role: "system", content: systemPrompt }];
+    messages = [
+    { role: "system", content: `context:${context}` },
+    { role: "system", content: systemPrompt }
+  ];
 
     const saved = localStorage.getItem(storageKey);
     if (saved) {
