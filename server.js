@@ -138,6 +138,11 @@ const Photo = mongoose.model('Photo', new mongoose.Schema({
   prompt: String
 }));
 
+const Girlfriend = mongoose.model('Girlfriend', new mongoose.Schema({
+  imageUrl: String,
+  timestamp: { type: Date, default: Date.now }
+}));
+
 const Comment = mongoose.model('Comment', new mongoose.Schema({
   photoId: String,
   text: String
@@ -362,6 +367,18 @@ const result = await model.generateContent({
     console.error("Gemini API error:", err);
     res.status(500).json({ error: "Chat failed" });
   }
+});
+
+app.post('/api/girlfriends', async (req, res) => {
+  const { imageUrl } = req.body;
+  await Girlfriend.create({ imageUrl, timestamp: new Date() });
+  res.status(200).json({ message: 'Added to girlfriends' });
+});
+
+app.delete('/api/vote-history', async (req, res) => {
+  const { imageUrl } = req.body;
+  await VoteLog.deleteOne({ imageUrl });
+  res.status(200).json({ message: 'Deleted from history' });
 });
 
   app.get('/api/rankings', async (req, res) => {
