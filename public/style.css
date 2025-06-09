@@ -674,7 +674,7 @@ input[type="radio"] {
 
   .card img {
     width: 100% !important;
-    height: auto !important;
+    height: 340px !important;
     max-width: 100% !important;
     border-radius: 12px !important;
     display: block;
@@ -687,38 +687,6 @@ input[type="radio"] {
     font-size: 1rem !important;
     padding: 0.6rem 0 !important;
     margin: 0.4rem auto !important;
-    display: block !important;
-    text-align: center !important;
-  }
-}
-
-@media screen and (max-width: 600px) {
-  .card {
-    width: 95vw !important;
-    max-width: 420px !important;
-    background-color: #fff !important;
-    padding: 1rem !important;
-    border-radius: 16px !important;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
-    margin: 1rem auto !important;
-    box-sizing: border-box !important;
-  }
-
-  .card img {
-    width: 100% !important;
-    height: 340px !important;
-    object-fit: cover !important;
-    display: block !important;
-    margin: 0 auto !important;
-    border-radius: 12px !important;
-  }
-
-  .chat-btn,
-  .break-btn {
-    width: 90% !important;
-    font-size: 1rem !important;
-    padding: 0.7rem 0 !important;
-    margin: 0.5rem auto !important;
     display: block !important;
     text-align: center !important;
   }
