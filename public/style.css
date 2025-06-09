@@ -622,3 +622,43 @@ input[type="radio"] {
     text-align: center !important;
   }
 }
+
+/* モバイル対応含め常に中央寄せさせるベース */
+.girlfriend-grid {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 1.5rem;
+  padding: 1rem;
+  box-sizing: border-box;
+}
+
+/* モバイル用サイズ調整 */
+@media screen and (max-width: 480px) {
+  .card {
+    width: 92% !important;
+    max-width: 340px !important;
+    margin: 0 auto !important;
+    padding: 1rem !important;
+    box-sizing: border-box !important;
+  }
+
+  .card img {
+    width: 100% !important;
+    height: auto !important;
+    display: block !important;
+    margin: 0 auto !important;
+    border-radius: 12px !important;
+  }
+
+  .chat-btn,
+  .break-btn {
+    width: 90% !important;
+    font-size: 1rem !important;
+    padding: 0.6rem 0 !important;
+    margin: 0.4rem auto !important;
+    display: block !important;
+    text-align: center !important;
+  }
+}
