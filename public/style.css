@@ -413,21 +413,40 @@ input[type="radio"] {
   #photo-container {
     grid-template-columns: repeat(3, 1fr) !important;
     gap: 4px !important;
-  }
-
-  .photo-card img {
-    width: 100%;
-    max-width: 100px;
-    height: auto;
-    margin: 0 auto;
-  }
-
-  body {
-    padding: 0.5rem;
+    padding: 0 !important; /* ← 無駄な左右余白を排除 */
   }
 
   .photo-card {
-    padding: 0;
-    margin: 0;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  .photo-card img {
+    width: 100% !important;
+    height: auto !important;
+    max-width: unset !important; /* ← 上限解除で1frにフィット */
+    margin: 0 !important;
+  }
+
+  .photo-card label {
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+}
+
+/* スマホ用：投票履歴を2列1行で表示 */
+@media screen and (max-width: 480px) {
+  .history-container {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 12px !important;
+    justify-items: center;
+    padding: 0 1rem;
+  }
+
+  .history-card {
+    width: 100% !important;
+    max-width: 170px; /* お好みで調整 */
+    margin: 0 auto;
   }
 }
