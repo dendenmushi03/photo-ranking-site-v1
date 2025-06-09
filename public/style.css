@@ -478,15 +478,6 @@ input[type="radio"] {
     padding: 0 1rem;
   }
 
-  .card {
-    width: 90% !important;
-    max-width: 300px;
-    padding: 1rem;
-    border-radius: 16px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    text-align: center;
-  }
-
   .card img {
     width: 100% !important;
     aspect-ratio: 1 / 1;
