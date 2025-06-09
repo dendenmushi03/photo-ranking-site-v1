@@ -496,14 +496,16 @@ input[type="radio"] {
   }
 
   .chat-btn,
-  .break-btn {
-    width: 80%;
-    max-width: 240px;
-    font-size: 1rem;
-    padding: 0.6rem 1rem;
-    margin: 0.4rem auto;
-    display: block;
-  }
+.break-btn {
+  width: auto; /* ← 80%から変更 */
+  max-width: 240px;
+  font-size: 0.95rem; /* ← 小さくして1行に収めやすく */
+  padding: 0.5rem 1.2rem; /* ← 横余白を調整 */
+  margin: 0.4rem auto;
+  display: block;
+  white-space: nowrap; /* ← 改行させない！ */
+  text-align: center; /* 念のため中央寄せ */
+}
 }
 
 /* チャット入力エリアと送信ボタンを横並びに */
