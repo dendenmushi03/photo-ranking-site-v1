@@ -413,30 +413,34 @@ input[type="radio"] {
   #photo-container {
     display: grid !important;
     grid-template-columns: repeat(3, 1fr) !important;
-    gap: 4px !important;
+    gap: 0 !important; /* ← 隙間ゼロにする */
     padding: 0 !important;
-    margin: 0 auto !important;
-    max-width: 100% !important;
-    justify-content: center !important;
+    margin: 0 auto;
+    width: 100vw; /* ← スマホ幅ピッタリ */
   }
 
   .photo-card {
-    padding: 0 !important;
     margin: 0 !important;
+    padding: 0 !important;
   }
 
   .photo-card img {
     width: 100% !important;
-    height: auto !important;
-    aspect-ratio: 1 / 1 !important; /* ✅ 正方形にする */
+    aspect-ratio: 1 / 1 !important;
     object-fit: cover !important;
+    border-radius: 0 !important;
     margin: 0 !important;
-    border-radius: 6px !important;
+    padding: 0 !important;
   }
 
   .photo-card label {
     padding: 0 !important;
     margin: 0 !important;
+  }
+
+  .photo-card label span {
+    font-size: 0.75rem;
+    padding-top: 4px;
   }
 }
 
