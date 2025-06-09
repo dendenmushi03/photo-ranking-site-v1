@@ -137,7 +137,7 @@
         div.innerHTML = `
           <img src="/image/${entry.imageUrl}" alt="彼女画像">
           <p>${new Date(entry.timestamp).toLocaleString()}</p>
-          <button class="chat-btn" onclick="startChat('${entry.characterId}', '${entry.imageUrl}')">この子と話す</button>
+          <button class="chat-btn" onclick="startChat('${entry.characterId}', '${entry.imageUrl}')">チャットする</button>
           <button class="break-btn" onclick="breakUp('${entry.characterId}')">別れる</button>
         `;
         container.appendChild(div);

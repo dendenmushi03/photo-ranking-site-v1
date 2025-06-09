@@ -98,7 +98,7 @@
   });
 
         if (filtered.length === 0) {
-          container.innerHTML = '<p style="text-align:center;">表示できる履歴がありません。</p>';
+          container.innerHTML = '<p style="text-align:center;">表示できる履歴がありません。まずはお気に入りの女の子を見つけて投票しよう！</p>';
           return;
         }
 
@@ -111,7 +111,7 @@
     <img src="/image/${entry.imageUrl}" class="photo" alt="履歴画像">
   </div>
   <p>${new Date(entry.timestamp).toLocaleString()}</p>
-  <button class="chat-btn" onclick="startChat('${entry.characterId}', '${entry.imageUrl}')">この子と話す</button>
+  <button class="chat-btn" onclick="startChat('${entry.characterId}', '${entry.imageUrl}')">チャットする</button>
   <button class="love-btn" onclick="addToGirlfriends('${entry.characterId}', '${entry.imageUrl}', '${entry.timestamp}')">告白する</button>
 `;       
           container.appendChild(div);
@@ -205,5 +205,10 @@
       <a href="/terms.html">利用規約</a>
     </p>
   </footer>
+
+  <!-- admax -->
+  <script src="https://adm.shinobi.jp/s/8dd4dfeae7d420bc4156800b1ab67128"></script>
+  <!-- admax -->
+
 </body>
 </html>
