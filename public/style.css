@@ -413,10 +413,11 @@ input[type="radio"] {
   #photo-container {
     display: grid !important;
     grid-template-columns: repeat(3, 1fr) !important;
-    gap: 0 !important; /* ← 隙間ゼロにする */
+    gap: 2px !important;             /* ← 極小の隙間で調整 */
     padding: 0 !important;
     margin: 0 auto;
-    width: 100vw; /* ← スマホ幅ピッタリ */
+    width: 100vw;                    /* ← 画面いっぱいにする */
+    box-sizing: border-box;
   }
 
   .photo-card {
@@ -426,21 +427,17 @@ input[type="radio"] {
 
   .photo-card img {
     width: 100% !important;
-    aspect-ratio: 1 / 1 !important;
+    aspect-ratio: 1 / 1 !important;  /* ← 正方形を保つ */
     object-fit: cover !important;
     border-radius: 0 !important;
     margin: 0 !important;
     padding: 0 !important;
+    display: block;
   }
 
   .photo-card label {
-    padding: 0 !important;
     margin: 0 !important;
-  }
-
-  .photo-card label span {
-    font-size: 0.75rem;
-    padding-top: 4px;
+    padding: 0 !important;
   }
 }
 
