@@ -2,8 +2,94 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>彼女一覧</title>
-  <link rel="stylesheet" href="style.css?v=1">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 1rem;
+      background-color: #f7f7fb;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 2rem;
+      color: #ff3399;
+    }
+
+    .underline {
+      width: 80%;
+      height: 4px;
+      background: linear-gradient(to right, #ff69b4, hotpink);
+      margin: 1rem auto;
+      border-radius: 3px;
+    }
+
+    .girlfriend-grid {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1.5rem;
+      margin-top: 1rem;
+    }
+
+    .card {
+      width: 95vw;
+      max-width: 420px;
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 0 12px rgba(0,0,0,0.1);
+      padding: 1rem;
+      box-sizing: border-box;
+    }
+
+    .card img {
+      width: 100%;
+      height: 220px;
+      object-fit: cover;
+      border-radius: 12px;
+      display: block;
+      margin: 0 auto 1rem;
+    }
+
+    .chat-btn,
+    .break-btn {
+      display: block;
+      width: 90%;
+      margin: 0.4rem auto;
+      padding: 0.8rem 0;
+      border: none;
+      border-radius: 30px;
+      font-size: 1rem;
+      font-weight: bold;
+      color: #fff;
+      cursor: pointer;
+    }
+
+    .chat-btn {
+      background: linear-gradient(to right, #4facfe, #00f2fe);
+    }
+
+    .break-btn {
+      background: linear-gradient(to right, #999, #ccc);
+    }
+
+    .nav-links {
+      margin-top: 2rem;
+    }
+
+    .nav-button {
+      display: inline-block;
+      margin: 0.5rem;
+      padding: 0.8rem 1.5rem;
+      background: linear-gradient(to right, #a18cd1, #fbc2eb);
+      color: white;
+      border-radius: 30px;
+      text-decoration: none;
+      font-weight: bold;
+    }
+  </style>
 </head>
 <body>
   <h1>💕 彼女 💕</h1>
@@ -32,17 +118,15 @@
     }
 
     function startChat(characterId, imageUrl) {
-  localStorage.setItem("chatCharacterId", characterId);
-  localStorage.setItem("chatCharacterImage", `/image/${imageUrl}`);
-  localStorage.setItem("chatContext", "girlfriend");
-  localStorage.setItem("chatStorageKey", `chatLog_${characterId}_${imageUrl}`);
-  window.location.href = "chat.html";
-}
+      localStorage.setItem("chatCharacterId", characterId);
+      localStorage.setItem("chatCharacterImage", `/image/${imageUrl}`);
+      localStorage.setItem("chatContext", "girlfriend");
+      localStorage.setItem("chatStorageKey", `chatLog_${characterId}_${imageUrl}`);
+      window.location.href = "chat.html";
+    }
 
     function breakUp(characterId) {
-      const confirmBreakup = confirm("本当にこの子と別れますか？");
-      if (!confirmBreakup) return;
-
+      if (!confirm("本当にこの子と別れますか？")) return;
       const girlfriends = JSON.parse(localStorage.getItem("girlfriends") || "[]");
       const updated = girlfriends.filter(g => g.characterId !== characterId);
       localStorage.setItem("girlfriends", JSON.stringify(updated));
@@ -57,16 +141,9 @@
     <a href="upload.html" class="nav-button">📤 AI画像を投稿して参加!</a>
   </div>
 
-  <footer>
-    <p>
-      <a href="/privacy.html">プライバシーポリシー</a> |
-      <a href="/terms.html">利用規約</a>
-    </p>
-  </footer>
-
   <!-- admax -->
   <script src="https://adm.shinobi.jp/s/b9d2c8f63d3d859f79bc25a0b873b6ea"></script>
   <!-- admax -->
-   
+
 </body>
 </html>
