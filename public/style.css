@@ -544,3 +544,18 @@ input[type="radio"] {
     max-width: 340px !important;
   }
 }
+
+@media screen and (max-width: 480px) {
+  .girlfriend-grid {
+    display: flex !important;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 16px;
+    padding: 1rem;
+  }
+
+  .girlfriend-grid .card {
+    width: 90%;
+    max-width: 320px;
+  }
+}
