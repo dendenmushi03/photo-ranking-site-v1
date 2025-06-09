@@ -440,20 +440,32 @@ input[type="radio"] {
   }
 }
 
-/* スマホ用：投票履歴を2列1行で表示 */
 @media screen and (max-width: 480px) {
   .history-container {
     display: grid !important;
     grid-template-columns: repeat(2, 1fr) !important;
     gap: 12px !important;
-    justify-items: center;
-    padding: 0 1rem;
+    justify-items: center !important;
+    padding: 0 1rem !important;
+    box-sizing: border-box;
+  }
+
+  .history-card {
+    width: 100% !important;
+    max-width: 170px !important;
+    margin: 0 auto !important;
+    border-radius: 12px !important;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
   }
 
   .history-card img {
-    width: 100% !important;
-    height: auto !important;
+    width: 95% !important;
+    aspect-ratio: 1 / 1 !important;
     object-fit: cover !important;
-    border-radius: 8px;
+    border-radius: 12px !important;
+    display: block;
+    margin: 0 auto !important;
+    padding: 0 !important;
+    box-sizing: border-box;
   }
 }
