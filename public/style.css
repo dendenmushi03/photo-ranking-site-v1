@@ -416,7 +416,8 @@ input[type="radio"] {
     gap: 2px !important;
     padding: 0 !important;
     margin: 0 auto !important;
-    width: 100vw !important;
+    width: 100% !important;
+    max-width: 100% !important;
     box-sizing: border-box;
     justify-content: center !important;
   }
@@ -428,10 +429,10 @@ input[type="radio"] {
   }
 
   .photo-card img {
-    width: 95% !important; /* ← サイズ微調整 */
+    width: 95% !important;
     aspect-ratio: 1 / 1 !important;
     object-fit: cover !important;
-    border-radius: 8px !important; /* ← 丸み追加 */
+    border-radius: 8px !important;
     display: block;
     margin: 0 auto !important;
     padding: 0 !important;
