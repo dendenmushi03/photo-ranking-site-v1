@@ -559,3 +559,30 @@ input[type="radio"] {
     max-width: 320px;
   }
 }
+
+@media screen and (max-width: 480px) {
+  .card {
+    width: 92% !important;
+    max-width: 320px !important;
+    margin: 0 auto !important;
+    padding: 1rem !important;
+  }
+
+  .card img {
+    width: 100% !important;
+    height: auto !important;
+    max-width: 300px;
+    display: block;
+    margin: 0 auto;
+  }
+
+  .chat-btn,
+  .break-btn {
+    width: 90% !important;
+    font-size: 1rem !important;
+    padding: 0.6rem 0 !important;
+    margin: 0.5rem auto !important;
+    display: block;
+    text-align: center;
+  }
+}
