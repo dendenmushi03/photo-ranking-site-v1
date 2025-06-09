@@ -444,17 +444,18 @@ input[type="radio"] {
   .history-container {
     display: grid !important;
     grid-template-columns: repeat(2, 1fr) !important;
-    gap: 16px !important;
-    justify-content: center !important;   /* ← grid自体を中央寄せ */
+    gap: 12px !important;
+    justify-content: center !important;
     padding: 0 0.5rem !important;
     box-sizing: border-box;
   }
 
   .history-card {
-    max-width: 160px !important; /* ← 少しだけ小さく */
+    width: 100% !important;
+    max-width: 150px !important;  /* ← 👈 ここを160→150に微調整 */
     margin: 0 auto !important;
     border-radius: 12px !important;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    box-shadow: 0 0 10px rgba(0,0,0,0.08);
   }
 
   .history-card img {
