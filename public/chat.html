@@ -59,16 +59,29 @@
   box-shadow: 0 0 5px rgba(102,179,255,0.5);
 }
 
+/* PC・共通スタイル */
 #chat-form button {
-  padding: 8px 16px;
+  padding: 0.6rem 1.2rem;
   background: linear-gradient(to right, #2196f3, #42a5f5);
   border: none;
-  border-radius: 20px;
+  border-radius: 30px;
   color: white;
   font-weight: bold;
-  font-size: 0.9rem;
+  font-size: 1rem;
   cursor: pointer;
+  min-width: 70px; /* ←ここで文字サイズ確保 */
+  text-align: center;
   transition: background 0.3s, transform 0.2s;
+}
+
+/* モバイル用：変な小ささをリセット */
+@media (max-width: 480px) {
+  #chat-form button {
+    width: auto;         /* ← 固定幅を解除！ */
+    height: auto;        /* ← 高さも解除！ */
+    padding: 0.6rem 1.2rem;
+    font-size: 1rem;
+  }
 }
 
 #chat-form button:hover {
