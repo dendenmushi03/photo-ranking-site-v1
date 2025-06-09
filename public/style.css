@@ -117,8 +117,8 @@ img {
 
 @media screen and (max-width: 480px) {
   #photo-container {
-    grid-template-columns: repeat(3, 1fr);
-    gap: 4px;
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 4px !important;
   }
 
   .photo-card img {
@@ -127,7 +127,6 @@ img {
     height: auto;
     margin: 0 auto;
   }
-}
 
   body {
     padding: 0.5rem;
@@ -194,13 +193,6 @@ form {
   background: linear-gradient(to right, #ff69b4, #ff8efb);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-}
-
-/* 📱 スマホでも3列表示を維持するための強制指定 */
-@media screen and (max-width: 768px) {
-  #photo-container {
-    grid-template-columns: repeat(3, 1fr) !important;
-  }
 }
 
 .fancy-box {
