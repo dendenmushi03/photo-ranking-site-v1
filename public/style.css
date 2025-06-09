@@ -423,8 +423,8 @@ input[type="radio"] {
 
   .photo-card img {
     width: 100% !important;
-    max-width: 90px;
-    height: 120px;
+    max-width: 90px !important;
+    height: 120px !important;
     object-fit: cover;
     height: auto !important;
     max-width: unset !important; /* ← 上限解除で1frにフィット */
