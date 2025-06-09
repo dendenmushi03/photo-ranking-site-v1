@@ -118,7 +118,7 @@ img {
 @media screen and (max-width: 480px) {
   #photo-container {
     grid-template-columns: repeat(3, 1fr);
-    gap: 12px;
+    gap: 4px;
   }
 
   .photo-card img {
@@ -127,6 +127,7 @@ img {
     height: auto;
     margin: 0 auto;
   }
+}
 
   body {
     padding: 0.5rem;
