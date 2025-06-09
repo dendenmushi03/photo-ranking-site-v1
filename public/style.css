@@ -411,9 +411,13 @@ input[type="radio"] {
 
 @media screen and (max-width: 480px) {
   #photo-container {
+    display: grid !important;
     grid-template-columns: repeat(3, 1fr) !important;
     gap: 4px !important;
-    padding: 0 !important; /* ← 無駄な左右余白を排除 */
+    padding: 0 !important;
+    margin: 0 auto !important;
+    max-width: 100% !important;
+    justify-content: center !important;
   }
 
   .photo-card {
@@ -422,16 +426,17 @@ input[type="radio"] {
   }
 
   .photo-card img {
-  width: 100% !important;
-  max-width: 100px !important;
-  height: 130px !important;
-  object-fit: cover !important;
-  margin: 0 auto !important;
-}
+    width: 100% !important;
+    height: auto !important;
+    aspect-ratio: 1 / 1 !important; /* ✅ 正方形にする */
+    object-fit: cover !important;
+    margin: 0 !important;
+    border-radius: 6px !important;
+  }
 
   .photo-card label {
-    margin: 0 !important;
     padding: 0 !important;
+    margin: 0 !important;
   }
 }
 
