@@ -422,14 +422,12 @@ input[type="radio"] {
   }
 
   .photo-card img {
-    width: 100% !important;
-    max-width: 90px !important;
-    height: 120px !important;
-    object-fit: cover;
-    height: auto !important;
-    max-width: unset !important; /* ← 上限解除で1frにフィット */
-    margin: 0 !important;
-  }
+  width: 100% !important;
+  max-width: 100px !important;
+  height: 130px !important;
+  object-fit: cover !important;
+  margin: 0 auto !important;
+}
 
   .photo-card label {
     margin: 0 !important;
@@ -447,9 +445,10 @@ input[type="radio"] {
     padding: 0 1rem;
   }
 
-  .history-card {
+  .history-card img {
     width: 100% !important;
-    max-width: 170px; /* お好みで調整 */
-    margin: 0 auto;
+    height: auto !important;
+    object-fit: cover !important;
+    border-radius: 8px;
   }
 }
