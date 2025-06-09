@@ -662,3 +662,32 @@ input[type="radio"] {
     text-align: center !important;
   }
 }
+
+@media screen and (max-width: 480px) {
+  .card {
+    width: 90vw !important;
+    max-width: 360px !important;
+    padding: 1rem !important;
+    margin: 0 auto !important;
+    box-sizing: border-box !important;
+  }
+
+  .card img {
+    width: 100% !important;
+    height: auto !important;
+    max-width: 100% !important;
+    border-radius: 12px !important;
+    display: block;
+    margin: 0 auto !important;
+  }
+
+  .chat-btn,
+  .break-btn {
+    width: 90% !important;
+    font-size: 1rem !important;
+    padding: 0.6rem 0 !important;
+    margin: 0.4rem auto !important;
+    display: block !important;
+    text-align: center !important;
+  }
+}
