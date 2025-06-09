@@ -468,3 +468,79 @@ input[type="radio"] {
     box-sizing: border-box;
   }
 }
+
+@media screen and (max-width: 480px) {
+  .grid {
+    display: grid !important;
+    grid-template-columns: repeat(1, 1fr) !important;
+    justify-items: center !important;
+    gap: 16px !important;
+    padding: 0 1rem;
+  }
+
+  .card {
+    width: 90% !important;
+    max-width: 300px;
+    padding: 1rem;
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    text-align: center;
+  }
+
+  .card img {
+    width: 100% !important;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    border-radius: 12px;
+    margin-bottom: 0.5rem;
+  }
+
+  .chat-btn,
+  .break-btn {
+    width: 80%;
+    max-width: 240px;
+    font-size: 1rem;
+    padding: 0.6rem 1rem;
+    margin: 0.4rem auto;
+    display: block;
+  }
+}
+
+/* チャット入力エリアと送信ボタンを横並びに */
+.chat-input-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 1rem;
+  max-width: 600px;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+/* テキスト入力欄 */
+#chat-input {
+  flex: 1;
+  padding: 10px 14px;
+  border-radius: 20px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+  outline: none;
+}
+
+/* 送信ボタン（小さくて丸み） */
+#send-button {
+  padding: 10px 16px;
+  border: none;
+  border-radius: 20px;
+  background-color: #3388ff;
+  color: white;
+  font-size: 0.9rem;
+  cursor: pointer;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+  transition: background-color 0.3s ease;
+}
+
+#send-button:hover {
+  background-color: #2266cc;
+}
