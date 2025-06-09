@@ -549,7 +549,7 @@ input[type="radio"] {
 
 @media screen and (max-width: 480px) {
   .card {
-    width: 92%;
-    max-width: 340px;
+    width: 92% !important;
+    max-width: 340px !important;
   }
 }
