@@ -546,3 +546,10 @@ input[type="radio"] {
 #send-button:hover {
   background-color: #2266cc;
 }
+
+@media screen and (max-width: 480px) {
+  .card {
+    width: 92%;
+    max-width: 340px;
+  }
+}
