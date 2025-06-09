@@ -421,12 +421,14 @@ input[type="radio"] {
     margin: 0 !important;
   }
 
-   .photo-card img {
-    width: 100%;
-    max-width: 90px;     /* 👈 サイズを小さめに調整 */
-    height: 120px;        /* 👈 高さも明示的に指定 */
+  .photo-card img {
+    width: 100% !important;
+    max-width: 90px;
+    height: 120px;
     object-fit: cover;
-    margin: 0 auto;
+    height: auto !important;
+    max-width: unset !important; /* ← 上限解除で1frにフィット */
+    margin: 0 !important;
   }
 
   .photo-card label {
