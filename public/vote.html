@@ -56,12 +56,22 @@
       border: 3px solid transparent;
       pointer-events: none;
     }
+
     .photo-card.selected img {
       border: 3px solid #3388ff;
       transform: scale(1.05);
       box-shadow: 0 0 12px #3388ff;
     }
-  </style>
+
+    .check-item {
+    font-weight: bold;
+    background: linear-gradient(transparent 60%, #d6f5d6 60%);
+    display: inline-block;
+    font-size: 1.2rem;
+    margin: 0.5rem 0;
+    }
+
+</style>
 </head>
 <body>
 
@@ -74,10 +84,9 @@
   <div class="site-description fancy-box">
   <h2>🏆 AI美女のNo.1を決めよう！</h2>
   <p>
-    1️⃣ <strong>AI美女に投票！</strong><br>
-    2️⃣ <strong>推しとチャット！</strong><br>
-    3️⃣ <strong>告白して彼女にしよう！</strong><br>
-
+    <p class="check-item">✅ AI美女に投票！</p>
+    <p class="check-item">✅ 推しとチャット！</p>
+    <p class="check-item">✅ 告白して彼女にしよう！</p>
     📸 あなた自身のAI美女画像を投稿することもできるよ！
   </p>
 </div>
