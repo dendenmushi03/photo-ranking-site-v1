@@ -693,39 +693,3 @@ input[type="radio"] {
     text-align: center !important;
   }
 }
-
-.header-banner {
-  display: flex;
-  flex-wrap: nowrap;
-  width: 100%;
-  height: auto; /* PCでは自動で高さ調整 */
-}
-
-.left-section,
-.right-section {
-  height: auto;
-}
-
-.left-section img,
-.right-section img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-/* ✅ スマホ画面幅だけ110pxに固定 */
-@media (max-width: 768px) {
-  .header-banner {
-    height: 110px;
-  }
-
-  .left-section,
-  .right-section {
-    height: 100%;
-  }
-
-  .left-section img,
-  .right-section img {
-    height: 100%;
-  }
-}

@@ -80,6 +80,48 @@
     margin: 0.4rem 0;
     }
 
+    .header-banner {
+  display: flex;
+  flex-wrap: nowrap;
+  width: 100%;
+  height: auto; /* PCでは自動調整 */
+  margin-bottom: 1rem;
+}
+
+.left-section {
+  flex: 0 0 25%;
+  max-width: 25%;
+}
+
+.right-section {
+  flex: 0 0 75%;
+  max-width: 75%;
+}
+
+.left-section img,
+.right-section img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* ✅ スマホだけ高さを110pxに固定 */
+@media (max-width: 768px) {
+  .header-banner {
+    height: 110px;
+  }
+
+  .left-section,
+  .right-section {
+    height: 100%;
+  }
+
+  .left-section img,
+  .right-section img {
+    height: 100%;
+  }
+}
+
 </style>
 </head>
 <body>
