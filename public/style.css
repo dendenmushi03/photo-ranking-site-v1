@@ -695,42 +695,36 @@ input[type="radio"] {
 }
 
 .signup-bubble {
-  background: white;
-  border: 3px solid #444;
-  padding: 0.8rem 1.2rem;
+  background: #fff;
+  border: none;
+  padding: 1.2rem 1.6rem;
   display: inline-block;
-  border-radius: 6px;
+  border-radius: 20px;
   position: relative;
-  margin: 1.5rem auto;
-  font-size: 1.1rem;
+  margin: 2rem auto;
+  font-size: 1.2rem;
   font-weight: bold;
-  color: #444;
-  box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+  color: #333;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  max-width: 90%;
+  text-align: center;
+  line-height: 1.6;
 }
 
+/* 💬 吹き出しの上向き矢印（↑） */
 .signup-bubble::after {
   content: "";
   position: absolute;
-  bottom: -20px;
+  top: -20px;
   left: 50%;
   transform: translateX(-50%);
-  border-width: 10px;
+  border-width: 0 12px 12px 12px;
   border-style: solid;
-  border-color: #444 transparent transparent transparent;
-}
-
-.signup-bubble::before {
-  content: "";
-  position: absolute;
-  bottom: -18px;
-  left: 50%;
-  transform: translateX(-50%);
-  border-width: 9px;
-  border-style: solid;
-  border-color: white transparent transparent transparent;
+  border-color: transparent transparent #fff transparent;
+  filter: drop-shadow(0 -2px 2px rgba(0,0,0,0.1));
 }
 
 .highlight {
-  color: #e53935; /* 赤色で目立たせる */
-  font-size: 1.3em;
+  color: #e53935;
+  font-size: 1.4em;
 }
