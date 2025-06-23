@@ -695,36 +695,46 @@ input[type="radio"] {
 }
 
 .header-banner {
-  display: block;
+  display: flex;
   align-items: center;
+  justify-content: flex-start;
   padding: 4px 8px;
   background-color: #fffbe8;
   border-bottom: 4px solid #ff3333;
+  flex-wrap: nowrap; /* ← これ重要：折り返しを防止 */
+}
+
+.header-banner img {
+  display: block;
+  max-height: 100px;
+  height: auto;
+  width: auto;
+  max-width: 100%;
+  flex-shrink: 1; /* サイズが狭くても収まるように */
 }
 
 .aibijo-logo {
-  width: 25%;       /* 横幅30% */
-  height: 180px;     /* アスペクト比維持 */
+  width: 25%;
+  max-width: 25%;
+  height: auto;
   object-fit: contain;
 }
 
 .banner-right {
-  width: 75%;       /* 横幅70% */
-  height: 180px;
+  width: 75%;
+  max-width: 75%;
+  height: auto;
   object-fit: contain;
 }
 
-/* スマホ表示対応 */
 @media (max-width: 600px) {
   .aibijo-logo {
-    width: 30%;       /* 横幅30% */
-    height: 110px;     /* アスペクト比維持 */
-    object-fit: contain;
+    width: 30%;
+    max-width: 30%;
   }
 
   .banner-right {
-    width: 70%;       /* 横幅70% */
-    height: 110px;
-    object-fit: contain;
+    width: 70%;
+    max-width: 70%;
   }
 }
