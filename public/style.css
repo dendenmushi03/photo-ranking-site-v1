@@ -711,23 +711,23 @@ input[type="radio"] {
 .signup-bubble::after {
   content: "";
   position: absolute;
-  top: -25px;
+  bottom: -25px;
   left: 50%;
   transform: translateX(-50%);
   border-width: 10px;
   border-style: solid;
-  border-color: #444 transparent transparent transparent;
+  border-color: transparent transparent #444 transparent;
 }
 
 .signup-bubble::before {
   content: "";
   position: absolute;
-  top: -18px;
+  bottom: -18px;
   left: 50%;
   transform: translateX(-50%);
   border-width: 9px;
   border-style: solid;
-  border-color: white transparent transparent transparent;
+  border-color: transparent transparent white transparent;
 }
 
 .highlight {
