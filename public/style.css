@@ -693,3 +693,23 @@ input[type="radio"] {
     text-align: center !important;
   }
 }
+
+.header-banner {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  background-color: #fffbe8;
+  border-bottom: 4px solid #ff3333;
+  gap: 10px;
+  overflow-x: auto; /* ← はみ出す場合は横スクロールにする */
+}
+
+.logo-img {
+  height: 50px;
+  flex-shrink: 0;
+}
+
+.text-banner-img {
+  height: 42px;
+  flex-shrink: 0;
+}
