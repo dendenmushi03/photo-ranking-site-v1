@@ -82,43 +82,58 @@
 
     .header-banner {
   display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 0;
+  background-color: #fffbe8;
+  border-bottom: 2px solid #ff3333;
   flex-wrap: nowrap;
   width: 100%;
-  height: auto; /* PCでは自動調整 */
-  margin-bottom: 1rem;
+  box-sizing: border-box;
 }
 
-.left-section {
-  flex: 0 0 25%;
-  max-width: 25%;
+.aibijo-logo {
+  width: 30%;
+  height: auto;
+  object-fit: contain;
 }
 
-.right-section {
-  flex: 0 0 75%;
-  max-width: 75%;
-}
-
-.left-section img,
-.right-section img {
-  width: 100%;
-  height: 100%;
+.banner-right {
+  width: 70%;
+  height: auto;
   object-fit: cover;
 }
 
-/* ✅ スマホだけ高さを110pxに固定 */
-@media (max-width: 768px) {
+@media (max-width: 600px) {
   .header-banner {
-    height: 110px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 0;
+    margin: 0;
+    width: 100%;
+    box-sizing: border-box;
   }
 
-  .left-section,
-  .right-section {
-    height: 90%;
+  .aibijo-logo {
+    width: 25%;
+    max-width: 25%;
+    height: auto;
+    object-fit: contain;
   }
 
-  .left-section img,
-  .right-section img {
-    height: 90%;
+  .banner-right {
+    width: 75%;
+    max-width: 75%;
+    height: auto;
+    object-fit: cover;
+  }
+
+  .header-banner img {
+    display: block;
+    width: 100%;
+    height: auto;
+    object-fit: cover;
   }
 }
 
