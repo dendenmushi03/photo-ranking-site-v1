@@ -695,7 +695,7 @@ input[type="radio"] {
 }
 
 .header-banner {
-  display: flex;
+  display: block;
   align-items: center;
   padding: 4px 8px;
   background-color: #fffbe8;
@@ -704,27 +704,27 @@ input[type="radio"] {
 
 .aibijo-logo {
   width: 25%;       /* 横幅30% */
-  height: 150PX;     /* アスペクト比維持 */
+  height: 180px;     /* アスペクト比維持 */
   object-fit: contain;
 }
 
 .banner-right {
   width: 75%;       /* 横幅70% */
-  height: 150PX;
+  height: 180px;
   object-fit: contain;
 }
 
 /* スマホ表示対応 */
 @media (max-width: 600px) {
   .aibijo-logo {
-    width: 25%;       /* 横幅30% */
-    height: 80PX;     /* アスペクト比維持 */
+    width: 30%;       /* 横幅30% */
+    height: 110px;     /* アスペクト比維持 */
     object-fit: contain;
   }
 
   .banner-right {
-    width: 75%;       /* 横幅70% */
-    height: 80PX;
+    width: 70%;       /* 横幅70% */
+    height: 110px;
     object-fit: contain;
   }
 }
