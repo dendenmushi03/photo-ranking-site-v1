@@ -695,36 +695,47 @@ input[type="radio"] {
 }
 
 .signup-bubble {
-  background: #fff;
-  border: none;
-  padding: 1.2rem 1.6rem;
+  background: white;
+  border: 3px solid #444;
+  padding: 0.8rem 1.2rem;
   display: inline-block;
-  border-radius: 20px;
+  border-radius: 6px;
   position: relative;
-  margin: 2rem auto;
-  font-size: 1.2rem;
+  margin: 1.5rem auto;
+  font-size: 1.1rem;
   font-weight: bold;
-  color: #333;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-  max-width: 90%;
-  text-align: center;
-  line-height: 1.6;
+  color: #444;
+  box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
 }
 
-/* 💬 吹き出しの上向き矢印（↑） */
 .signup-bubble::after {
   content: "";
   position: absolute;
-  top: -20px;
+  top: -25px;
   left: 50%;
   transform: translateX(-50%);
-  border-width: 0 12px 12px 12px;
+  border-width: 10px;
   border-style: solid;
-  border-color: transparent transparent #fff transparent;
-  filter: drop-shadow(0 -2px 2px rgba(0,0,0,0.1));
+  border-color: #444 transparent transparent transparent;
+}
+
+.signup-bubble::before {
+  content: "";
+  position: absolute;
+  top: -18px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 9px;
+  border-style: solid;
+  border-color: white transparent transparent transparent;
 }
 
 .highlight {
-  color: #e53935;
-  font-size: 1.4em;
+  color: #e53935; /* 赤色で目立たせる */
+  font-size: 1.3em;
+}
+
+/* ヘッダーバナー直後の広告バナーにマージンを追加 */
+.header-banner + a > img {
+  margin-top: 1.5rem;  /* ← 必要に応じて 24px や 2rem などに変更可 */
 }
