@@ -733,23 +733,34 @@ input[type="radio"] {
 }
 
 @media (max-width: 600px) {
+  .header-banner {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 0;
+    margin: 0;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
   .aibijo-logo {
     width: 25%;
     max-width: 25%;
+    height: auto;
+    object-fit: contain;
   }
 
   .banner-right {
     width: 75%;
     max-width: 75%;
+    height: auto;
     object-fit: cover;
   }
 
-  .header-banner {
+  .header-banner img {
+    display: block;
     width: 100%;
-    max-width: 100%;
-    padding: 0;
-    margin: 0;
-    box-sizing: border-box;
+    height: auto;
+    object-fit: cover;
   }
-
 }
