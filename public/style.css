@@ -752,9 +752,4 @@ input[type="radio"] {
     box-sizing: border-box;
   }
 
-  .header-banner img {
-    width: 100% !important;
-    height: auto !important;
-    object-fit: cover !important;
-  }
 }
