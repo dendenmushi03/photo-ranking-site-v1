@@ -698,7 +698,7 @@ input[type="radio"] {
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  padding: 4px 8px;
+  padding: 0px;
   background-color: #fffbe8;
   border-bottom: 4px solid #ff3333;
   flex-wrap: nowrap; /* ← これ重要：折り返しを防止 */
@@ -729,12 +729,12 @@ input[type="radio"] {
 
 @media (max-width: 600px) {
   .aibijo-logo {
-    width: 30%;
-    max-width: 30%;
+    width: 25%;
+    max-width: 25%;
   }
 
   .banner-right {
-    width: 70%;
-    max-width: 70%;
+    width: 75%;
+    max-width: 75%;
   }
 }
