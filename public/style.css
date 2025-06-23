@@ -705,11 +705,6 @@ input[type="radio"] {
   flex-wrap: nowrap;
 }
 
-.logo-img {
-  height: 48px;
-  flex-shrink: 0;
-}
-
 .text-banner-img {
   height: 42px;
   flex-shrink: 0;
@@ -721,8 +716,8 @@ input[type="radio"] {
     justify-content: flex-start;
   }
 
-  .logo-img,
-  .text-banner-img {
+  .aibijo-logo,
+  .banner-right {
     height: 40px;
   }
 }
