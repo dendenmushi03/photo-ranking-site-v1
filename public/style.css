@@ -699,15 +699,20 @@ input[type="radio"] {
   align-items: center;
   justify-content: flex-start;
   padding: 0px;
+  gap: 0;
   background-color: #fffbe8;
-  border-bottom: 4px solid #ff3333;
+  border-bottom: 2px solid #fffbe8;
   flex-wrap: nowrap; /* ← これ重要：折り返しを防止 */
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .header-banner img {
   display: block;
   max-height: 100px;
   height: auto;
+  object-fit: cover;
   width: auto;
   max-width: 100%;
   flex-shrink: 1; /* サイズが狭くても収まるように */
@@ -724,7 +729,7 @@ input[type="radio"] {
   width: 75%;
   max-width: 75%;
   height: auto;
-  object-fit: contain;
+  object-fit: cover;
 }
 
 @media (max-width: 600px) {
@@ -736,5 +741,20 @@ input[type="radio"] {
   .banner-right {
     width: 75%;
     max-width: 75%;
+    object-fit: cover;
+  }
+
+  .header-banner {
+    width: 100%;
+    max-width: 100%;
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+  }
+
+  .header-banner img {
+    width: 100% !important;
+    height: auto !important;
+    object-fit: cover !important;
   }
 }
