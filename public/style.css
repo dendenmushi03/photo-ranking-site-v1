@@ -693,3 +693,44 @@ input[type="radio"] {
     text-align: center !important;
   }
 }
+
+.signup-bubble {
+  background: white;
+  border: 3px solid #444;
+  padding: 0.8rem 1.2rem;
+  display: inline-block;
+  border-radius: 6px;
+  position: relative;
+  margin: 1.5rem auto;
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: #444;
+  box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+}
+
+.signup-bubble::after {
+  content: "";
+  position: absolute;
+  bottom: -20px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 10px;
+  border-style: solid;
+  border-color: #444 transparent transparent transparent;
+}
+
+.signup-bubble::before {
+  content: "";
+  position: absolute;
+  bottom: -18px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 9px;
+  border-style: solid;
+  border-color: white transparent transparent transparent;
+}
+
+.highlight {
+  color: #e53935; /* 赤色で目立たせる */
+  font-size: 1.3em;
+}
