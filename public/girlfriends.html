@@ -134,9 +134,75 @@
       margin: 0 auto !important;
     }
 
+        .header-banner {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 0;
+  background-color: #fffbe8;
+  border-bottom: 2px solid #ff3333;
+  flex-wrap: nowrap;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.aibijo-logo {
+  width: 30%;
+  height: auto;
+  object-fit: contain;
+}
+
+.banner-right {
+  width: 70%;
+  height: auto;
+  object-fit: cover;
+}
+
+@media (max-width: 600px) {
+  .header-banner {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 0;
+    margin: 0;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .aibijo-logo {
+    width: 25%;
+    max-width: 25%;
+    height: auto;
+    object-fit: contain;
+  }
+
+  .banner-right {
+    width: 75%;
+    max-width: 75%;
+    height: auto;
+    object-fit: cover;
+  }
+
+  .header-banner img {
+    display: block;
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+  }
+}
+
   </style>
 </head>
 <body>
+    <div class="header-banner">
+  <div class="left-section">
+    <img src="image/aibijo-logo.png" alt="アイ美女！" />
+  </div>
+  <div class="right-section">
+    <img src="image/banner-right.png" alt="No.1を決める総選挙" />
+  </div>
+</div>
+
   <h1>💕 彼女 💕</h1>
   <div class="underline"></div>
   <div id="girlfriend-container" class="girlfriend-grid"></div>
