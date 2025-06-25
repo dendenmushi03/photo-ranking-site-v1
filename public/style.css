@@ -739,3 +739,15 @@ input[type="radio"] {
 .header-banner + a > img {
   margin-top: 1.5rem;  /* ← 必要に応じて 24px や 2rem などに変更可 */
 }
+
+.ad-container {
+  text-align: center;
+  margin: 1rem auto;
+  padding: 0;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.ad-container script {
+  display: inline-block;
+}
