@@ -741,10 +741,11 @@ input[type="radio"] {
 }
 
 .ad-container {
-  text-align: center;
-  margin: 1rem auto;
-  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   width: 100%;
+  margin: 1rem auto;
   box-sizing: border-box;
 }
 
