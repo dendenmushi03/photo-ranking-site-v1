@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <title>今日のAI美女</title>
+</head>
+<body>
+  <h1>🌸 今日のAI美女 🌸</h1>
+  <img id="today-img" alt="今日のAI美女" style="max-width: 100%; border-radius: 10px;" />
+  <script>
+    const today = new Date().toISOString().slice(0, 10);
+    document.getElementById("today-img").src = `daily/${today}.png`;
+  </script>
+</body>
+</html>
