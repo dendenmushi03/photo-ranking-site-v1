@@ -420,14 +420,12 @@ function closeConfessModal() {
   document.getElementById("signupNumber").textContent = randomCount;
   </script>
 
-  <!-- ✅ 告白モーダル -->
-<div id="confessModal" class="modal hidden">
-  <div class="modal-content">
-    <img src="remove.png" class="remove-icon" onclick="closeConfessModal()" alt="閉じる" />
-    <h2 id="confessMessage"></h2>
-    <img id="confessImage" src="" alt="告白画像" />
-    <div id="confessButtons"></div>
-  </div>
+  <!-- 告白モーダル -->
+<div class="modal-content">
+  <button class="remove-btn" onclick="closeConfessModal()">×</button>
+  <h2 id="confessMessage">告白成功！</h2>
+  <img id="confessImage" src="" alt="告白画像" />
+  <div id="confessButtons"></div>
 </div>
 
 </body>

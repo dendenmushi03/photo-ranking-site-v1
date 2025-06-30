@@ -396,18 +396,18 @@ input[type="radio"] {
   display: block;
 }
 
-.remove-icon {
+.modal-content .remove-icon {
   position: absolute;
-  top: 8px;
-  right: 8px;
-  width: 2px;
-  height: 2px;
-  z-index: 10;
+  top: 12px;
+  right: 12px;
+  width: 28px;       /* ← ここを正しいサイズに */
+  height: 28px;
   cursor: pointer;
+  z-index: 10;
   transition: transform 0.2s ease;
 }
 
-.remove-icon:hover {
+.modal-content .remove-icon:hover {
   transform: scale(1.2);
 }
 
