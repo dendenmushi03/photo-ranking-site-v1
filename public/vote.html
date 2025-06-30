@@ -149,6 +149,7 @@
   z-index: 9999;
 }
 .modal-content {
+  position: relative;
   background: white;
   padding: 30px;
   border-radius: 12px;
@@ -377,14 +378,14 @@ function closeModal() {
   <!-- ✅ 投票完了モーダル -->
 <div id="voteModal" class="modal hidden">
   <div class="modal-content">
-    <button class="remove-btn modal-close" onclick="closeConfessModal()">×</button>
+    <button class="remove-btn modal-close" onclick="closeModal()">×</button>
     <h2>投票完了！</h2>
     <img id="votedImage" src="" alt="投票画像" style="width: 200px; border-radius: 10px; margin-bottom: 1rem;" />
     <div style="display: flex; flex-direction: column; gap: 1rem; align-items: center;">
       <button onclick="shareOnTwitter()" style="background: none; border: none; cursor: pointer;">
         <img src="image/x-logo.png" alt="共有" style="width: 40px; height: 40px;" />
       </button>
-      <a href="javascript:goToChat()" class="nav-button">💌 この子とチャットする</a>
+      <a href="javascript:goToChat()" class="nav-button">💌 チャットする</a>
       <a href="rankings.html" class="nav-button">🏆 ランキングを見る</a>
       <a href="javascript:voteAgain()" class="nav-button">🗳 違う子に投票する</a>
     </div>
