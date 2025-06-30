@@ -344,6 +344,14 @@
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ imageUrl })
   }).catch(err => console.error("履歴削除失敗:", err));
+
+  // ✅ 履歴から即座に削除（DOM）
+const historyCard = document.querySelector(
+  `.history-card img[src="/image/${imageUrl}"]`
+)?.closest(".history-card");
+
+if (historyCard) historyCard.remove();
+
 }
 
 function showConfessModal(success, imageUrl) {
@@ -358,14 +366,12 @@ function showConfessModal(success, imageUrl) {
     image.style.display = "block";
     buttons.innerHTML = `
       <a href="girlfriends.html" class="nav-button">彼女ページへ</a>
-      <a href="javascript:closeConfessModal()" class="nav-button">閉じる</a>
     `;
   } else {
     message.textContent = "告白失敗…フラれてしまいました😢";
     image.style.display = "none";
     buttons.innerHTML = `
       <a href="history.html" class="nav-button">他の人に告白する</a>
-      <a href="javascript:closeConfessModal()" class="nav-button">閉じる</a>
     `;
   }
 
@@ -417,7 +423,7 @@ function closeConfessModal() {
   <!-- ✅ 告白モーダル -->
 <div id="confessModal" class="modal hidden">
   <div class="modal-content">
-    <button class="remove-btn" onclick="closeConfessModal()">×</button>
+    <img src="remove.png" class="remove-icon" onclick="closeConfessModal()" alt="閉じる" />
     <h2 id="confessMessage"></h2>
     <img id="confessImage" src="" alt="告白画像" />
     <div id="confessButtons"></div>
