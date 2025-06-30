@@ -421,11 +421,13 @@ function closeConfessModal() {
   </script>
 
   <!-- 告白モーダル -->
-<div class="modal-content">
-  <button class="remove-btn" onclick="closeConfessModal()">×</button>
-  <h2 id="confessMessage">告白成功！</h2>
-  <img id="confessImage" src="" alt="告白画像" />
-  <div id="confessButtons"></div>
+<div id="confessModal" class="modal hidden">
+  <div class="modal-content">
+    <button class="remove-btn" onclick="closeConfessModal()">×</button>
+    <h2 id="confessMessage">告白成功！</h2>
+    <img id="confessImage" src="" alt="告白画像" />
+    <div id="confessButtons"></div>
+  </div>
 </div>
 
 </body>
