@@ -752,3 +752,27 @@ input[type="radio"] {
 .ad-container script {
   display: inline-block;
 }
+
+.modal-content .remove-btn {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  width: 28px;
+  height: 28px;
+  font-size: 16px;
+  background-color: #ff4d4d;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  line-height: 1;
+  padding: 0;
+  z-index: 10;
+  transition: transform 0.2s ease;
+}
+
+.modal-content .remove-btn:hover {
+  background-color: #cc0000;
+  transform: scale(1.2);
+}
