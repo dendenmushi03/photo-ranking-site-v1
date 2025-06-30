@@ -174,6 +174,23 @@
   display: none;
 }
 
+.modal-close {
+  position: absolute;
+  top: 12px;
+  right: 16px;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #333;
+  cursor: pointer;
+  z-index: 10000;
+}
+
+.modal-close:hover {
+  color: #ff3399;
+}
+
 </style>
 </head>
 <body>
@@ -349,6 +366,10 @@ function showVoteModal(photoId) {
   modal.classList.remove("hidden");
 }
 
+function closeModal() {
+  document.getElementById("voteModal").classList.add("hidden");
+}
+
   </script>
 
   <script src="history.js?v=2" defer></script>
@@ -356,14 +377,16 @@ function showVoteModal(photoId) {
   <!-- ✅ 投票完了モーダル -->
 <div id="voteModal" class="modal hidden">
   <div class="modal-content">
-    <h2>投票ありがとうございました！</h2>
+    <button class="modal-close" onclick="closeModal()">×</button>
+    <h2>投票完了！</h2>
     <img id="votedImage" src="" alt="投票画像" style="width: 200px; border-radius: 10px; margin-bottom: 1rem;" />
     <div style="display: flex; flex-direction: column; gap: 1rem; align-items: center;">
       <button onclick="shareOnTwitter()" style="background: none; border: none; cursor: pointer;">
         <img src="image/x-logo.png" alt="共有" style="width: 40px; height: 40px;" />
       </button>
-      <a href="javascript:goToChat()" class="nav-button">この子とチャットする</a>
-      <a href="javascript:voteAgain()" class="nav-button">違う子に投票する</a>
+      <a href="javascript:goToChat()" class="nav-button">💌 この子とチャットする</a>
+      <a href="rankings.html" class="nav-button">🏆 ランキングを見る</a>
+      <a href="javascript:voteAgain()" class="nav-button">🗳 違う子に投票する</a>
     </div>
   </div>
 </div>

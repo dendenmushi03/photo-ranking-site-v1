@@ -255,13 +255,12 @@
   if (success) {
     girlfriends.push({ characterId, imageUrl, timestamp });
     localStorage.setItem("girlfriends", JSON.stringify(girlfriends));
-    alert("告白成功！彼女リストに追加しました💘");
+    showConfessModal(true, imageUrl);  // ✅ 成功モーダル表示
   } else {
-    // ❗失敗した子を記録
     const rejected = JSON.parse(localStorage.getItem("rejectedGirls") || "[]");
     rejected.push(`${characterId}-${timestamp}`);
     localStorage.setItem("rejectedGirls", JSON.stringify(rejected));
-    alert("告白失敗…フラれてしまいました😢");
+    showConfessModal(false, imageUrl); // ✅ 失敗モーダル表示
   }
 
   fetch('/api/vote-history', {
@@ -269,8 +268,39 @@
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ imageUrl })
   }).catch(err => console.error("履歴削除失敗:", err));
+}
 
   location.reload();
+}
+
+function showConfessModal(success, imageUrl) {
+  const modal = document.getElementById("confessModal");
+  const message = document.getElementById("confessMessage");
+  const image = document.getElementById("confessImage");
+  const buttons = document.getElementById("confessButtons");
+
+  if (success) {
+    message.textContent = "告白成功！彼女リストに追加しました💘";
+    image.src = `/image/${imageUrl}`;
+    image.style.display = "block";
+    buttons.innerHTML = `
+      <a href="girlfriends.html" class="nav-button">彼女ページへ</a>
+      <a href="javascript:closeConfessModal()" class="nav-button">閉じる</a>
+    `;
+  } else {
+    message.textContent = "告白失敗…フラれてしまいました😢";
+    image.style.display = "none";
+    buttons.innerHTML = `
+      <a href="history.html" class="nav-button">他の人に告白する</a>
+      <a href="javascript:closeConfessModal()" class="nav-button">閉じる</a>
+    `;
+  }
+
+  modal.classList.remove("hidden");
+}
+
+function closeConfessModal() {
+  document.getElementById("confessModal").classList.add("hidden");
 }
 
   </script>
@@ -310,6 +340,16 @@
   const randomCount = Math.floor(Math.random() * 101) + 100; // 100〜200
   document.getElementById("signupNumber").textContent = randomCount;
   </script>
+
+  <!-- ✅ 告白モーダル -->
+<div id="confessModal" class="modal hidden">
+  <div class="modal-content" style="position: relative;">
+    <button class="modal-close" onclick="closeConfessModal()">×</button>
+    <h2 id="confessMessage"></h2>
+    <img id="confessImage" src="" alt="告白画像" style="width: 200px; border-radius: 10px; margin: 1rem auto; display: none;" />
+    <div id="confessButtons" style="display: flex; flex-direction: column; gap: 1rem; align-items: center;"></div>
+  </div>
+</div>
 
 </body>
 </html>
