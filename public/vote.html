@@ -297,8 +297,8 @@ var adstir_vars = {
   }))
   .then(res => res.ok ? res.json() : Promise.reject('履歴保存エラー'))
   .then(() => {
-    showVoteModal(); // ✅ モーダルを表示
-  })
+  showVoteModal(photoId); // ✅ 選択画像を渡す
+})
   .catch(error => {
     alert("投票中にエラーが発生しました。");
     console.error(error);
@@ -328,10 +328,6 @@ var adstir_vars = {
   const randomCount = Math.floor(Math.random() * 101) + 100; // 100〜200
   document.getElementById("signupNumber").textContent = randomCount;
 
-  function showVoteModal() {
-  document.getElementById("voteModal").classList.remove("hidden");
-}
-
 function shareOnTwitter() {
   const url = encodeURIComponent("https://myrankingphoto.com/vote.html");
   const text = encodeURIComponent("AI美女総選挙に投票したよ！No.1美女を選ぼう👑");
@@ -346,6 +342,13 @@ function voteAgain() {
   location.reload();
 }
 
+function showVoteModal(photoId) {
+  const modal = document.getElementById("voteModal");
+  const votedImg = document.getElementById("votedImage");
+  votedImg.src = `/image/${photoId}`;
+  modal.classList.remove("hidden");
+}
+
   </script>
 
   <script src="history.js?v=2" defer></script>
@@ -354,9 +357,14 @@ function voteAgain() {
 <div id="voteModal" class="modal hidden">
   <div class="modal-content">
     <h2>投票ありがとうございました！</h2>
-    <button onclick="shareOnTwitter()">SNSに共有する</button>
-    <button onclick="goToChat()">チャットする</button>
-    <button onclick="voteAgain()">違う子に投票する</button>
+    <img id="votedImage" src="" alt="投票画像" style="width: 200px; border-radius: 10px; margin-bottom: 1rem;" />
+    <div style="display: flex; justify-content: center; gap: 1rem;">
+      <button onclick="shareOnTwitter()" style="background: none; border: none; cursor: pointer;">
+        <img src="image/x-logo.png" alt="共有" style="width: 40px; height: 40px;" />
+      </button>
+      <button onclick="goToChat()">この子とチャットする</button>
+      <button onclick="voteAgain()">違う子に投票する</button>
+    </div>
   </div>
 </div>
 
