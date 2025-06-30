@@ -358,12 +358,12 @@ function showVoteModal(photoId) {
   <div class="modal-content">
     <h2>投票ありがとうございました！</h2>
     <img id="votedImage" src="" alt="投票画像" style="width: 200px; border-radius: 10px; margin-bottom: 1rem;" />
-    <div style="display: flex; justify-content: center; gap: 1rem;">
+    <div style="display: flex; flex-direction: column; gap: 1rem; align-items: center;">
       <button onclick="shareOnTwitter()" style="background: none; border: none; cursor: pointer;">
         <img src="image/x-logo.png" alt="共有" style="width: 40px; height: 40px;" />
       </button>
-      <button onclick="goToChat()">この子とチャットする</button>
-      <button onclick="voteAgain()">違う子に投票する</button>
+      <a href="javascript:goToChat()" class="nav-button">この子とチャットする</a>
+      <a href="javascript:voteAgain()" class="nav-button">違う子に投票する</a>
     </div>
   </div>
 </div>
