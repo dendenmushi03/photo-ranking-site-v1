@@ -235,7 +235,7 @@ var adstir_vars = {
     <div id="photo-container" class="photo-wrapper"></div>
     <div id="vote-container" class="button-wrapper">
       <button id="vote-button" type="submit">投票する</button>
-      <button id="reload-button" type="button">🔄画像更新</button>
+      <button id="reload-button" type="button">🔄</button>
     </div>
   </form>
 
@@ -378,7 +378,6 @@ function closeModal() {
   <!-- ✅ 投票完了モーダル -->
 <div id="voteModal" class="modal hidden">
   <div class="modal-content">
-    <button class="remove-btn modal-close" onclick="closeModal()">×</button>
     <h2>投票完了！</h2>
     <img id="votedImage" src="" alt="投票画像" style="width: 200px; border-radius: 10px; margin-bottom: 1rem;" />
     <div style="display: flex; flex-direction: column; gap: 1rem; align-items: center;">

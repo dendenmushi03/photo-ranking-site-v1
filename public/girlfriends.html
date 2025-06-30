@@ -238,12 +238,25 @@
     }
 
     function breakUp(characterId) {
-      if (!confirm("本当にこの子と別れますか？")) return;
-      const girlfriends = JSON.parse(localStorage.getItem("girlfriends") || "[]");
-      const updated = girlfriends.filter(g => g.characterId !== characterId);
-      localStorage.setItem("girlfriends", JSON.stringify(updated));
-      window.location.href = "history.html";
-    }
+  if (!confirm("本当にこの子と別れますか？")) return;
+
+  const girlfriends = JSON.parse(localStorage.getItem("girlfriends") || "[]");
+  const updated = girlfriends.filter(g => g.characterId !== characterId);
+  const ex = girlfriends.find(g => g.characterId === characterId);
+
+  // 彼女から削除
+  localStorage.setItem("girlfriends", JSON.stringify(updated));
+
+  // 再表示されないように rejected にも追加（characterId-timestamp 形式）
+  if (ex) {
+    const rejected = JSON.parse(localStorage.getItem("rejectedGirls") || "[]");
+    rejected.push(`${ex.characterId}-${ex.timestamp}`);
+    localStorage.setItem("rejectedGirls", JSON.stringify(rejected));
+  }
+
+  window.location.href = "history.html";
+}
+
   </script>
 
   <div class="underline-pink"></div>
