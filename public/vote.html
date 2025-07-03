@@ -19,11 +19,11 @@
   <meta property="og:description" content="AI美女写真の頂上決戦。あなたの1票がランキングを動かす!投票・投稿どちらもOK。推し美女でNo.1を狙え！">
   <meta property="og:url" content="https://myrankingphoto.com/vote.html">
   <meta property="og:type" content="website">
-  <meta property="og:image" content="https://myrankingphoto.com/og-image-new-9.jpg">
+  <meta property="og:image" content="https://myrankingphoto.com/og-image-new-8.jpg">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="可愛い子にたくさん出会える！">
   <meta name="twitter:description" content="AI美女の中からあなたの推しを選んで投票!今すぐNo.1を決めよう！">
-  <meta name="twitter:image" content="https://myrankingphoto.com/og-image-new-9.jpg">
+  <meta name="twitter:image" content="https://myrankingphoto.com/og-image-new-8.jpg">
 
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2449604975433002" crossorigin="anonymous"></script>
 
@@ -372,6 +372,7 @@ function showVoteModal(photoId) {
 
 function closeModal() {
   document.getElementById("voteModal").classList.add("hidden");
+  location.reload();  // 🔁 ページをリロードする
 }
 
   </script>
@@ -381,6 +382,7 @@ function closeModal() {
   <!-- ✅ 投票完了モーダル -->
 <div id="voteModal" class="modal hidden">
   <div class="modal-content">
+    <img src="image/remove.png" class="remove-icon" onclick="closeVoteModal()" alt="閉じる" />
     <h2>投票完了！</h2>
     <img id="votedImage" src="" alt="投票画像" style="width: 200px; border-radius: 10px; margin-bottom: 1rem;" />
     <div style="display: flex; flex-direction: column; gap: 1rem; align-items: center;">
