@@ -809,7 +809,7 @@ input[type="radio"] {
   justify-content: center;
   align-items: center;
   background: linear-gradient(45deg, #ffeb3b, #ffc107);
-  border: 2px solid #ff66cc;
+  border: 3px solid #ff66cc;
   border-radius: 0;
   padding: 0;
   margin: 0 auto;
