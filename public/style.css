@@ -803,3 +803,15 @@ input[type="radio"] {
   border-radius: 30px;
   text-align: center;
 }
+
+.ad-highlight {
+  border: 3px solid #ff69b4;
+  border-radius: 12px;
+  background: #fff0f8;
+  box-shadow: 0 0 15px rgba(255, 105, 180, 0.4);
+  padding: 10px;
+  margin: 20px auto;
+  text-align: center;
+  width: fit-content;
+  max-width: 95%;
+}
