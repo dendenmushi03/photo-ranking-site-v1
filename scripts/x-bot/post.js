@@ -1,11 +1,20 @@
-// Node 20 以降（Actionsで使う）を想定：fetch がグローバルにある
 const { TwitterApi } = require('twitter-api-v2');
 
 async function main() {
-  const text = process.env.POST_TEXT || '本日のAI美女はこちら 👉 ' + (process.env.TARGET_URL || 'https://example.com') + '?utm_source=x&utm_medium=social&utm_campaign=daily';
-  const imageUrl = process.env.IMAGE_URL; // 例: https://your-site/og/daily.png
+  const base = process.env.POST_TEXT || '本日のAI美女はこちら👇';
+  const url  = process.env.TARGET_URL || 'https://myrankingphoto.com/';
+  const stamp = new Date().toLocaleString('ja-JP', { timeZone: 'Asia/Tokyo', hour12: false });
+  const text = `${base} ${url} ${stamp}`.slice(0, 270);
+  const imageUrl = process.env.IMAGE_URL;
 
-  // OAuth 1.0a（長期トークンで安定運用）
+  console.log('env check:', {
+    hasKey: !!process.env.TWITTER_API_KEY,
+    hasSecret: !!process.env.TWITTER_API_SECRET,
+    hasAccessToken: !!process.env.TWITTER_ACCESS_TOKEN,
+    hasAccessSecret: !!process.env.TWITTER_ACCESS_SECRET,
+    hasImageUrl: !!imageUrl,
+  });
+
   const client = new TwitterApi({
     appKey: process.env.TWITTER_API_KEY,
     appSecret: process.env.TWITTER_API_SECRET,
@@ -15,20 +24,26 @@ async function main() {
 
   let mediaId;
   if (imageUrl) {
-    const res = await fetch(imageUrl);
-    if (!res.ok) throw new Error(`Image fetch failed: ${res.status}`);
-    const mime = res.headers.get('content-type') || 'image/jpeg';
-    const buffer = Buffer.from(await res.arrayBuffer());
-    // v1.1 のメディアアップロード（安定・簡単）
-    mediaId = await client.v1.uploadMedia(buffer, { mimeType: mime });
+    try {
+      const res = await fetch(imageUrl);
+      if (!res.ok) throw new Error(`Image fetch failed: ${res.status} ${res.statusText}`);
+      const mime = res.headers.get('content-type') || 'image/png';
+      const buf = Buffer.from(await res.arrayBuffer());
+      mediaId = await client.v1.uploadMedia(buf, { mimeType: mime });
+      console.log('media uploaded:', !!mediaId);
+    } catch (e) {
+      console.error('media upload error:', e);
+    }
   }
 
-  const payload = mediaId ? { text, media: { media_ids: [mediaId] } } : { text };
-  const result = await client.v2.tweet(payload); // v2 の POST /2/tweets
-  console.log('Posted', result?.data);
+  try {
+    const payload = mediaId ? { text, media: { media_ids: [mediaId] } } : { text };
+    const r = await client.v2.tweet(payload);
+    console.log('tweet result:', r?.data || r);
+  } catch (e) {
+    console.error('tweet error:', e?.data?.errors || e);
+    throw e;
+  }
 }
 
-main().catch(e => {
-  console.error(e);
-  process.exit(1);
-});
+main().catch(err => process.exit(1));

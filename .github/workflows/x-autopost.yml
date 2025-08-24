@@ -3,7 +3,6 @@ name: X Auto Post
 on:
   workflow_dispatch: {}
   schedule:
-    # GitHub ActionsはUTC。JST(UTC+9) 08:30/12:15/19:00/22:00 = UTC 23:30 / 03:15 / 10:00 / 13:00
     - cron: '30 23 * * *'
     - cron: '15 3 * * *'
     - cron: '0 10 * * *'
@@ -14,17 +13,23 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
-      - run: npm i
-      - run: node post.js
+
+      # ← サブフォルダ scripts/x-bot にだけ依存を入れる
+      - name: Install deps for x-bot
+        run: npm i --prefix scripts/x-bot
+
+      # ← ルートではなく、明示的にサブフォルダのpost.jsを実行
+      - name: Post to X
+        run: node scripts/x-bot/post.js
         env:
           TWITTER_API_KEY: ${{ secrets.TWITTER_API_KEY }}
           TWITTER_API_SECRET: ${{ secrets.TWITTER_API_SECRET }}
           TWITTER_ACCESS_TOKEN: ${{ secrets.TWITTER_ACCESS_TOKEN }}
           TWITTER_ACCESS_SECRET: ${{ secrets.TWITTER_ACCESS_SECRET }}
-          # ↓任意（固定文言や画像URLを差し替え）
           POST_TEXT: ${{ secrets.POST_TEXT }}
           TARGET_URL: ${{ secrets.TARGET_URL }}
-          IMAGE_URL: ${{ secrets.IMAGE_URL }}
+          IMAGE_URL: ${{ secrets.IMAGE_URL }}  # いま削除中なら undefined になり画像なしで投稿されます
