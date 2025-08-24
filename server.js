@@ -72,52 +72,69 @@ app.use((req, res, next) => {
   next();
 });
 
-
-// ==== OG画像 自動生成（satori + resvg）ここから ====
-// ESMライブラリなので動的importで読み込み
+// === OG画像生成（フォント検証＋family明示＋resvgにもフォント指定） ===
 async function renderOgPng({ title, subtitle, brand = 'myrankingphoto.com' }) {
   const satori = (await import('satori')).default;
   const { Resvg } = await import('@resvg/resvg-js');
 
-const regularPath = path.resolve(__dirname, 'assets/fonts/NotoSansJP-Regular.ttf');
-const boldPath    = path.resolve(__dirname, 'assets/fonts/NotoSansJP-Bold.ttf');
+  const regularPath = path.resolve(__dirname, 'assets/fonts/NotoSansJP-Regular.ttf');
+  const boldPath    = path.resolve(__dirname, 'assets/fonts/NotoSansJP-Bold.ttf');
 
-if (!fs.existsSync(regularPath) || !fs.existsSync(boldPath)) {
-  throw new Error(`Font not found. regular:${regularPath} bold:${boldPath}`);
-}
-const fontRegular = fs.readFileSync(regularPath);
-const fontBold    = fs.readFileSync(boldPath);
+  // フォント読込＆検証（空ファイルや読み込み失敗を検出）
+  const fontRegular = fs.readFileSync(regularPath);
+  const fontBold    = fs.readFileSync(boldPath);
+  if (!fontRegular?.length) throw new Error(`Font not found or empty: ${regularPath}`);
+  if (!fontBold?.length)    throw new Error(`Font not found or empty: ${boldPath}`);
 
-  const width = 1200, height = 630;
+  const width = 1200;
+  const height = 630;
 
+  // Satoriにフォント埋め込み＋ルートに fontFamily 明示
   const svg = await satori(
     {
       type: 'div',
       props: {
         style: {
-          width, height,
-          display: 'flex', flexDirection: 'column', justifyContent: 'center',
-          padding: 60, background: '#0f1115', position: 'relative'
+          width,
+          height,
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          padding: 60,
+          background: '#0f1115',
+          position: 'relative',
+          fontFamily: 'Noto Sans JP' // ★ 明示
         },
         children: [
           { type: 'div', props: { style: { color: '#fff', fontSize: 64, fontWeight: 700, lineHeight: 1.25 }, children: title } },
-          { type: 'div', props: { style: { color: '#cbd5e1', fontSize: 36, marginTop: 18 }, children: subtitle } },
+          { type: 'div', props: { style: { color: '#cbd5e1', fontSize: 36, marginTop: 18, fontWeight: 400 }, children: subtitle } },
           { type: 'div', props: { style: { position: 'absolute', bottom: 36, right: 60, color: '#8ab4ff', fontSize: 28 }, children: brand } },
           { type: 'div', props: { style: { position: 'absolute', top: 0, left: 0, width: 20, height: '100%', background: 'linear-gradient(180deg,#5eead4 0%,#2563eb 100%)' } } }
         ]
       }
     },
     {
-      width, height,
+      width,
+      height,
       fonts: [
-        { name: 'NotoSansJP', data: fontRegular, weight: 400 },
-        { name: 'NotoSansJP', data: fontBold,    weight: 700 },
-      ],
+        { name: 'Noto Sans JP', data: new Uint8Array(fontRegular), weight: 400, style: 'normal' },
+        { name: 'Noto Sans JP', data: new Uint8Array(fontBold),    weight: 700, style: 'bold' }
+      ]
     }
   );
 
-  const resvg = new Resvg(svg, { fitTo: { mode: 'width', value: width }, background: '#0f1115' });
-  return resvg.render().asPng(); // Buffer
+  // Resvg 側にもフォントパスを渡しておく（環境依存のフォント解決を避ける）
+  const resvg = new Resvg(svg, {
+    background: '#0f1115',
+    fitTo: { mode: 'width', value: width },
+    font: {
+      loadSystemFonts: false,
+      defaultFontFamily: 'Noto Sans JP',
+      fontFiles: [regularPath, boldPath]
+    }
+  });
+
+  return resvg.render().asPng();
 }
 
 function jstNow() {
@@ -159,6 +176,49 @@ app.get('/og/trending.png', (req, res) => handleOg(req, res, 'trending'));
 app.get('/og/top3.png',     (req, res) => handleOg(req, res, 'top3'));
 app.get('/og/new5.png',     (req, res) => handleOg(req, res, 'new5'));
 app.get('/og/today.png',    (req, res) => handleOg(req, res, 'today'));
+
+// デバッグ用：SVGのまま返す（フォント埋め込みが正しいかを確認）
+app.get('/og/daily.svg', async (req, res) => {
+  try {
+    const satori = (await import('satori')).default;
+
+    const regularPath = path.resolve(__dirname, 'assets/fonts/NotoSansJP-Regular.ttf');
+    const boldPath    = path.resolve(__dirname, 'assets/fonts/NotoSansJP-Bold.ttf');
+    const fontRegular = fs.readFileSync(regularPath);
+    const fontBold    = fs.readFileSync(boldPath);
+
+    const width = 1200, height = 630;
+    const svg = await satori(
+      {
+        type: 'div',
+        props: {
+          style: {
+            width, height, background: '#0f1115', color: '#fff',
+            display: 'flex', flexDirection: 'column', justifyContent: 'center',
+            padding: 60, fontFamily: 'Noto Sans JP'
+          },
+          children: [
+            { type: 'div', props: { style: { fontSize: 64, fontWeight: 700 }, children: '今日のAI美女' } },
+            { type: 'div', props: { style: { fontSize: 36, marginTop: 18 }, children: 'デバッグ：SVG 直表示' } }
+          ]
+        }
+      },
+      {
+        width, height,
+        fonts: [
+          { name: 'Noto Sans JP', data: new Uint8Array(fontRegular), weight: 400 },
+          { name: 'Noto Sans JP', data: new Uint8Array(fontBold),    weight: 700 }
+        ]
+      }
+    );
+
+    res.set('Content-Type', 'image/svg+xml; charset=utf-8');
+    res.send(svg);
+  } catch (e) {
+    res.status(500).send('SVG debug error: ' + String(e?.message || e));
+  }
+});
+
 // ==== OG画像 自動生成ここまで ====
 
 // ---- debug: フォント存在確認（必要に応じて削除可）
