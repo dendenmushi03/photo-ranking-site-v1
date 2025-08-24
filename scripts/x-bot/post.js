@@ -63,7 +63,7 @@ if (localPick) {
   console.log('picked local image:', localPick.fileName);
 } else {
   // 2) ローカルが無ければ従来通りのOG画像にフォールバック
-  let origin = 'https://myrankingphoto.com';
+  let origin = 'https://myrankingphoto.com/vote.html';
   try { origin = new URL(url).origin; } catch {}
   const pathByLabel = {
     daily:    '/og/daily.png',
