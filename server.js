@@ -79,8 +79,14 @@ async function renderOgPng({ title, subtitle, brand = 'myrankingphoto.com' }) {
   const satori = (await import('satori')).default;
   const { Resvg } = await import('@resvg/resvg-js');
 
-  const fontRegular = fs.readFileSync(path.join(__dirname, 'assets/fonts/NotoSansJP-Regular.ttf'));
-  const fontBold    = fs.readFileSync(path.join(__dirname, 'assets/fonts/NotoSansJP-Bold.ttf'));
+const regularPath = path.resolve(__dirname, 'assets/fonts/NotoSansJP-Regular.ttf');
+const boldPath    = path.resolve(__dirname, 'assets/fonts/NotoSansJP-Bold.ttf');
+
+if (!fs.existsSync(regularPath) || !fs.existsSync(boldPath)) {
+  throw new Error(`Font not found. regular:${regularPath} bold:${boldPath}`);
+}
+const fontRegular = fs.readFileSync(regularPath);
+const fontBold    = fs.readFileSync(boldPath);
 
   const width = 1200, height = 630;
 
@@ -140,10 +146,11 @@ async function handleOg(req, res, kind) {
     res.set('Content-Type', 'image/png');
     res.set('Cache-Control', 'public, max-age=3600');
     res.send(png);
+  
   } catch (e) {
-    console.error('OG generate error:', e);
-    res.status(500).send('OG generation error');
-  }
+  console.error('OG generate error:', e);
+  res.status(500).type('text/plain').send(`OG generation error: ${e.message}`);
+}
 }
 
 // 静的配信より前に登録すること！
@@ -154,7 +161,16 @@ app.get('/og/new5.png',     (req, res) => handleOg(req, res, 'new5'));
 app.get('/og/today.png',    (req, res) => handleOg(req, res, 'today'));
 // ==== OG画像 自動生成ここまで ====
 
-
+// ---- debug: フォント存在確認（必要に応じて削除可）
+app.get('/_debug/og', (req, res) => {
+  const rp = path.resolve(__dirname, 'assets/fonts/NotoSansJP-Regular.ttf');
+  const bp = path.resolve(__dirname, 'assets/fonts/NotoSansJP-Bold.ttf');
+  res.json({
+    node: process.version,
+    exists: { regular: fs.existsSync(rp), bold: fs.existsSync(bp) },
+    paths: { regular: rp, bold: bp }
+  });
+});
 
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(session({
