@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "@google/generative-ai": "^0.24.1",
+    "@resvg/resvg-js": "^2.6.2",
     "bcryptjs": "^3.0.2",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
@@ -22,6 +23,7 @@
     "node-cron": "^4.1.1",
     "node-fetch": "^3.3.2",
     "openai": "^5.0.2",
+    "satori": "^0.16.2",
     "sharp": "^0.34.1"
   },
   "author": "",

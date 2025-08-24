@@ -72,6 +72,90 @@ app.use((req, res, next) => {
   next();
 });
 
+
+// ==== OG画像 自動生成（satori + resvg）ここから ====
+// ESMライブラリなので動的importで読み込み
+async function renderOgPng({ title, subtitle, brand = 'myrankingphoto.com' }) {
+  const satori = (await import('satori')).default;
+  const { Resvg } = await import('@resvg/resvg-js');
+
+  const fontRegular = fs.readFileSync(path.join(__dirname, 'assets/fonts/NotoSansJP-Regular.ttf'));
+  const fontBold    = fs.readFileSync(path.join(__dirname, 'assets/fonts/NotoSansJP-Bold.ttf'));
+
+  const width = 1200, height = 630;
+
+  const svg = await satori(
+    {
+      type: 'div',
+      props: {
+        style: {
+          width, height,
+          display: 'flex', flexDirection: 'column', justifyContent: 'center',
+          padding: 60, background: '#0f1115', position: 'relative'
+        },
+        children: [
+          { type: 'div', props: { style: { color: '#fff', fontSize: 64, fontWeight: 700, lineHeight: 1.25 }, children: title } },
+          { type: 'div', props: { style: { color: '#cbd5e1', fontSize: 36, marginTop: 18 }, children: subtitle } },
+          { type: 'div', props: { style: { position: 'absolute', bottom: 36, right: 60, color: '#8ab4ff', fontSize: 28 }, children: brand } },
+          { type: 'div', props: { style: { position: 'absolute', top: 0, left: 0, width: 20, height: '100%', background: 'linear-gradient(180deg,#5eead4 0%,#2563eb 100%)' } } }
+        ]
+      }
+    },
+    {
+      width, height,
+      fonts: [
+        { name: 'NotoSansJP', data: fontRegular, weight: 400 },
+        { name: 'NotoSansJP', data: fontBold,    weight: 700 },
+      ],
+    }
+  );
+
+  const resvg = new Resvg(svg, { fitTo: { mode: 'width', value: width }, background: '#0f1115' });
+  return resvg.render().asPng(); // Buffer
+}
+
+function jstNow() {
+  return new Date(new Date().toLocaleString('en-US', { timeZone: 'Asia/Tokyo' }));
+}
+const YOUbi = ['日','月','火','水','木','金','土'];
+
+async function handleOg(req, res, kind) {
+  const now = jstNow();
+  const y = now.getFullYear(), m = String(now.getMonth()+1).padStart(2, '0'), d = String(now.getDate()).padStart(2, '0');
+  const dateLabel = `${y}.${m}.${d}（${YOUbi[now.getDay()]}）`;
+
+  let title = 'AI美女', subtitle = dateLabel;
+  if (kind === 'daily')    { title = '今日のAI美女';      subtitle = `本日のお題・更新：${dateLabel}`; }
+  if (kind === 'trending') { title = '急上昇タグ 🔥';      subtitle = `更新：${dateLabel}`; }
+  if (kind === 'top3')     { title = '昨日のTOP3 🏆';      subtitle = `更新：${dateLabel}`; }
+  if (kind === 'new5')     { title = '新着おすすめ5選 ✨';  subtitle = `更新：${dateLabel}`; }
+  if (kind === 'today')    { title = '本日のピックアップ';  subtitle = dateLabel; }
+
+  try {
+    const png = await renderOgPng({ title, subtitle });
+    const outDir = path.join(__dirname, 'public/og');
+    fs.mkdirSync(outDir, { recursive: true });
+    fs.writeFileSync(path.join(outDir, `${kind}.png`), png); // 生成物を静的パスにも保存
+
+    res.set('Content-Type', 'image/png');
+    res.set('Cache-Control', 'public, max-age=3600');
+    res.send(png);
+  } catch (e) {
+    console.error('OG generate error:', e);
+    res.status(500).send('OG generation error');
+  }
+}
+
+// 静的配信より前に登録すること！
+app.get('/og/daily.png',    (req, res) => handleOg(req, res, 'daily'));
+app.get('/og/trending.png', (req, res) => handleOg(req, res, 'trending'));
+app.get('/og/top3.png',     (req, res) => handleOg(req, res, 'top3'));
+app.get('/og/new5.png',     (req, res) => handleOg(req, res, 'new5'));
+app.get('/og/today.png',    (req, res) => handleOg(req, res, 'today'));
+// ==== OG画像 自動生成ここまで ====
+
+
+
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(session({
   secret: process.env.SECRET_KEY || 'fallback-secret',
@@ -84,11 +168,11 @@ app.use(session({
   }
 }));
 
-// ✅ ←ここに追記OK！
+// 投票API：session 設定の直後・app.get('/') より前に置く
 app.post('/api/vote', async (req, res) => {
   const { imageUrl, characterId } = req.body;
 
-  // Cookie または session から userId を取得（なければ新規発行）
+  // Cookie / session から userId を確定
   let userId = req.cookies.userId || req.session.userId;
   if (!userId) {
     userId = crypto.randomUUID();
@@ -101,12 +185,7 @@ app.post('/api/vote', async (req, res) => {
   }
 
   try {
-    await VoteLog.create({
-      imageUrl,
-      characterId,
-      timestamp: new Date(),
-      userId: userId
-    });
+    await VoteLog.create({ imageUrl, characterId, timestamp: new Date(), userId });
     res.json({ success: true });
   } catch (err) {
     console.error('投票履歴の保存エラー:', err);
@@ -251,35 +330,6 @@ conn.once('open', () => {
     if (files.length) await gfs.delete(files[0]._id);
     res.json({ message: 'Photo deleted' });
   });
-
-app.post('/api/vote', async (req, res) => {
-  const { imageUrl, characterId } = req.body;
-
-  // Cookie または session から userId を取得（なければ新規発行）
-  let userId = req.cookies.userId || req.session.userId;
-  if (!userId) {
-    userId = crypto.randomUUID();
-    res.cookie('userId', userId, {
-      maxAge: 365 * 24 * 60 * 60 * 1000, // 1年
-      httpOnly: false,
-      sameSite: 'lax',
-    });
-    req.session.userId = userId;
-  }
-
-  try {
-    await VoteLog.create({
-      imageUrl,
-      characterId,
-      timestamp: new Date(),
-      userId: userId
-    });
-    res.json({ success: true });
-  } catch (err) {
-    console.error('投票履歴の保存エラー:', err);
-    res.status(500).json({ error: '保存に失敗しました' });
-  }
-});
 
 app.get('/api/vote-history', async (req, res) => {
   const userId = req.cookies.userId || req.session.userId;
