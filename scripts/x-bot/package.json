@@ -1,0 +1,9 @@
+{
+  "name": "x-autopost",
+  "version": "1.0.0",
+  "private": true,
+  "type": "commonjs",
+  "dependencies": {
+    "twitter-api-v2": "^1.17.0"
+  }
+}
