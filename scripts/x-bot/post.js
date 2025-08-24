@@ -2,7 +2,7 @@ const { TwitterApi } = require('twitter-api-v2');
 
 async function main() {
   const base = process.env.POST_TEXT || '本日のAI美女はこちら👇';
-  const url  = process.env.TARGET_URL || 'https://myrankingphoto.com/';
+  const url  = process.env.TARGET_URL || 'https://myrankingphoto.com/vote.html';
   const stamp = new Date().toLocaleString('ja-JP', { timeZone: 'Asia/Tokyo', hour12: false });
   const text = `${base} ${url} ${stamp}`.slice(0, 270);
   const imageUrl = process.env.IMAGE_URL;
