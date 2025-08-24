@@ -14,7 +14,7 @@ async function urlExists(u) {
 async function main() {
   // ====== 文面とリンク ======
   const base  = process.env.POST_TEXT || '本日のAI美女はこちら👇';
-  const url   = process.env.TARGET_URL || 'https://myrankingphoto.com/';
+  const url   = process.env.TARGET_URL || 'https://myrankingphoto.com/vote.html';
   const stamp = new Date().toLocaleString('ja-JP', { timeZone: 'Asia/Tokyo', hour12: false });
 
   // ====== どの枠で投稿するか（FORCE_SLOT があればそれを優先：8/12/19/22） ======
@@ -22,7 +22,7 @@ async function main() {
   const hour   = Number(process.env.FORCE_SLOT) || nowJst.getHours();
 
   // ====== 画像URLを TARGET_URL から自動生成 ======
-  let origin = 'https://myrankingphoto.com';
+  let origin = 'https://myrankingphoto.com/vote.html';
   try { origin = new URL(url).origin; } catch {}
 
   // デフォルト「today.png」、時間帯で自動差し替え
