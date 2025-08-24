@@ -1,6 +1,26 @@
 // scripts/x-bot/post.js
 const { TwitterApi } = require('twitter-api-v2');
 
+const fs = require('fs');
+const path = require('path');
+
+// ローカル画像ディレクトリからランダムに1枚選ぶ
+// デフォルト: リポジトリ直下の `public/image`。ENVで `IMAGE_DIR` を上書き可（例: public/daily/image）
+function pickRandomLocalImage() {
+  const repoRoot = path.resolve(__dirname, '..', '..'); // ← scripts/x-bot からリポジトリルートへ
+  const configured = process.env.IMAGE_DIR || 'public/image';
+  const dir = path.isAbsolute(configured) ? configured : path.join(repoRoot, configured);
+  const allow = new Set(['.png', '.jpg', '.jpeg', '.gif', '.webp']);
+  try {
+    const files = fs.readdirSync(dir).filter(f => allow.has(path.extname(f).toLowerCase()));
+    if (files.length === 0) return null;
+    const pick = files[Math.floor(Math.random() * files.length)];
+    return { absPath: path.join(dir, pick), fileName: pick };
+  } catch {
+    return null;
+  }
+}
+
 // 画像の存在チェック（HEAD）
 async function urlExists(u) {
   try {
@@ -21,28 +41,48 @@ async function main() {
   const nowJst = new Date(new Date().toLocaleString('en-US', { timeZone: 'Asia/Tokyo' }));
   const hour   = Number(process.env.FORCE_SLOT) || nowJst.getHours();
 
-  // ====== 画像URLを TARGET_URL から自動生成 ======
-  let origin = 'https://myrankingphoto.com/vote.html';
+// ====== 投稿テキスト（時間帯で変える） ======
+let label = 'daily';
+let text = `${base} ${url}`;
+if (hour === 12) { label = 'trending'; text = `急上昇タグ 🔥 ${url}`; }
+else if (hour === 19) { label = 'top3';     text = `昨日のTOP3 🏆 ${url}`; }
+else if (hour === 22) { label = 'new5';     text = `新着おすすめ5選 ✨ ${url}`; }
+
+// ====== 添付画像の決定：ローカル > OG画像 ======
+let imageBuffer = null;       // ローカル画像を使う場合のバッファ
+let imageMime   = null;
+let remoteImageUrl = '';      // OG画像にフォールバックする場合のURL
+
+// 1) まずローカルからランダムに選ぶ
+const localPick = pickRandomLocalImage();
+if (localPick) {
+  const ext = path.extname(localPick.fileName).toLowerCase();
+  const mimeMap = { '.png':'image/png', '.jpg':'image/jpeg', '.jpeg':'image/jpeg', '.gif':'image/gif', '.webp':'image/webp' };
+  imageMime   = mimeMap[ext] || 'image/png';
+  imageBuffer = fs.readFileSync(localPick.absPath);
+  console.log('picked local image:', localPick.fileName);
+} else {
+  // 2) ローカルが無ければ従来通りのOG画像にフォールバック
+  let origin = 'https://myrankingphoto.com';
   try { origin = new URL(url).origin; } catch {}
-
-  // デフォルト「today.png」、時間帯で自動差し替え
-  let label = 'daily', imgPath = '/og/daily.png', text = base + ' ' + url;
-  if (hour === 12) { label = 'trending'; imgPath = '/og/trending.png'; text = '急上昇タグ 🔥 ' + url; }
-  else if (hour === 19){ label = 'top3'; imgPath = '/og/top3.png'; text = '昨日のTOP3 🏆 ' + url; }
-  else if (hour === 22){ label = 'new5'; imgPath = '/og/new5.png'; text = '新着おすすめ5選 ✨ ' + url; }
-
-  let imageUrl = origin + imgPath;
+  const pathByLabel = {
+    daily:    '/og/daily.png',
+    trending: '/og/trending.png',
+    top3:     '/og/top3.png',
+    new5:     '/og/new5.png',
+  };
+  remoteImageUrl = origin + (pathByLabel[label] || '/og/daily.png');
 
   // 画像が無ければ today.png にフォールバック
-  if (!(await urlExists(imageUrl))) {
+  if (!(await urlExists(remoteImageUrl))) {
     const fallback = origin + '/og/today.png';
-    if (await urlExists(fallback)) imageUrl = fallback;
-    else imageUrl = ''; // それも無ければテキストのみ
+    remoteImageUrl = (await urlExists(fallback)) ? fallback : '';
   }
+}
 
-  const textWithStamp = `${text} ${stamp}`.slice(0, 270);
+const textWithStamp = `${text} ${stamp}`.slice(0, 270);
 
-  console.log('slot:', { hour, label, imageUrl });
+console.log('slot:', { hour, label, useLocal: !!imageBuffer, remoteImageUrl });
 
   // ====== X 認証 ======
   const client = new TwitterApi({
@@ -52,16 +92,20 @@ async function main() {
     accessSecret: process.env.TWITTER_ACCESS_SECRET,
   });
 
-  // ====== 画像アップロード（あれば） ======
-  let mediaId;
-  if (imageUrl) {
-    const res = await fetch(imageUrl);
-    if (!res.ok) throw new Error(`Image fetch failed: ${res.status} ${res.statusText}`);
-    const mime = res.headers.get('content-type') || 'image/png';
-    const buf  = Buffer.from(await res.arrayBuffer());
-    mediaId = await client.v1.uploadMedia(buf, { mimeType: mime });
-    console.log('media uploaded:', !!mediaId);
-  }
+// ====== 画像アップロード（あれば） ======
+let mediaId;
+if (imageBuffer) {
+  // ローカル画像をそのままアップロード
+  mediaId = await client.v1.uploadMedia(imageBuffer, { mimeType: imageMime || 'image/png' });
+  console.log('media uploaded (local):', !!mediaId);
+} else if (remoteImageUrl) {
+  const res = await fetch(remoteImageUrl);
+  if (!res.ok) throw new Error(`Image fetch failed: ${res.status} ${res.statusText}`);
+  const mime = res.headers.get('content-type') || 'image/png';
+  const buf  = Buffer.from(await res.arrayBuffer());
+  mediaId = await client.v1.uploadMedia(buf, { mimeType: mime });
+  console.log('media uploaded (remote):', !!mediaId);
+}
 
   // ====== 投稿 ======
   const payload = mediaId ? { text: textWithStamp, media: { media_ids: [mediaId] } } : { text: textWithStamp };

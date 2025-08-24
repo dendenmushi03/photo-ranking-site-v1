@@ -22,7 +22,6 @@ jobs:
       - name: Install deps for x-bot
         run: npm i --prefix scripts/x-bot
 
-      # ← ルートではなく、明示的にサブフォルダのpost.jsを実行
       - name: Post to X
         run: node scripts/x-bot/post.js
         env:
@@ -32,4 +31,4 @@ jobs:
           TWITTER_ACCESS_SECRET: ${{ secrets.TWITTER_ACCESS_SECRET }}
           POST_TEXT: ${{ secrets.POST_TEXT }}
           TARGET_URL: ${{ secrets.TARGET_URL }}
-          IMAGE_URL: ${{ secrets.IMAGE_URL }}  # いま削除中なら undefined になり画像なしで投稿されます
+          IMAGE_DIR: public/image     # ← ここを追加。public/image からランダムで1枚添付
