@@ -37,16 +37,25 @@ async function main() {
   const url   = process.env.TARGET_URL || 'https://myrankingphoto.com/vote.html';
   const stamp = new Date().toLocaleString('ja-JP', { timeZone: 'Asia/Tokyo', hour12: false });
 
+  // ハッシュタグ（空 or 未設定は無視）。カンマ/空白区切りどちらでもOK、先頭に # が無い語は自動で付与
+const rawTags  = process.env.POST_HASHTAGS || '';
+const hashtags = rawTags
+  .split(/[,\s]+/)           // カンマ or 連続空白で分割
+  .filter(Boolean)           // 空要素除去
+  .map(t => (t.startsWith('#') ? t : `#${t}`))
+  .join(' ');
+
   // ====== どの枠で投稿するか（FORCE_SLOT があればそれを優先：8/12/19/22） ======
   const nowJst = new Date(new Date().toLocaleString('en-US', { timeZone: 'Asia/Tokyo' }));
   const hour   = Number(process.env.FORCE_SLOT) || nowJst.getHours();
 
-// ====== 投稿テキスト（時間帯で変える） ======
-let label = 'daily';
-let text = `${base} ${url}`;
-if (hour === 12) { label = 'trending'; text = `急上昇タグ 🔥 ${url}`; }
-else if (hour === 19) { label = 'top3';     text = `昨日のTOP3 🏆 ${url}`; }
-else if (hour === 22) { label = 'new5';     text = `新着おすすめ5選 ✨ ${url}`; }
+// テキスト末尾にハッシュタグがあれば付与
+const withTags = (t) => hashtags ? `${t} ${hashtags}` : t;
+
+let label = 'daily', imgPath = '/og/daily.png', text = withTags(`${base} ${url}`);
+if (hour === 14) { label = 'trending'; imgPath = '/og/trending.png'; text = withTags(`急上昇タグ 🔥 ${url}`); }
+else if (hour === 18){ label = 'top3';      imgPath = '/og/top3.png';      text = withTags(`昨日のTOP3 🏆 ${url}`); }
+else if (hour === 22){ label = 'new5';      imgPath = '/og/new5.png';      text = withTags(`新着おすすめ5選 ✨ ${url}`); }
 
 // ====== 添付画像の決定：ローカル > OG画像 ======
 let imageBuffer = null;       // ローカル画像を使う場合のバッファ
@@ -63,7 +72,7 @@ if (localPick) {
   console.log('picked local image:', localPick.fileName);
 } else {
   // 2) ローカルが無ければ従来通りのOG画像にフォールバック
-  let origin = 'https://myrankingphoto.com/vote.html';
+  let origin = 'https://myrankingphoto.com';
   try { origin = new URL(url).origin; } catch {}
   const pathByLabel = {
     daily:    '/og/daily.png',
