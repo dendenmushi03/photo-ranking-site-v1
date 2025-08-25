@@ -12,15 +12,25 @@ jobs:
   post:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout (with LFS)
+        uses: actions/checkout@v4
+        with:
+          lfs: true
 
-      - uses: actions/setup-node@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
           node-version: '20'
 
-      # ← サブフォルダ scripts/x-bot にだけ依存を入れる
       - name: Install deps for x-bot
         run: npm i --prefix scripts/x-bot
+
+      - name: Debug image dir and slot
+        run: |
+          node -e "const fs=require('fs'),p=process.env.IMAGE_DIR||'public/image';try{const a=fs.readdirSync(p).filter(f=>/\.(png|jpg|jpeg|gif|webp)$/i.test(f));console.log('[DEBUG] IMAGE_DIR=',p,'count=',a.length,'sample=',a.slice(0,5));}catch(e){console.log('[DEBUG] no IMAGE_DIR',e.message)}"
+          node -e "const nowJst=new Date(new Date().toLocaleString('en-US',{timeZone:'Asia/Tokyo'}));console.log('[DEBUG] JST hour=',nowJst.getHours());"
+        env:
+          IMAGE_DIR: public/image
 
       - name: Post to X
         run: node scripts/x-bot/post.js
@@ -31,4 +41,4 @@ jobs:
           TWITTER_ACCESS_SECRET: ${{ secrets.TWITTER_ACCESS_SECRET }}
           POST_TEXT: ${{ secrets.POST_TEXT }}
           TARGET_URL: ${{ secrets.TARGET_URL }}
-          IMAGE_DIR: public/image     # ← ここを追加。public/image からランダムで1枚添付
+          IMAGE_DIR: public/image
