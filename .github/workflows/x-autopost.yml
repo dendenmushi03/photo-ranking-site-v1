@@ -42,3 +42,4 @@ jobs:
           POST_TEXT: ${{ secrets.POST_TEXT }}
           TARGET_URL: ${{ secrets.TARGET_URL }}
           IMAGE_DIR: public/image
+          POST_HASHTAGS: ${{ secrets.POST_HASHTAGS }}
