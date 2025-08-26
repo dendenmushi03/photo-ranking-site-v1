@@ -56,9 +56,9 @@ const stamp = new Date().toLocaleString('ja-JP', { timeZone: 'Asia/Tokyo', hour1
 
 const hasAnyUrl = /https?:\/\/\S+/i.test(base);
 const NL = '\n';
-// base に URL が無ければ、URL の「上に1行」「下に1行」の空行を入れて差し込む
-// ＝ base + \n\n + URL + \n\n
-let body = hasAnyUrl ? base : `${base}${NL}${NL}${url}${NL}${NL}`;
+// base に URL が無ければ、URL の「下だけ1行」の空行を入れて差し込む
+// ＝ base + \n + URL + \n\n
+let body = hasAnyUrl ? base : `${base}${NL}${url}${NL}${NL}`;
 
 // （任意）デバッグしたいとき
 console.log('[DEBUG] url=', JSON.stringify(url), 'hasAnyUrl=', hasAnyUrl);
