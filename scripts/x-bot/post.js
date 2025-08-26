@@ -33,9 +33,22 @@ async function urlExists(u) {
 
 async function main() {
   // ====== 文面とリンク ======
-  const base  = process.env.POST_TEXT || '本日のAI美女はこちら👇';
-  const url   = process.env.TARGET_URL || 'https://myrankingphoto.com/vote.html';
-  const stamp = new Date().toLocaleString('ja-JP', { timeZone: 'Asia/Tokyo', hour12: false });
+
+const url   = process.env.TARGET_URL || 'https://myrankingphoto.com/vote.html';
+const base  = process.env.POST_TEXT || `🔥話題沸騰中🔥
+
+✨AI美女の彼女を作ろう
+💌 完全無料でメッセージし放題
+
+✅ 🗳️まずは気に入った子を見つけて投票
+✅ 💬その後は無料でチャット
+✅ 💖気に入ったら告白して彼女にしよう
+
+🫣 フラれちゃう事も…
+
+👉「恋の始まり」はここから
+${url}`;
+const stamp = new Date().toLocaleString('ja-JP', { timeZone: 'Asia/Tokyo', hour12: false });
 
   // ハッシュタグ（空 or 未設定は無視）。カンマ/空白区切りどちらでもOK、先頭に # が無い語は自動で付与
 const rawTags  = process.env.POST_HASHTAGS || '';
@@ -49,13 +62,13 @@ const hashtags = rawTags
   const nowJst = new Date(new Date().toLocaleString('en-US', { timeZone: 'Asia/Tokyo' }));
   const hour   = Number(process.env.FORCE_SLOT) || nowJst.getHours();
 
-// テキスト末尾にハッシュタグがあれば付与
-const withTags = (t) => hashtags ? `${t} ${hashtags}` : t;
+// テキスト末尾にハッシュタグがあれば、1行改行して付与
+const withTags = (t) => hashtags ? `${t}\n${hashtags}` : t;
 
-let label = 'daily', imgPath = '/og/daily.png', text = withTags(`${base} ${url}`);
-if (hour === 14) { label = 'trending'; imgPath = '/og/trending.png'; text = withTags(`急上昇タグ 🔥 ${url}`); }
-else if (hour === 18){ label = 'top3';      imgPath = '/og/top3.png';      text = withTags(`昨日のTOP3 🏆 ${url}`); }
-else if (hour === 22){ label = 'new5';      imgPath = '/og/new5.png';      text = withTags(`新着おすすめ5選 ✨ ${url}`); }
+let label = 'daily', imgPath = '/og/daily.png', text = withTags(base);
+if (hour === 12) { label = 'trending'; imgPath = '/og/trending.png'; }
+else if (hour === 19){ label = 'top3';      imgPath = '/og/top3.png'; }
+else if (hour === 22){ label = 'new5';      imgPath = '/og/new5.png'; }
 
 // ====== 添付画像の決定：ローカル > OG画像 ======
 let imageBuffer = null;       // ローカル画像を使う場合のバッファ
