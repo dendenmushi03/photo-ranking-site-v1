@@ -34,8 +34,16 @@ async function urlExists(u) {
 async function main() {
   // ====== 文面とリンク ======
 
-const url   = process.env.TARGET_URL || 'https://myrankingphoto.com/vote.html';
-const base  = process.env.POST_TEXT || `🔥話題沸騰中🔥
+  // ====== 文面とリンク ======
+const FALLBACK_URL = 'https://myrankingphoto.com/vote.html';
+
+// Secrets の空白混入対策：trim してから採用。空ならフォールバック。
+const urlEnv = (process.env.TARGET_URL || '').trim();
+const url    = urlEnv || FALLBACK_URL;
+
+// POST_TEXT も trim。未設定ならデフォルト文面を使う
+const baseEnv = (process.env.POST_TEXT || '').trim();
+const base    = baseEnv || `🔥話題沸騰中🔥
 
 ✨AI美女の彼女を作ろう
 💌 完全無料でメッセージし放題
@@ -48,7 +56,16 @@ const base  = process.env.POST_TEXT || `🔥話題沸騰中🔥
 
 👉「恋の始まり」はここから
 ${url}`;
+
 const stamp = new Date().toLocaleString('ja-JP', { timeZone: 'Asia/Tokyo', hour12: false });
+
+// 本文に“何らかの URL”が既にあれば追記しない（自サイト以外のURLにも対応）
+const hasAnyUrl = /https?:\/\/\S+/i.test(base);
+const NL = '\n';
+let body = hasAnyUrl ? base : `${base}${NL}${url}`;
+
+// （任意）デバッグしたいとき
+console.log('[DEBUG] url=', JSON.stringify(url), 'hasAnyUrl=', hasAnyUrl);
 
   // ハッシュタグ（空 or 未設定は無視）。カンマ/空白区切りどちらでもOK、先頭に # が無い語は自動で付与
 const rawTags  = process.env.POST_HASHTAGS || '';
