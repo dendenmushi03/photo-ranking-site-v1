@@ -48,6 +48,8 @@ const base    = baseEnv || `🔥話題沸騰中🔥
 ✨ AIが生んだ奇跡の美女が集結
 💌 推しに投票してNo.1を決めよう！
 
+👇 こちらから 👇
+
 ${url}`;
 
 const stamp = new Date().toLocaleString('ja-JP', { timeZone: 'Asia/Tokyo', hour12: false });
