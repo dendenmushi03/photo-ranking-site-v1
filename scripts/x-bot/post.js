@@ -45,24 +45,18 @@ const url    = urlEnv || FALLBACK_URL;
 const baseEnv = (process.env.POST_TEXT || '').trim();
 const base    = baseEnv || `🔥話題沸騰中🔥
 
-✨AI美女の彼女を作ろう
-💌 完全無料でメッセージし放題
+✨ AIが生んだ奇跡の美女が集結
+💌 推しに投票してNo.1を決めよう！
 
-✅ 🗳️まずは気に入った子を見つけて投票
-✅ 💬その後は無料でチャット
-✅ 💖気に入ったら告白して彼女にしよう
-
-🫣 フラれちゃう事も…
-
-👉「恋の始まり」はここから
 ${url}`;
 
 const stamp = new Date().toLocaleString('ja-JP', { timeZone: 'Asia/Tokyo', hour12: false });
 
-// 本文に“何らかの URL”が既にあれば追記しない（自サイト以外のURLにも対応）
 const hasAnyUrl = /https?:\/\/\S+/i.test(base);
 const NL = '\n';
-let body = hasAnyUrl ? base : `${base}${NL}${url}`;
+// base に URL が無ければ、URL の「上に1行」「下に1行」の空行を入れて差し込む
+// ＝ base + \n\n + URL + \n\n
+let body = hasAnyUrl ? base : `${base}${NL}${NL}${url}${NL}${NL}`;
 
 // （任意）デバッグしたいとき
 console.log('[DEBUG] url=', JSON.stringify(url), 'hasAnyUrl=', hasAnyUrl);
@@ -82,7 +76,7 @@ const hashtags = rawTags
 // テキスト末尾にハッシュタグがあれば、1行改行して付与
 const withTags = (t) => hashtags ? `${t}\n${hashtags}` : t;
 
-let label = 'daily', text = withTags(base);
+let label = 'daily', text = withTags(body);
 if (hour === 12) label = 'trending';
 else if (hour === 19) label = 'top3';
 else if (hour === 22) label = 'new5';
