@@ -66,6 +66,11 @@ const hashtags = rawTags
 const withTags = (t) => hashtags ? `${t}\n${hashtags}` : t;
 
 let label = 'daily', imgPath = '/og/daily.png', text = withTags(base);
+const NL = '\n';
+if (!base.includes(url)) {
+  // baseにURLが無ければ1行改行してURLを付与
+  text = withTags(`${base}${NL}${url}`);
+}
 if (hour === 12) { label = 'trending'; imgPath = '/og/trending.png'; }
 else if (hour === 19){ label = 'top3';      imgPath = '/og/top3.png'; }
 else if (hour === 22){ label = 'new5';      imgPath = '/og/new5.png'; }
