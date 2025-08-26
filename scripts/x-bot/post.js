@@ -65,15 +65,10 @@ const hashtags = rawTags
 // テキスト末尾にハッシュタグがあれば、1行改行して付与
 const withTags = (t) => hashtags ? `${t}\n${hashtags}` : t;
 
-let label = 'daily', imgPath = '/og/daily.png', text = withTags(base);
-const NL = '\n';
-if (!base.includes(url)) {
-  // baseにURLが無ければ1行改行してURLを付与
-  text = withTags(`${base}${NL}${url}`);
-}
-if (hour === 12) { label = 'trending'; imgPath = '/og/trending.png'; }
-else if (hour === 19){ label = 'top3';      imgPath = '/og/top3.png'; }
-else if (hour === 22){ label = 'new5';      imgPath = '/og/new5.png'; }
+let label = 'daily', text = withTags(base);
+if (hour === 12) label = 'trending';
+else if (hour === 19) label = 'top3';
+else if (hour === 22) label = 'new5';
 
 // ====== 添付画像の決定：ローカル > OG画像 ======
 let imageBuffer = null;       // ローカル画像を使う場合のバッファ
@@ -107,7 +102,11 @@ if (localPick) {
   }
 }
 
-const textWithStamp = `${text} ${stamp}`.slice(0, 270);
+// 280文字制限を考慮して、先に本文をカット→最後にタイムスタンプを付与
+const stampStr = ` ${stamp}`;
+const MAX = 280 - stampStr.length; // 余白を確保
+const textTrimmed = text.length > MAX ? text.slice(0, MAX) : text;
+const textWithStamp = textTrimmed + stampStr;
 
 console.log('slot:', { hour, label, useLocal: !!imageBuffer, remoteImageUrl });
 
