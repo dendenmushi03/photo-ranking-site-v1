@@ -22,8 +22,23 @@ jobs:
         with:
           node-version: '20'
 
+                # npm のレジストリを強制的に npmjs に固定（403対策）
+      - name: Force public npm registry
+        run: |
+          npm config set registry https://registry.npmjs.org/
+          npm config set always-auth false
+          npm config delete @*registry || true
+          npm config list
+
       - name: Install deps for x-bot
-        run: npm i --prefix scripts/x-bot
+        working-directory: scripts/x-bot
+        run: |
+          # lock があれば ci、なければ install
+          if [ -f package-lock.json ]; then
+            npm ci
+          else
+            npm install
+          fi
 
       - name: Debug image dir and slot
         run: |
