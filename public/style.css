@@ -836,3 +836,20 @@ input[type="radio"] {
     box-shadow: 0 0 12px rgba(255, 102, 204, 0.5);
   }
 }
+
+/* ランキング導線ボタン（上のピンクライン直前） */
+.btn-ranking {
+  display: block;
+  width: min(640px, 92%);
+  margin: 0.5rem auto 0.75rem;   /* 上下の余白：ピンクラインと近すぎないように */
+  padding: 14px 18px;
+  border-radius: 12px;
+  font-size: 18px;
+  font-weight: 700;
+  text-align: center;
+  color: #fff;
+  text-decoration: none;
+  background: linear-gradient(90deg, #7b5cff, #ff4d8d);
+  box-shadow: 0 6px 14px rgba(255, 77, 141, .3);
+}
+.btn-ranking:active { transform: translateY(1px); }
