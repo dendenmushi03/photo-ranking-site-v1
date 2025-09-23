@@ -233,6 +233,23 @@ app.get('/_debug/og', (req, res) => {
 });
 
 app.use(express.static(path.join(__dirname, 'public')));
+
+// 入口ページで使う静的ファイル
+app.use('/assets', express.static(path.join(__dirname, 'assets')));
+
+// ルート直下の home.css を返す
+app.get('/home.css', (req, res) => {
+  res.type('text/css').sendFile(path.join(__dirname, 'home.css'));
+});
+
+// 入口ページ（home.html）が参照する静的ファイルを配信
+app.use('/assets', express.static(path.join(__dirname, 'assets')));
+
+// ルート直下の home.css を配信（public 配下ではないため個別に返す）
+app.get('/home.css', (req, res) => {
+  res.type('text/css').sendFile(path.join(__dirname, 'home.css'));
+});
+
 app.use(session({
   secret: process.env.SECRET_KEY || 'fallback-secret',
   resave: false,
@@ -269,8 +286,9 @@ app.post('/api/vote', async (req, res) => {
   }
 });
 
+// 入口ページ（LP）
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public/index.html'));
+  res.sendFile(path.join(__dirname, 'home.html'));
 });
 
 const upload = multer({

@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>AI美女ランキング | 入口ページ</title>
+  <meta name="description" content="AI生成美女に投票してランキング化。毎日更新・不正対策・推し管理・チャット機能など、遊び方いろいろ。まずは今日の美女をチェック！" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./home.css" />
+</head>
+<body>
+  <!-- ===== Header ===== -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <div class="brand">
+        <img src="./assets/logo.svg" alt="" class="logo" />
+        <span class="brand-name">AI Beauty Rank</span>
+      </div>
+      <nav class="nav">
+        <a href="#features">特徴</a>
+        <a href="#howto">使い方</a>
+        <a href="#preview">ランキング</a>
+        <a href="#faq">FAQ</a>
+        <a class="btn ghost small" href="./today.html">今日のAI美女</a>
+        <a class="btn primary small" href="./vote.html">今すぐ投票</a>
+      </nav>
+      <button class="nav-toggle" aria-label="menu">☰</button>
+    </div>
+  </header>
+
+  <!-- ===== Hero ===== -->
+  <section class="hero">
+    <div class="container hero-inner">
+      <div class="hero-copy">
+        <h1>推しのAI美女に、<br class="sp-only">一票を。</h1>
+        <p class="lead">
+          ランダム表示から“直感”で選ぶ投票体験。<br/>
+          集計は自動、<span class="underline">毎日ランキング更新</span>。<br class="sp-only">推しは「彼女」にも登録できます。
+        </p>
+        <div class="cta">
+          <a class="btn primary xl" href="./vote.html">投票をはじめる</a>
+          <a class="btn ghost xl" href="./rankings.html">最新ランキングを見る</a>
+        </div>
+        <div class="badges">
+          <div class="badge"><strong id="stat-photos">--</strong><span>掲載枚数</span></div>
+          <div class="badge"><strong id="stat-votes">--</strong><span>累計投票</span></div>
+          <div class="badge"><strong id="stat-today">--</strong><span>今日の更新</span></div>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <div class="phone-mock">
+          <img src="./assets/preview-hero.jpg" alt="投票画面プレビュー" />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Features ===== -->
+  <section id="features" class="section">
+    <div class="container">
+      <h2 class="section-title">このサイトでできること</h2>
+      <div class="grid features-grid">
+        <article class="card">
+          <h3>ランダム投票</h3>
+          <p>AI美女をランダム表示。迷ったら直感で1枚に投票！偏りを抑えた表示ロジックでフェアに。</p>
+        </article>
+        <article class="card">
+          <h3>ランキング自動集計</h3>
+          <p>投票はサーバーで即時集計。<code>rankings.html</code> と <code>rankings-others.html</code> に段階表示。</p>
+        </article>
+        <article class="card">
+          <h3>推し管理 & チャット</h3>
+          <p>「告白する」で彼女ページに追加。履歴から「この子と話す」でAIチャットも。</p>
+        </article>
+        <article class="card">
+          <h3>重複・類似対策</h3>
+          <p>pHashで類似チェック。重複の警告や承認フローでクオリティ維持。</p>
+        </article>
+        <article class="card">
+          <h3>毎日更新</h3>
+          <p><code>今日のAI美女</code>で日替わり表示。自動生成スクリプトと連携可能。</p>
+        </article>
+        <article class="card">
+          <h3>広告/アフィ最適化</h3>
+          <p>将来の収益化に合わせて広告枠やOGP最適化を設計済み。</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== How it works ===== -->
+  <section id="howto" class="section alt">
+    <div class="container">
+      <h2 class="section-title">はじめ方（3ステップ）</h2>
+      <ol class="steps">
+        <li>
+          <span class="num">1</span>
+          <h3>投票ページへ</h3>
+          <p><a href="./vote.html">vote.html</a> を開くとAI美女が表示されます。</p>
+        </li>
+        <li>
+          <span class="num">2</span>
+          <h3>1枚を選んで投票</h3>
+          <p>気に入った1枚を選んで投票。結果は即座に集計されます。</p>
+        </li>
+        <li>
+          <span class="num">3</span>
+          <h3>ランキング/推し管理</h3>
+          <p><a href="./rankings.html">ランキング</a>で全体トレンド、<a href="./history.html">履歴</a>や<a href="./girlfriends.html">彼女ページ</a>で推しを管理。</p>
+        </li>
+      </ol>
+      <div class="cta center">
+        <a class="btn primary" href="./vote.html">今すぐ投票</a>
+        <a class="btn ghost" href="./today.html">今日のAI美女を見る</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Preview (Ranking cards) ===== -->
+  <section id="preview" class="section">
+    <div class="container">
+      <h2 class="section-title">最新ランキングのプレビュー</h2>
+      <div class="grid preview-grid">
+        <!-- 3枚だけプレビュー。サーバ側で埋め込みに差し替えてOK -->
+        <a class="preview-card" href="./rankings.html">
+          <img src="./assets/sample1.jpg" alt="Rank #1" />
+          <span class="ribbon">#1</span>
+        </a>
+        <a class="preview-card" href="./rankings.html">
+          <img src="./assets/sample2.jpg" alt="Rank #2" />
+          <span class="ribbon">#2</span>
+        </a>
+        <a class="preview-card" href="./rankings.html">
+          <img src="./assets/sample3.jpg" alt="Rank #3" />
+          <span class="ribbon">#3</span>
+        </a>
+      </div>
+      <div class="cta center">
+        <a class="btn primary" href="./rankings.html">全ランキングを見る</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Safety / Policy ===== -->
+  <section class="section alt">
+    <div class="container">
+      <h2 class="section-title">ポリシー & ガイドライン</h2>
+      <div class="grid policy-grid">
+        <div class="card">
+          <h3>コンテンツ方針</h3>
+          <p>不適切・公序良俗に反する画像の掲載は禁止。通報機能を順次導入します。</p>
+        </div>
+        <div class="card">
+          <h3>プライバシー</h3>
+          <p>生成画像中心。個人情報の収集は最小限にし、アクセス解析は匿名化します。</p>
+        </div>
+        <div class="card">
+          <h3>不正対策</h3>
+          <p>連投/ボット対策・レート制限・類似判定を運用。健全なランキングを維持します。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== FAQ ===== -->
+  <section id="faq" class="section">
+    <div class="container">
+      <h2 class="section-title">FAQ</h2>
+      <div class="faq">
+        <details>
+          <summary>料金はかかりますか？</summary>
+          <p>閲覧・投票は無料です。将来的に広告や応援機能を導入予定です。</p>
+        </details>
+        <details>
+          <summary>投票は1日に何回できますか？</summary>
+          <p>一定回数に制限する場合があります（混雑時やイベント開催時など）。</p>
+        </details>
+        <details>
+          <summary>AI美女の画像はどのように作成されていますか？</summary>
+          <p>ガイドラインに沿ったプロンプトで生成し、重複・類似をチェックの上で掲載します。</p>
+        </details>
+        <details>
+          <summary>推しを「彼女」に登録するとどうなりますか？</summary>
+          <p>お気に入り一覧に追加され、一覧からチャット（AI）を開始できます。</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Footer ===== -->
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <span class="brand-name">AI Beauty Rank</span>
+        <small>© <span id="y"></span> MyRankingPhoto Project</small>
+      </div>
+      <nav class="footer-nav">
+        <a href="./privacy.html">プライバシー</a>
+        <a href="./terms.html">利用規約</a>
+        <a href="mailto:info@example.com">お問い合わせ</a>
+      </nav>
+    </div>
+  </footer>
+
+  <!-- ===== Minimal JS (モバイルメニュー/数値カウンタ) ===== -->
+  <script>
+    // Header year
+    document.getElementById('y').textContent = new Date().getFullYear();
+
+    // Mobile nav
+    const navBtn = document.querySelector('.nav-toggle');
+    const header = document.querySelector('.site-header');
+    navBtn.addEventListener('click', () => header.classList.toggle('open'));
+
+    // Dummy counters（必要ならAPI値に差し替え）
+    const lerp = (a,b,t)=>a+(b-a)*t;
+    function animateNumber(el, target, duration=1200){
+      const start = performance.now();
+      (function frame(now){
+        const t = Math.min(1,(now - start)/duration);
+        el.textContent = Math.floor(lerp(0,target,t)).toLocaleString();
+        if(t<1) requestAnimationFrame(frame);
+      })(start);
+    }
+    animateNumber(document.getElementById('stat-photos'), 3250);
+    animateNumber(document.getElementById('stat-votes'), 128765);
+    animateNumber(document.getElementById('stat-today'), 24);
+  </script>
+</body>
+</html>
