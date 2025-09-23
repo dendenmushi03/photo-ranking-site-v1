@@ -233,14 +233,13 @@ app.get('/_debug/og', (req, res) => {
 });
 
 app.use(express.static(path.join(__dirname, 'public')));
+// 新LPの確認用ルート（/home で表示）
+app.get('/home', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public/home.html'));
+});
 
 // 入口ページで使う静的ファイル（1回だけでOK）
 app.use('/assets', express.static(path.join(__dirname, 'assets')));
-
-// ルート直下の home.css を返す（1回だけでOK）
-app.get('/home.css', (req, res) => {
-  res.type('text/css').sendFile(path.join(__dirname, 'home.css'));
-});
 
 // プロキシ配下（Render等）での secure クッキーに必須
 app.set('trust proxy', 1);
@@ -279,11 +278,6 @@ app.post('/api/vote', async (req, res) => {
     console.error('投票履歴の保存エラー:', err);
     res.status(500).json({ error: '保存に失敗しました' });
   }
-});
-
-// 入口ページ（LP）
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'home.html'));
 });
 
 const upload = multer({
