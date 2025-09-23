@@ -234,21 +234,16 @@ app.get('/_debug/og', (req, res) => {
 
 app.use(express.static(path.join(__dirname, 'public')));
 
-// 入口ページで使う静的ファイル
+// 入口ページで使う静的ファイル（1回だけでOK）
 app.use('/assets', express.static(path.join(__dirname, 'assets')));
 
-// ルート直下の home.css を返す
+// ルート直下の home.css を返す（1回だけでOK）
 app.get('/home.css', (req, res) => {
   res.type('text/css').sendFile(path.join(__dirname, 'home.css'));
 });
 
-// 入口ページ（home.html）が参照する静的ファイルを配信
-app.use('/assets', express.static(path.join(__dirname, 'assets')));
-
-// ルート直下の home.css を配信（public 配下ではないため個別に返す）
-app.get('/home.css', (req, res) => {
-  res.type('text/css').sendFile(path.join(__dirname, 'home.css'));
-});
+// プロキシ配下（Render等）での secure クッキーに必須
+app.set('trust proxy', 1);
 
 app.use(session({
   secret: process.env.SECRET_KEY || 'fallback-secret',
@@ -257,7 +252,7 @@ app.use(session({
   cookie: {
     maxAge: 3600000,
     sameSite: 'lax',
-    secure: false
+    secure: process.env.NODE_ENV === 'production' // 本番のみ secure
   }
 }));
 
