@@ -5,7 +5,7 @@
   --bg-blue:   #5aa7ff;
 
   /* 既存UIに影響させたくない場合はこの下で使い分ける */
-  --site-gradient: linear-gradient(135deg, var(--bg-pink) 0%, var(--bg-purple) 45%, var(--bg-blue) 100%);
+  --site-gradient: linear-gradient(135deg, var(--bg-pink) 0%, var(--bg-purple) 50%, var(--bg-blue) 100%);
 }
 
 body{
