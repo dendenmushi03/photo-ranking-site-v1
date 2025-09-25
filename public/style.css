@@ -8,36 +8,21 @@
   --site-gradient: linear-gradient(135deg, var(--bg-pink) 0%, var(--bg-purple) 45%, var(--bg-blue) 100%);
 }
 
-html, body { height: 100%; }
-
 body{
-  background: transparent;   /* ← 直接は塗らない */
-  color: inherit;
-  position: relative;
-}
-
-/* 固定グラデは擬似要素で（iOSで安定） */
-body::before{
-  content: "";
-  position: fixed;
-  inset: 0;
-  z-index: -1;
-  background: var(--site-gradient);
-  /* 必要なら微ノイズやぼかしもここに追加できます */
+  background: var(--site-gradient) fixed; /* ← 共通グラデに統一 */
+  color: inherit;                          /* 既存の文字色があればそのままでOK */
+  /* 既存の他プロパティは残す */
 }
 
 .section,
 .section.alt,
-.site-footer { 
-  background: transparent;
+.site-footer,
+.site-header { 
+  background: transparent;                 /* 下地を透過して共通グラデを見せる */
+  backdrop-filter: none;                    /* 必要なら外す。既存で必要なら消してください */
 }
 
-/* ヘッダーだけは半透明＋ぼかしで可読性UP */
-.site-header{
-  background: rgba(255,255,255,.68);
-  backdrop-filter: saturate(130%) blur(10px);
-  -webkit-backdrop-filter: saturate(130%) blur(10px);
-}
+/* もし .section.alt に別色が指定されていたら上書き */
 
 h1 {
   font-size: 2rem;
@@ -869,34 +854,3 @@ input[type="radio"] {
     box-shadow: 0 0 12px rgba(255, 102, 204, 0.5);
   }
 }
-
-/* ==== 投票ページの見出しを白字＋枠で強調 ==== */
-.lead-emph{
-  display: inline-block;
-  margin: 16px auto 12px;
-  padding: 10px 16px;
-  color: #fff;                                /* 白字 */
-  text-align: center;
-  border: 1px solid rgba(255,255,255,.70);    /* 白い枠 */
-  border-radius: 16px;
-  background: rgba(255,255,255,.12);          /* うっすら白背景で読みやすく */
-  backdrop-filter: blur(8px) saturate(120%);  /* ガラス風 */
-  -webkit-backdrop-filter: blur(8px) saturate(120%);
-  box-shadow: 0 10px 24px rgba(0,0,0,.18);
-
-  /* 文字の縁取り（WebKit優先＋フォールバック） */
-  -webkit-text-stroke: 1px rgba(0,0,0,.25);
-  text-shadow:
-    0 1px 2px rgba(0,0,0,.35),
-    0 0 0 1px rgba(0,0,0,.25);
-  line-height: 1.35;
-}
-
-/* 絵文字は縁取りしない */
-.lead-emph .emoji{
-  -webkit-text-stroke: 0;
-  text-shadow: none;
-}
-
-/* 中央配置を確実に */
-.lead-emph{ display: block; width: fit-content; max-width: 92%; }
