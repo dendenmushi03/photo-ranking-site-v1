@@ -4,9 +4,14 @@
   --bg-purple: #7a69ff;
   --bg-blue:   #5aa7ff;
 
-  /* 既存UIに影響させたくない場合はこの下で使い分ける */
-  --site-gradient: linear-gradient(135deg, var(--bg-pink) 0%, var(--bg-purple) 45%, var(--bg-blue) 100%);
-}
+/* ピンク領域を広げて 体感5:5 へ */
+--site-gradient: linear-gradient(
+  135deg,
+  var(--bg-pink) 0%,
+  var(--bg-pink) 50%,   /* ← ピンクを50%まで維持 */
+  var(--bg-purple) 70%, /* ← 紫は短めに橋渡し */
+  var(--bg-blue) 100%
+);
 
 html, body { height: 100%; }
 
@@ -24,6 +29,16 @@ body::before{
   z-index: -1;
   background: var(--site-gradient);
   /* 必要なら微ノイズやぼかしもここに追加できます */
+}
+
+/* ほんのりピンクの放射グラデを左上から重ねる（視覚的にピンク比率を上げる） */
+body::after{
+  content:"";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background: radial-gradient(120% 90% at 0% 0%, rgba(255,128,213,.22) 0%, transparent 55%);
+  pointer-events: none;
 }
 
 .section,
@@ -867,5 +882,77 @@ input[type="radio"] {
   }
   100% {
     box-shadow: 0 0 12px rgba(255, 102, 204, 0.5);
+  }
+}
+
+/* ====== 統一ボタン（ランキングページ準拠）====== */
+:root{
+  --cta-grad-1: #f1b7e4;     /* ランキングの淡ピンク */
+  --cta-grad-2: #c8c0ff;     /* 淡ラベンダー */
+  --cta-text:   #ffffff;
+  --cta-shadow: 0 10px 24px rgba(0,0,0,.18);
+  --cta-shadow-h: 0 12px 28px rgba(0,0,0,.24);
+}
+
+/* HTMLを変えなくても効くように、各ページで使っているボタンを全部まとめて上書き */
+.unified-btn,
+.nav-button,
+#vote-button,
+.chat-btn,
+.break-btn,
+.love-btn,
+.modal-content a.nav-button {
+  display: block;
+  width: min(680px, 92%);
+  margin: 12px auto;
+  padding: 14px 22px;
+  text-align: center;
+  text-decoration: none;
+  color: var(--cta-text) !important;
+  font-weight: 800;
+  letter-spacing: .3px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,.35);
+  background: linear-gradient(135deg, var(--cta-grad-1), var(--cta-grad-2));
+  box-shadow: var(--cta-shadow);
+  transition: transform .18s ease, box-shadow .18s ease, filter .18s ease;
+}
+
+.unified-btn:hover,
+.nav-button:hover,
+#vote-button:hover,
+.chat-btn:hover,
+.break-btn:hover,
+.love-btn:hover,
+.modal-content a.nav-button:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--cta-shadow-h);
+  filter: saturate(105%);
+}
+
+/* アイコン＋文字の縦位置を安定させる */
+.unified-btn > *,
+.nav-button > *,
+#vote-button > *,
+.chat-btn > *,
+.break-btn > *,
+.love-btn > *,
+.modal-content a.nav-button > * {
+  vertical-align: middle;
+  line-height: 1.2;
+}
+
+/* モバイルでの中央寄せと幅 */
+@media (max-width: 480px){
+  .unified-btn,
+  .nav-button,
+  #vote-button,
+  .chat-btn,
+  .break-btn,
+  .love-btn,
+  .modal-content a.nav-button {
+    width: 92%;
+    font-size: 1.05rem;
+    padding: 14px 18px;
   }
 }
