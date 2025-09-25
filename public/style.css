@@ -1,28 +1,10 @@
-:root{
-  /* Gradient palette: pink -> purple -> blue */
-  --bg-pink:   #ff80d5;
-  --bg-purple: #7a69ff;
-  --bg-blue:   #5aa7ff;
-
-  /* 既存UIに影響させたくない場合はこの下で使い分ける */
-  --site-gradient: linear-gradient(135deg, var(--bg-pink) 0%, var(--bg-purple) 50%, var(--bg-blue) 100%);
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background: linear-gradient(to bottom, #e6ccff, #fce4ec);
+  text-align: center;
 }
-
-body{
-  background: var(--site-gradient) fixed; /* ← 共通グラデに統一 */
-  color: inherit;                          /* 既存の文字色があればそのままでOK */
-  /* 既存の他プロパティは残す */
-}
-
-.section,
-.section.alt,
-.site-footer,
-.site-header { 
-  background: transparent;                 /* 下地を透過して共通グラデを見せる */
-  backdrop-filter: none;                    /* 必要なら外す。既存で必要なら消してください */
-}
-
-/* もし .section.alt に別色が指定されていたら上書き */
 
 h1 {
   font-size: 2rem;
