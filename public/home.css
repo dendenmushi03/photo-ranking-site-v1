@@ -1,121 +1,124 @@
-:root{
-  --bg:#0b0b10;
-  --card:#14141c;
-  --alt:#0f0f15;
-  --text:#e8e8ee;
-  --muted:#a8a8b3;
-  --primary:#7b7bff;
-  --primary-weak:#7b7bff22;
-  --border:#262633;
-  --shadow: 0 10px 30px rgba(0,0,0,.35);
-  --radius:14px;
-}
-*{box-sizing:border-box}
-html,body{height:100%}
-body{
-  margin:0;
-  font-family:"Noto Sans JP",system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol",sans-serif;
-  color:var(--text);
-  background:linear-gradient(180deg,#0a0a12 0%, #0a0a12 40%, #0d0d17 100%) fixed;
-}
+/* ===== LP（ys-dc.jp 風：清潔×信頼×大CTA） ===== */
 
-/* Container */
-.container{width:min(1120px, calc(100% - 32px)); margin-inline:auto}
+/* ベース */
+.container{ width:min(1120px, calc(100% - 32px)); margin-inline:auto; }
+.sp-only{ display:none; }
+@media (max-width: 960px){ .sp-only{ display:inline; } }
 
-/* Header */
-.site-header{
-  position:sticky; top:0; backdrop-filter: blur(10px);
-  background:rgba(10,10,18,.6); border-bottom:1px solid var(--border); z-index:50;
+/* ヘッダーを白ガラス風に（共通style.cssの上書き） */
+.site-header.lp{
+  position: sticky; top: 0; z-index: 50;
+  background: rgba(255,255,255,.82);
+  border-bottom: 1px solid rgba(0,0,0,.06);
+  backdrop-filter: saturate(130%) blur(10px);
+  -webkit-backdrop-filter: saturate(130%) blur(10px);
 }
-.header-inner{display:flex; align-items:center; justify-content:space-between; padding:14px 0}
-.brand{display:flex; align-items:center; gap:10px}
-.logo{width:28px;height:28px;opacity:.9}
-.brand-name{font-weight:700; letter-spacing:.2px}
-.nav{display:flex; gap:18px; align-items:center}
-.nav a{color:var(--text); text-decoration:none; font-size:14px; opacity:.92}
-.nav a:hover{opacity:1}
-.btn{display:inline-block; padding:12px 18px; border-radius:999px; text-decoration:none; border:1px solid transparent; transition:.2s; font-weight:700}
-.btn.primary{background:var(--primary); color:#0b0b10}
-.btn.ghost{border-color:var(--border); background:transparent}
-.btn.small{padding:8px 12px; font-size:13px}
-.btn.xl{padding:14px 22px; font-size:16px}
-.nav-toggle{display:none; background:none; border:none; color:var(--text); font-size:22px}
+.header-inner{ display:flex; align-items:center; justify-content:space-between; padding: 10px 0; }
+.brand{ display:flex; align-items:center; gap:10px; text-decoration:none; }
+.brand .logo{ width:28px; height:28px; }
+.brand-name{ font-weight:900; color:#2e2038; letter-spacing:.2px; }
+.nav{ display:flex; gap:18px; }
+.nav a{ color:#4b3a58; text-decoration:none; font-size:14px; opacity:.92 }
+.nav a:hover{ opacity:1 }
+.nav-toggle{ display:none; background:none; border:0; font-size:22px; color:#4b3a58; }
+.site-header.open .nav{
+  display:flex; position:absolute; right:16px; left:16px; top:54px;
+  flex-direction:column; gap:10px; background:#fff; border:1px solid rgba(0,0,0,.06);
+  padding:12px; border-radius:12px; box-shadow:0 10px 24px rgba(0,0,0,.12);
+}
+@media (max-width: 960px){ .nav{ display:none; } .nav-toggle{ display:inline-block; } }
 
-/* Hero */
-.hero{padding:64px 0 24px; border-bottom:1px solid var(--border)}
-.hero-inner{display:grid; grid-template-columns:1.1fr .9fr; gap:32px; align-items:center}
-.hero h1{font-size:48px; line-height:1.15; margin:0 0 10px}
-.lead{color:var(--muted); font-size:18px}
-.underline{background:linear-gradient(transparent 65%, var(--primary-weak) 0)}
-.cta{display:flex; gap:12px; margin-top:22px}
-.badges{display:flex; gap:16px; margin-top:28px}
-.badge{background:var(--card); border:1px solid var(--border); padding:12px 16px; border-radius:12px; text-align:center; min-width:120px; box-shadow:var(--shadow)}
-.badge strong{display:block; font-size:22px}
+/* ヒーロー */
+.hero{ position: relative; padding: 72px 0 36px; }
+.hero-bg{
+  position:absolute; inset:0; z-index:-1;
+  background:
+    radial-gradient(120% 90% at 0% 0%, rgba(255,128,213,.22) 0%, transparent 55%),
+    var(--site-gradient);
+  /* 背景写真を入れたい場合は下の1行のコメントアウトを外す */
+  /* background-image: url("/assets/hero.jpg"), radial-gradient(...), var(--site-gradient); background-size:cover, auto, auto; background-position:center, center, center; background-blend-mode: soft-light, normal; */
+}
+.hero-inner{
+  display:grid; grid-template-columns:1.05fr .95fr; align-items:center; gap: 36px;
+}
+.hero-copy .eyebrow{
+  display:inline-block; font-weight:800; letter-spacing:.3px; color:#2e2038;
+  background:#fff; border:1px solid rgba(0,0,0,.06); border-radius:999px;
+  padding:6px 10px; box-shadow:0 8px 18px rgba(0,0,0,.08);
+}
+.hero h1{
+  margin:12px 0 8px; font-size:42px; line-height:1.15; font-weight:900;
+  background: linear-gradient(90deg,#ff6fd8 0%, #8c7bff 50%, #ffb86c 100%);
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+}
+.hero .lead{ color:#5d4c6f; font-size:17px; }
+.underline{ background: linear-gradient(transparent 65%, #ff6fd824 0); }
+
+.cta{ display:flex; gap:12px; margin-top:18px; flex-wrap:wrap; }
+.btn{ display:inline-block; text-decoration:none; border-radius:999px; }
+.btn.primary, .btn.ghost { font-weight:800; letter-spacing:.3px; }
+.btn.primary{ background:linear-gradient(135deg, #f1b7e4, #c8c0ff); color:#fff; padding:14px 22px; border:1px solid rgba(255,255,255,.35); box-shadow:0 10px 24px rgba(0,0,0,.18); }
+.btn.ghost{ background:#ffffffc4; color:#4b3a58; padding:14px 22px; border:1px solid rgba(0,0,0,.08); box-shadow:0 10px 20px rgba(0,0,0,.10); }
+.btn.xl{ font-size:16px; }
+
+.hero-stats{ display:flex; gap:12px; margin-top:16px; padding:0; list-style:none; }
+.hero-stats li{
+  flex:1 1 0; text-align:center; background:#fff; border:1px solid rgba(0,0,0,.06);
+  border-radius:12px; padding:12px 10px; box-shadow:0 10px 24px rgba(0,0,0,.10);
+}
+.hero-stats strong{ display:block; font-size:22px; font-weight:900; color:#2e2038; }
+.hero-stats span{ font-size:12px; color:#6b5b7a; }
+
 .hero-visual .phone-mock{
-  background:linear-gradient(180deg,#1a1a26,#0e0e16); border:1px solid var(--border);
-  border-radius:28px; padding:12px; box-shadow:var(--shadow)
+  background:linear-gradient(180deg,#ffffffaa,#ffffff88);
+  border:1px solid rgba(0,0,0,.06);
+  border-radius:28px; padding:12px; box-shadow:0 14px 36px rgba(0,0,0,.18);
 }
-.hero-visual img{display:block; width:100%; border-radius:18px}
+.hero-visual img{ display:block; width:100%; border-radius:18px; }
 
-/* Sections */
-.section{padding:72px 0}
-.section.alt{background:var(--alt); border-block:1px solid var(--border)}
-.section-title{font-size:28px; margin:0 0 24px}
-
-/* Features grid */
-.grid{display:grid; gap:16px}
-.features-grid{grid-template-columns:repeat(3,1fr)}
-.card{
-  background:var(--card); border:1px solid var(--border); border-radius:var(--radius);
-  padding:20px; box-shadow:var(--shadow)
-}
-.card h3{margin:0 0 8px}
-
-/* Steps */
-.steps{display:grid; grid-template-columns:repeat(3,1fr); gap:16px; counter-reset:st}
-.steps li{list-style:none; background:var(--card); border:1px solid var(--border); border-radius:var(--radius); padding:20px}
-.steps .num{
-  display:inline-grid; place-items:center; width:30px;height:30px; border-radius:999px;
-  background:var(--primary); color:#0b0b10; font-weight:700; margin-right:8px
-}
-.steps h3{display:flex; align-items:center; gap:8px; margin:0 0 4px}
-
-/* Preview */
-.preview-grid{grid-template-columns:repeat(3,1fr)}
-.preview-card{position:relative; border-radius:16px; overflow:hidden; border:1px solid var(--border)}
-.preview-card img{display:block; width:100%; height:100%; object-fit:cover; aspect-ratio:1/1}
-.preview-card .ribbon{
-  position:absolute; top:10px; left:10px; background:var(--primary); color:#0b0b10;
-  padding:6px 10px; border-radius:999px; font-weight:700; font-size:13px
-}
-
-/* Policy */
-.policy-grid{grid-template-columns:repeat(3,1fr)}
-
-/* FAQ */
-.faq details{
-  background:var(--card); border:1px solid var(--border); border-radius:12px; padding:16px; margin-bottom:12px
-}
-.faq summary{cursor:pointer; font-weight:700}
-.faq p{color:var(--muted)}
-
-/* Footer */
-.site-footer{border-top:1px solid var(--border); padding:28px 0}
-.footer-inner{display:flex; align-items:center; justify-content:space-between; gap:16px}
-.footer-nav{display:flex; gap:16px}
-.footer-nav a{color:var(--muted); text-decoration:none}
-.footer-brand .brand-name{font-weight:700; display:block}
-
-/* Responsive */
-.sp-only{display:none}
 @media (max-width: 960px){
-  .hero-inner{grid-template-columns:1fr}
+  .hero-inner{ grid-template-columns:1fr; }
+  .hero h1{ font-size:34px; }
 }
+
+/* セクション */
+.section{ padding:64px 0; }
+.section.alt{ background:linear-gradient(180deg, #ffffffa6, #ffffff60); border-block:1px solid rgba(0,0,0,.06) }
+.section-title{ font-size:24px; margin:0 0 18px; color:#3b2a3e; font-weight:900 }
+
+/* 3つの特長 */
+.grid{ display:grid; gap:16px; }
+.features-grid{ grid-template-columns:repeat(3,1fr); }
+.card{
+  background:#fff; border:1px solid rgba(0,0,0,.06);
+  border-radius:14px; padding:18px; box-shadow:0 10px 24px rgba(0,0,0,.10);
+}
+.card h3{ margin:0 0 6px; color:#35253f; font-weight:900 }
+
+/* ステップ */
+.steps{ display:grid; grid-template-columns:repeat(3,1fr); gap:16px; counter-reset:st; }
+.steps li{
+  list-style:none; background:#fff; border:1px solid rgba(0,0,0,.06);
+  border-radius:14px; padding:18px; box-shadow:0 10px 24px rgba(0,0,0,.10)
+}
+.steps .num{
+  display:inline-grid; place-items:center; width:28px; height:28px; border-radius:999px;
+  background:linear-gradient(90deg,#ff6fd8,#ffb86c); color:#3b2a3e; font-weight:900; margin-right:8px;
+}
+.steps h3{ display:flex; align-items:center; gap:8px; margin:0 0 4px; }
+
+/* お知らせ */
+.news-list{ margin:0; padding-left:1.2rem; color:#4b3a58; }
+.news-list li{ margin:.35rem 0; }
+.news-list time{ font-weight:700; margin-right:.5rem; color:#2e2038; }
+
+/* フッター */
+.site-footer{ border-top:1px solid rgba(0,0,0,.06); padding:24px 0; background:rgba(255,255,255,.85); }
+.footer-inner{ display:flex; align-items:center; justify-content:space-between; gap:16px; }
+.footer-nav{ display:flex; gap:16px; }
+.footer-nav a{ color:#6f5e77; text-decoration:none; }
+
 @media (max-width: 780px){
-  .features-grid,.steps,.preview-grid,.policy-grid{grid-template-columns:1fr}
-  .sp-only{display:inline}
-  .nav{display:none}
-  .site-header.open .nav{display:flex; position:absolute; top:58px; right:16px; left:16px;
-    flex-direction:column; background:var(--card); border:1px solid var(--border); padding:12px; border-radius:12px}
-  .nav-toggle{display:inline-block}
+  .features-grid, .steps{ grid-template-columns:1fr; }
+  .hero-stats{ flex-direction:column; }
 }
