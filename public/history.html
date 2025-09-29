@@ -226,15 +226,55 @@
 
   </style>
 </head>
+
 <body>
-    <div class="header-banner">
-  <div class="left-section">
-    <img src="image/aibijo-logo.png" alt="アイ美女！" />
+
+  <!-- 置き換え後：海遊館風アプリバー -->
+<header class="appbar" role="banner">
+  <div class="appbar__inner">
+    <!-- Left: Language -->
+    <button class="appbar__side appbar__lang" type="button" aria-haspopup="true" aria-expanded="false">
+      <span>Language</span>
+      <svg class="chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 10l5 5 5-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+    </button>
+
+    <!-- Center: Logo -->
+    <a href="/" class="appbar__brand" aria-label="AI Beauty Rank">
+      <img src="/assets/logo-48.png" alt="" class="brand__logo" />
+      <span class="brand__name">AI Beauty Rank</span>
+    </a>
+
+    <!-- Right: Menu -->
+    <button class="appbar__side appbar__menu" type="button" aria-controls="global-menu" aria-expanded="false">
+      <svg class="burger" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+      <span>Menu</span>
+    </button>
   </div>
-  <div class="right-section">
-    <img src="image/banner-right.png" alt="No.1を決める総選挙" />
-  </div>
-</div>
+</header>
+
+<!-- オプション：開閉メニュー（必要な人だけ） -->
+<nav id="global-menu" class="drawer" hidden>
+  <ul class="drawer__list">
+    <li><a href="/vote.html">投票</a></li>
+    <li><a href="/rankings.html">ランキング</a></li>
+    <li><a href="/history.html">チャット</a></li>
+    <li><a href="/upload.html">アップロード</a></li>
+    <li><a href="/privacy.html">プライバシー</a></li>
+    <li><a href="/terms.html">利用規約</a></li>
+  </ul>
+</nav>
+  
+<!-- === Tabs: ページ切り替え === -->
+<nav class="tab-nav" aria-label="モード切替">
+  <ul class="tab-list" role="tablist">
+    <li role="presentation"><a role="tab" href="/vote.html"      data-tab="vote">投票</a></li>
+    <li role="presentation"><a role="tab" href="/rankings.html"  data-tab="rankings">ランキング</a></li>
+    <li role="presentation"><a role="tab" href="/history.html"   data-tab="chat" class="is-active" aria-current="page">チャット</a></li>
+    <li role="presentation"><a role="tab" href="/upload.html"    data-tab="upload">アップロード</a></li>
+  </ul>
+</nav>
 
   <div class="ad-container">
     <!-- admax -->
@@ -256,7 +296,16 @@
   直近で <span class="highlight" id="signupNumber">123</span> 人が無料登録！
   </div>
 
-  <h1 style="text-align:center;" class="gradient-text">📮 あなたの投票履歴</h1>
+<!-- バナー画像をそのまま表示 -->
+<img
+  src="/public/img/banners/chat.png"
+  alt="チャット"
+  class="page-banner-img"
+  loading="eager"
+  fetchpriority="high"
+/>
+<hr class="section-divider">
+
   <div class="underline"></div>
   <div class="history-container" id="history"></div>
 
@@ -449,6 +498,52 @@ function closeConfessModal() {
     <div id="confessButtons"></div>
   </div>
 </div>
+
+<script>
+  // 現在URLから該当タブをハイライト（冪等）
+  (function(){
+    const path = location.pathname;
+    const map = [
+      {key:'vote',      test: p => /\/(vote|index)\.html$/.test(p) || p === '/' },
+      {key:'rankings',  test: p => /\/rankings(\.html)?$/.test(p) },
+      {key:'chat',      test: p => /\/history\.html$/.test(p) },   // このページ
+      {key:'upload',    test: p => /\/upload\.html$/.test(p) }
+    ];
+    const hit = map.find(m => m.test(path));
+    if(!hit) return;
+    const el = document.querySelector('.tab-list a[data-tab="'+hit.key+'"]');
+    if(el){
+      el.classList.add('is-active');
+      el.setAttribute('aria-selected','true');
+      el.setAttribute('tabindex','0');
+      el.setAttribute('aria-current','page');
+    }
+  })();
+</script>
+
+<script>
+  // Menu toggle
+  (function(){
+    const btn = document.querySelector('.appbar__menu');
+    const drawer = document.getElementById('global-menu');
+    if(!btn || !drawer) return;
+
+    btn.addEventListener('click', () => {
+      const open = drawer.hasAttribute('hidden');
+      drawer.toggleAttribute('hidden', !open);
+      btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      if(open){ drawer.focus?.(); }
+    });
+
+    // ESCで閉じる
+    document.addEventListener('keydown', (e)=>{
+      if(e.key === 'Escape' && !drawer.hasAttribute('hidden')){
+        drawer.setAttribute('hidden','');
+        btn.setAttribute('aria-expanded','false');
+      }
+    });
+  })();
+</script>
 
 </body>
 </html>

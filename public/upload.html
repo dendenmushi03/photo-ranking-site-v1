@@ -15,12 +15,14 @@
   <title>AI画像投稿</title>
   <link rel="stylesheet" href="style.css?v=1" />
   <style>
-    body {
-      text-align: center;
-      font-family: 'Segoe UI', sans-serif;
-      background: linear-gradient(to bottom, #f7eaff, #fce4ec);
-      padding: 0;
-    }
+
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background: linear-gradient(to bottom, #f7eaff, #fce4ec);
+  padding: 0;
+}
+/* 本文エリアだけ中央寄せしたい場合に使うヘルパー */
+.content-center { text-align: center; }
 
     h1 {
       font-size: 2rem;
@@ -65,22 +67,27 @@
       width: 100%;
     }
 
-    button {
-      display: block;
-      width: 100%;
-      padding: 0.8rem;
-      background-color: #007bff;
-      color: white;
-      border: none;
-      border-radius: 6px;
-      font-size: 1rem;
-      margin-top: 1rem;
-      cursor: pointer;
-    }
+#upload button {
+  display: block;
+  width: 100%;
+  padding: 0.8rem;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  margin-top: 1rem;
+  cursor: pointer;
+}
+#upload img {
+  cursor: pointer;
+  max-width: 100%;
+  height: auto;
+}
 
-    button:hover {
-      background-color: #0056b3;
-    }
+#upload button:hover {
+  background-color: #0056b3;
+}
 
     .nav-links {
       margin-top: 2rem;
@@ -104,102 +111,120 @@
       transform: translateY(-2px);
     }
 
-        .header-banner {
+.header-banner {
   display: flex;
   align-items: center;
-  justify-content: flex-start;
-  padding: 0;
+  justify-content: space-between;
+  height: clamp(90px, 18vw, 200px);  /* ← 高さをレスポンシブ固定 */
+  padding: 0 8px;
+  overflow: hidden;                  /* はみ出し対策 */
   background-color: #fffbe8;
   border-bottom: 1px solid #d8b7ff;
   margin-bottom: 1rem;
-  flex-wrap: nowrap;
   width: 100%;
   box-sizing: border-box;
 }
 
 .aibijo-logo {
-  width: 30%;
-  height: auto;
-  object-fit: contain;
+  height: 100%;          /* 高さに合わせる */
+  width: auto;
+  object-fit: contain;   /* ロゴは潰さない */
+  flex: 0 0 auto;
 }
 
 .banner-right {
-  width: 70%;
-  height: auto;
-  object-fit: cover;
+  height: 100%;          /* 高さに合わせる */
+  width: auto;
+  max-width: 72vw;       /* 横暴れ防止の上限（お好みで） */
+  object-fit: cover;     /* 右側はトリミングで見せる */
+  flex: 1 1 auto;
 }
 
 @media (max-width: 600px) {
-  .header-banner {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    padding: 0;
-    margin: 0;
-    width: 100%;
-    box-sizing: border-box;
-  }
+  .header-banner { height: clamp(72px, 22vw, 140px); } /* さらにコンパクト */
 
-  .aibijo-logo {
-    width: 25%;
-    max-width: 25%;
-    height: auto;
-    object-fit: contain;
-  }
-
+  .aibijo-logo,
   .banner-right {
-    width: 75%;
-    max-width: 75%;
-    height: auto;
-    object-fit: cover;
+    height: 100%;
+    width: auto;
   }
 
-  .header-banner img {
-    display: block;
-    width: 100%;
-    height: auto;
-    object-fit: cover;
-  }
+  .header-banner img { display: block; }
 }
 
   </style>
 </head>
+
 <body>
-    <div class="header-banner">
-  <div class="left-section">
-    <img src="image/aibijo-logo.png" alt="アイ美女！" />
+
+<!-- 置き換え後：海遊館風アプリバー -->
+<header class="appbar" role="banner">
+  <div class="appbar__inner">
+    <!-- Left: Language -->
+    <button class="appbar__side appbar__lang" type="button" aria-haspopup="true" aria-expanded="false">
+      <span>Language</span>
+      <svg class="chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 10l5 5 5-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+    </button>
+
+    <!-- Center: Logo -->
+    <a href="/" class="appbar__brand" aria-label="AI Beauty Rank">
+      <img src="/assets/logo-48.png" alt="" class="brand__logo" />
+      <span class="brand__name">AI Beauty Rank</span>
+    </a>
+
+    <!-- Right: Menu -->
+    <button class="appbar__side appbar__menu" type="button" aria-controls="global-menu" aria-expanded="false">
+      <svg class="burger" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+      <span>Menu</span>
+    </button>
   </div>
-  <div class="right-section">
-    <img src="image/banner-right.png" alt="No.1を決める総選挙" />
-  </div>
-</div>
+</header>
 
+<!-- オプション：開閉メニュー（必要な人だけ） -->
+<nav id="global-menu" class="drawer" hidden>
+  <ul class="drawer__list">
+    <li><a href="/vote.html">投票</a></li>
+    <li><a href="/rankings.html">ランキング</a></li>
+    <li><a href="/history.html">チャット</a></li>
+    <li><a href="/upload.html">アップロード</a></li>
+    <li><a href="/privacy.html">プライバシー</a></li>
+    <li><a href="/terms.html">利用規約</a></li>
+  </ul>
+</nav>
 
+<!-- === Tabs: ページ切り替え === -->
+<nav class="tab-nav" aria-label="モード切替">
+  <ul class="tab-list" role="tablist">
+    <li role="presentation"><a role="tab" href="/vote.html"      data-tab="vote">投票</a></li>
+    <li role="presentation"><a role="tab" href="/rankings.html"  data-tab="rankings">ランキング</a></li>
+    <li role="presentation"><a role="tab" href="/history.html"   data-tab="chat">チャット</a></li>
+    <li role="presentation"><a role="tab" href="/upload.html"    data-tab="upload">アップロード</a></li>
+  </ul>
+</nav>
 
-  <h1 style="
-  font-size: 1.7rem;
-  font-weight: bold;
-  text-align: center;
-  background: linear-gradient(to right, #ff69b4, #ff1493);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  margin-top: 2rem;
-">
-  💖 AI美女を投稿して参加しよう! 💖
-</h1>
-<div class="underline"></div>
+<main id="upload">
+  <!-- バナー画像をそのまま表示 -->
+  <img
+    src="/public/img/banners/upload.png"
+    alt="アップロード"
+    class="page-banner-img"
+    loading="eager"
+    fetchpriority="high"
+  />
+  <hr class="section-divider">
+  <div class="underline"></div>
 
   <form id="uploadForm" enctype="multipart/form-data">
     <div class="form-row">
       <label for="photo">画像を選択（複数可）：</label>
       <input type="file" id="photo" name="photo" accept="image/*" multiple required>
     </div>
-
     <div class="form-row">
       <label for="author">投稿者名：</label>
       <input type="text" id="author" name="author" placeholder="ニックネームを入力（10字以内）" maxlength="10" required>
     </div>
-
     <button id="uploadButton" type="submit">アップロード</button>
   </form>
 
@@ -207,6 +232,7 @@
     <a href="vote.html" class="nav-button">🗳 投票ページへ</a>
     <a href="rankings.html" class="nav-button">🏆 ランキングページへ</a>
   </div>
+</main>
 
   <script src="upload.js?v=1"></script>
 
@@ -222,6 +248,80 @@
     <script src="https://adm.shinobi.jp/s/932c9bf67e636e25d45fea85af67e7cd"></script>
     <!-- admax -->
   </div>
+
+<script>
+  (function () {
+    // 末尾スラッシュや .html の有無を吸収して比較
+    const norm = (p) => {
+      try {
+        const u = new URL(p, location.origin).pathname
+          .replace(/\/+$/, '');
+        if (u === '' || u === '/') return '/index.html';
+        if (!/\.[a-z0-9]+$/i.test(u)) return u + '.html';
+        return u;
+      } catch { return p; }
+    };
+
+    const here = norm(location.pathname);
+
+    let activated = false;
+    document.querySelectorAll('.tab-list a').forEach(a => {
+      const target = norm(a.getAttribute('href'));
+      if (target === here ||
+          (target === '/index.html' && (here === '/index.html')) ||
+          (target === '/upload.html' && here === '/upload.html')) {
+        a.classList.add('is-active');
+        a.setAttribute('aria-current', 'page');
+        a.setAttribute('aria-selected', 'true');
+        a.setAttribute('tabindex', '0');
+        activated = true;
+      }
+    });
+
+    // フォールバック：このページでは upload を強制アクティブ
+    if (!activated) {
+      const fallback = document.querySelector('.tab-list a[data-tab="upload"]');
+      if (fallback) {
+        fallback.classList.add('is-active');
+        fallback.setAttribute('aria-current', 'page');
+        fallback.setAttribute('aria-selected', 'true');
+        fallback.setAttribute('tabindex', '0');
+      }
+    }
+  })();
+</script>
+
+<script>
+  (function(){
+    const btn = document.querySelector('.appbar__menu');
+    const drawer = document.getElementById('global-menu');
+    if(!btn || !drawer) return;
+
+    // クリックで開閉
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      const willOpen = drawer.hasAttribute('hidden');
+      drawer.toggleAttribute('hidden', !willOpen);
+      btn.setAttribute('aria-expanded', willOpen ? 'true' : 'false');
+    });
+
+    // 外側クリックで閉じる
+    document.addEventListener('click', (e) => {
+      if (drawer.hasAttribute('hidden')) return;
+      if (e.target.closest('#global-menu') || e.target.closest('.appbar__menu')) return;
+      drawer.setAttribute('hidden', '');
+      btn.setAttribute('aria-expanded', 'false');
+    });
+
+    // Esc で閉じる
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && !drawer.hasAttribute('hidden')) {
+        drawer.setAttribute('hidden','');
+        btn.setAttribute('aria-expanded','false');
+      }
+    });
+  })();
+</script>
 
 </body>
 </html>

@@ -80,62 +80,45 @@
     margin: 0.4rem 0;
     }
 
-    .header-banner {
+.header-banner {
   display: flex;
   align-items: center;
-  justify-content: flex-start;
-  padding: 0;
+  justify-content: space-between;
+  height: clamp(90px, 18vw, 200px);  /* ← 高さをレスポンシブ固定 */
+  padding: 0 8px;
+  overflow: hidden;                  /* はみ出し対策 */
   background-color: #fffbe8;
   border-bottom: 1px solid #d8b7ff;
   margin-bottom: 1rem;
-  flex-wrap: nowrap;
   width: 100%;
   box-sizing: border-box;
 }
 
 .aibijo-logo {
-  width: 30%;
-  height: auto;
-  object-fit: contain;
+  height: 100%;          /* 高さに合わせる */
+  width: auto;
+  object-fit: contain;   /* ロゴは潰さない */
+  flex: 0 0 auto;
 }
 
 .banner-right {
-  width: 70%;
-  height: auto;
-  object-fit: cover;
+  height: 100%;          /* 高さに合わせる */
+  width: auto;
+  max-width: 72vw;       /* 横暴れ防止の上限（お好みで） */
+  object-fit: cover;     /* 右側はトリミングで見せる */
+  flex: 1 1 auto;
 }
 
 @media (max-width: 600px) {
-  .header-banner {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    padding: 0;
-    margin: 0;
-    width: 100%;
-    box-sizing: border-box;
-  }
+  .header-banner { height: clamp(72px, 22vw, 140px); } /* さらにコンパクト */
 
-  .aibijo-logo {
-    width: 25%;
-    max-width: 25%;
-    height: auto;
-    object-fit: contain;
-  }
-
+  .aibijo-logo,
   .banner-right {
-    width: 75%;
-    max-width: 75%;
-    height: auto;
-    object-fit: cover;
+    height: 100%;
+    width: auto;
   }
 
-  .header-banner img {
-    display: block;
-    width: 100%;
-    height: auto;
-    object-fit: cover;
-  }
+  .header-banner img { display: block; }
 }
 
 .modal {
@@ -186,19 +169,59 @@
   color: #ff3399;
 }
 
+
+
 </style>
+
 </head>
 <body>
-  <div class="header-banner">
-  <div class="left-section">
-    <img src="image/aibijo-logo.png" alt="アイ美女！" />
-  </div>
-  <div class="right-section">
-    <img src="image/banner-right.png" alt="No.1を決める総選挙" />
-  </div>
-</div>
+  
+<!-- 置き換え後：海遊館風アプリバー -->
+<header class="appbar" role="banner">
+  <div class="appbar__inner">
+    <!-- Left: Language -->
+    <button class="appbar__side appbar__lang" type="button" aria-haspopup="true" aria-expanded="false">
+      <span>Language</span>
+      <svg class="chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 10l5 5 5-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+    </button>
 
-<div style="height: 1rem;"></div>
+    <!-- Center: Logo -->
+    <a href="/" class="appbar__brand" aria-label="AI Beauty Rank">
+      <img src="/assets/logo-48.png" alt="" class="brand__logo" />
+      <span class="brand__name">AI Beauty Rank</span>
+    </a>
+
+    <!-- Right: Menu -->
+    <button class="appbar__side appbar__menu" type="button" aria-controls="global-menu" aria-expanded="false">
+      <svg class="burger" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+      <span>Menu</span>
+    </button>
+  </div>
+</header>
+
+<!-- オプション：開閉メニュー（必要な人だけ） -->
+<nav id="global-menu" class="drawer" hidden>
+  <ul class="drawer__list">
+    <li><a href="/vote.html">投票</a></li>
+    <li><a href="/rankings.html">ランキング</a></li>
+    <li><a href="/history.html">チャット</a></li>
+    <li><a href="/upload.html">アップロード</a></li>
+    <li><a href="/privacy.html">プライバシー</a></li>
+    <li><a href="/terms.html">利用規約</a></li>
+  </ul>
+</nav>
+
+<!-- === Tabs: ページ切り替え === -->
+<nav class="tab-nav" aria-label="モード切替">
+  <ul class="tab-list" role="tablist">
+    <li role="presentation"><a role="tab" href="/vote.html"      data-tab="vote">投票</a></li>
+    <li role="presentation"><a role="tab" href="/rankings.html"  data-tab="rankings">ランキング</a></li>
+    <li role="presentation"><a role="tab" href="/history.html"   data-tab="chat">チャット</a></li>
+    <li role="presentation"><a role="tab" href="/upload.html"    data-tab="upload">アップロード</a></li>
+  </ul>
+</nav>
 
     <!-- admax -->
      <!-- <div class="ad-highlight pop-glow">
@@ -220,11 +243,16 @@
   直近で <span class="highlight" id="signupNumber">123</span> 人が無料登録！
   </div> -->
 
-  <div class="nav-links">
-    <a href="rankings.html" class="nav-button">🏆 ランキングを見る</a>
-  </div>
+<!-- バナー画像をそのまま表示 -->
+<img
+  src="/public/img/banners/vote.png"
+  alt="投票"
+  class="page-banner-img"
+  loading="eager"
+  fetchpriority="high"
+/>
+<hr class="section-divider">
 
-  <h1 class="one-line-title">💖 投票ページ 💖</h1>
   <div class="underline"></div>
 
 <!-- 投票手順の小さな通知バー -->
@@ -413,6 +441,82 @@ function closeModal() {
     </div>
   </div>
 </div>
+
+<script>
+  (function () {
+    // 末尾スラッシュや .html の有無を吸収して比較
+    const norm = (p) => {
+      try {
+        const u = new URL(p, location.origin).pathname
+          .replace(/\/+$/, '');              // 末尾スラッシュ除去
+        // 拡張子なしの /vote → /vote.html に寄せる（/ は /index.html 扱い）
+        if (u === '' || u === '/') return '/index.html';
+        if (!/\.[a-z0-9]+$/i.test(u)) return u + '.html';
+        return u;
+      } catch { return p; }
+    };
+
+    const here = norm(location.pathname);
+
+    // 各タブの href と「正規化した現在パス」を突き合わせ
+    let activated = false;
+    document.querySelectorAll('.tab-list a').forEach(a => {
+      const target = norm(a.getAttribute('href'));
+      if (target === here ||
+          (target === '/index.html' && (here === '/index.html')) ||
+          (target === '/vote.html'   && (here === '/vote.html' || here === '/index.html'))) {
+        a.classList.add('is-active');
+        a.setAttribute('aria-current', 'page');
+        a.setAttribute('aria-selected', 'true');
+        a.setAttribute('tabindex', '0');
+        activated = true;
+      }
+    });
+
+    // 念のため：何もマッチしなかった場合のフォールバック（このページでは投票タブ）
+    if (!activated) {
+      const fallback = document.querySelector('.tab-list a[data-tab="vote"]');
+      if (fallback) {
+        fallback.classList.add('is-active');
+        fallback.setAttribute('aria-current', 'page');
+        fallback.setAttribute('aria-selected', 'true');
+        fallback.setAttribute('tabindex', '0');
+      }
+    }
+  })();
+</script>
+
+<script>
+  (function(){
+    const btn = document.querySelector('.appbar__menu');
+    const drawer = document.getElementById('global-menu');
+    if(!btn || !drawer) return;
+
+    // クリックで開閉
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      const willOpen = drawer.hasAttribute('hidden');
+      drawer.toggleAttribute('hidden', !willOpen);
+      btn.setAttribute('aria-expanded', willOpen ? 'true' : 'false');
+    });
+
+    // 外側クリックで閉じる
+    document.addEventListener('click', (e) => {
+      if (drawer.hasAttribute('hidden')) return;
+      if (e.target.closest('#global-menu') || e.target.closest('.appbar__menu')) return;
+      drawer.setAttribute('hidden', '');
+      btn.setAttribute('aria-expanded', 'false');
+    });
+
+    // Esc で閉じる
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && !drawer.hasAttribute('hidden')) {
+        drawer.setAttribute('hidden','');
+        btn.setAttribute('aria-expanded','false');
+      }
+    });
+  })();
+</script>
 
 </body>
 </html>
