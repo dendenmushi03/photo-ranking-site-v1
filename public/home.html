@@ -345,17 +345,21 @@
     ];
     const pick = candidates[Math.floor(Math.random() * candidates.length)];
 
-    // 画面幅で背景のフィット方法を切り替え
-    const isSmall = window.matchMedia('(max-width: 520px)').matches;
-    // モバイル：拡大を抑える（高さ基準で 110% 程度に）
-    const bgSize = isSmall ? 'auto 110%' : 'cover';
-    // モバイル：被写体の顔が見えやすいように少し上寄せ
-    const bgPos  = isSmall ? 'center 20%' : 'center';
+// 画面幅で背景のフィット方法を切り替え
+const isSmall = window.matchMedia('(max-width: 520px)').matches;
 
-    hero.style.background =
-      `linear-gradient(180deg, rgba(16,12,24,.35), rgba(16,12,24,.55)),` +
-      `url("/image/${pick}") ${bgPos} / ${bgSize} no-repeat`;
-  })();
+// ✅ モバイル：横幅を基準にして原寸に近い表示（横=100%）
+const bgSize = isSmall ? '100% auto' : 'cover';
+
+// ✅ 顔が切れにくいように少し上寄せ
+const bgPos  = isSmall ? 'center 18%' : 'center';
+
+hero.style.background =
+  `linear-gradient(180deg, rgba(16,12,24,.35), rgba(16,12,24,.55)),` +
+  `url("/image/${pick}") ${bgPos} / ${bgSize} no-repeat`;
+
+
+})();
 </script>
 
   <script>
