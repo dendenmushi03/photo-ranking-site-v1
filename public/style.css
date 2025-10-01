@@ -941,10 +941,29 @@ input[type="radio"] {
   height: 44px;        /* ← アクティブでもサイズ不変 */
 }
 
-/* スマホ：2列で折り返し */
+/* スマホ：横一列（4タブ）に収める */
 @media (max-width: 560px){
-  .tab-list{ flex-wrap: wrap; gap: 10px; }
-  .tab-list a{ flex: 1 1 calc(50% - 10px); min-width: 46%; }
+  .tab-list{
+    flex-wrap: nowrap;   /* ← 折り返し禁止 */
+    gap: 6px;            /* 余白を詰める */
+    padding: 8px 0;      /* 高さも少し詰める */
+  }
+  .tab-list a{
+    flex: 1 1 0;         /* 均等に横幅配分 */
+    min-width: 0;        /* 最小幅の縛りを外す */
+    padding: 8px 10px;   /* コンパクトに */
+    font-size: 14px;     /* 文字も少し小さめ */
+    border-radius: 12px;
+  }
+}
+
+/* さらに狭い端末（iPhone SE 等）用の微調整 */
+@media (max-width: 360px){
+  .tab-list a{
+    padding: 6px 8px;
+    font-size: 13px;
+    letter-spacing: .01em;
+  }
 }
 
 .page-banner-img {
