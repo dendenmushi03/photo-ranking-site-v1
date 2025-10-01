@@ -512,3 +512,135 @@
 .hero .hero-bg{
   filter: saturate(.9) brightness(1.03); /* 0.8〜1.1あたりで微調整 */
 }
+
+/* ===== /home スマホ最適化（～560px）========================= */
+@media (max-width: 560px){
+
+  /* ヒーロー：上下余白を詰め、文字サイズを最適化 */
+  .hero { padding: 18px 0 14px; }
+  .hero-inner { padding: 0 14px; }
+  .hero-copy .eyebrow{
+    font-size: 12px;
+    padding: 4px 10px;
+    border-radius: 999px;
+    background: rgba(255,255,255,.75);
+    color: #333;
+    display: inline-block;
+  }
+  .hero-copy h1{
+    font-size: clamp(24px, 7vw, 32px);
+    line-height: 1.2;
+    margin: 10px 0 6px;
+    color: #fff;            /* ヒーロー上のタイトルは白で読ませる */
+    text-shadow: 0 2px 10px rgba(0,0,0,.35);
+  }
+  .hero-copy .lead{
+    font-size: 14px;
+    line-height: 1.6;
+    color: #fff;
+    text-shadow: 0 1px 6px rgba(0,0,0,.3);
+  }
+
+  /* ヒーロー背景が明るい写真でも文字を読めるよう、モバイル時は
+     追加のオーバーレイを重ねる（既存のJSの上に薄く足す） */
+  .hero-bg{
+    position: relative;
+    isolation: isolate;
+  }
+  .hero-bg::after{
+    content:"";
+    position:absolute; inset:0;
+    background: linear-gradient(180deg, rgba(10,8,16,.35), rgba(10,8,16,.5));
+    z-index:-1;
+  }
+
+  /* CTA：2ボタンは横並び（幅が足りない端末は自動折返し） */
+  .cta{
+    display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;
+    margin-top: 14px;
+  }
+  .cta .unified-btn{
+    flex: 1 1 46%;
+    min-width: 140px;
+    height: 48px;
+    font-weight: 800;
+    font-size: 15px;
+    border-radius: 14px;
+  }
+
+  /* ヒーロー配下の統計：カードをタップしやすく・1行に収めやすく */
+  .hero-stats{
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin: 14px 0 0;
+    padding: 0 6px;
+  }
+  .hero-stats li{
+    background: rgba(255,255,255,.9);
+    border-radius: 12px;
+    padding: 10px 6px;
+    box-shadow: 0 4px 10px rgba(0,0,0,.06);
+  }
+  .hero-stats li strong{
+    display: block;
+    font-size: clamp(16px, 5.4vw, 22px);
+    line-height: 1.2;
+  }
+  .hero-stats li span{
+    display: block;
+    font-size: 12px;
+    color: #666;
+  }
+  /* 超狭幅（SE等）は2列へ */
+  @media (max-width: 360px){
+    .hero-stats{ grid-template-columns: repeat(2, 1fr); }
+  }
+
+  /* 見出し（共通） */
+  .sec-ttl{
+    font-size: clamp(18px, 6.2vw, 22px);
+    margin: 18px 0 8px;
+  }
+
+  /* 特徴カード：2列グリッド（極端に狭い端末は1列） */
+  .features-grid{
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0,1fr));
+    gap: 12px;
+  }
+  @media (max-width: 360px){
+    .features-grid{ grid-template-columns: 1fr; }
+  }
+  .feature-card{
+    padding: 12px;
+    border-radius: 14px;
+  }
+  .feature-card .title{ font-size: 15px; }
+  .feature-card .desc { font-size: 12px; color:#666; }
+
+  /* 3ステップ：縦並び＋ボタンは幅広に */
+  .steps-flow{
+    display: grid; gap: 14px;
+    grid-template-columns: 1fr;
+  }
+  .step{
+    padding: 14px;
+    border-radius: 14px;
+  }
+  .step-title{ font-size: 16px; }
+  .step-desc { font-size: 13px; color:#555; }
+  .step-cta{
+    display: inline-flex;
+    align-items: center; justify-content: center;
+    min-height: 42px; padding: 0 14px;
+    border-radius: 12px;
+    font-weight: 800; font-size: 14px;
+  }
+
+  /* 下余白を少し詰めて全体をコンパクトに */
+  .section.news .section-title{ font-size: 18px; }
+  .news-list{ padding-left: 0; }
+  .news-list li{ font-size: 14px; }
+}
+/* ===== /home スマホ最適化 ここまで ========================== */

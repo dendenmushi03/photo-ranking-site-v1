@@ -487,35 +487,52 @@ function closeModal() {
 </script>
 
 <script>
-  (function(){
-    const btn = document.querySelector('.appbar__menu');
-    const drawer = document.getElementById('global-menu');
-    if(!btn || !drawer) return;
+(function(){
+  const btn    = document.querySelector('.appbar__menu');
+  const drawer = document.getElementById('global-menu');
+  if(!btn || !drawer) return;
 
-    // クリックで開閉
-    btn.addEventListener('click', (e) => {
-      e.preventDefault();
-      const willOpen = drawer.hasAttribute('hidden');
-      drawer.toggleAttribute('hidden', !willOpen);
-      btn.setAttribute('aria-expanded', willOpen ? 'true' : 'false');
-    });
+  // 背面レイヤーを1度だけ生成
+  let backdrop = document.getElementById('drawer-backdrop');
+  if(!backdrop){
+    backdrop = document.createElement('div');
+    backdrop.id = 'drawer-backdrop';
+    document.body.appendChild(backdrop);
+  }
 
-    // 外側クリックで閉じる
-    document.addEventListener('click', (e) => {
-      if (drawer.hasAttribute('hidden')) return;
-      if (e.target.closest('#global-menu') || e.target.closest('.appbar__menu')) return;
-      drawer.setAttribute('hidden', '');
-      btn.setAttribute('aria-expanded', 'false');
-    });
+  function openDrawer(){
+    drawer.removeAttribute('hidden');
+    document.body.classList.add('is-drawer-open');
+    backdrop.style.display = 'block';
+    btn.setAttribute('aria-expanded', 'true');
+  }
+  function closeDrawer(){
+    drawer.setAttribute('hidden','');
+    document.body.classList.remove('is-drawer-open');
+    backdrop.style.display = 'none';
+    btn.setAttribute('aria-expanded', 'false');
+  }
 
-    // Esc で閉じる
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && !drawer.hasAttribute('hidden')) {
-        drawer.setAttribute('hidden','');
-        btn.setAttribute('aria-expanded','false');
-      }
-    });
-  })();
+  // トグル
+  btn.addEventListener('click', (e) => {
+    e.preventDefault();
+    if (drawer.hasAttribute('hidden')) openDrawer();
+    else closeDrawer();
+  });
+
+  // 背面クリックで閉じる
+  backdrop.addEventListener('click', closeDrawer);
+
+  // メニュー内リンクを押したら閉じる
+  drawer.addEventListener('click', (e) => {
+    if (e.target.closest('a')) closeDrawer();
+  });
+
+  // Escキーでも閉じる
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && !drawer.hasAttribute('hidden')) closeDrawer();
+  });
+})();
 </script>
 
 </body>

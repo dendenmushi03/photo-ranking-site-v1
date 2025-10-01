@@ -1035,7 +1035,15 @@ input[type="radio"] {
   background:#fff; border-left:1px solid rgba(0,0,0,.06);
   box-shadow: -12px 0 24px rgba(0,0,0,.12);
   padding: 16px; overflow-y: auto;
+
+  /* ← 最前面に固定（広告や固定バナーより確実に高く） */
+  z-index: 100000;
+
+  /* iOS でもビヨンビヨンしないように */
+  height: 100dvh;
+  overscroll-behavior: contain;
 }
+
 .drawer__list{ list-style:none; padding:0; margin:0; }
 .drawer__list a{
   display:block; padding:12px 8px; color:#222; text-decoration:none; font-weight:700;
@@ -1159,4 +1167,20 @@ input[type="radio"] {
     width: 48px !important;
     height: 48px !important;
   }
+}
+
+/* ドロワー背面の半透明レイヤー（クリックで閉じる） */
+#drawer-backdrop{
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,.35);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+  z-index: 99990;          /* ← .drawer より一段低く */
+  display: none;           /* JS で開閉 */
+}
+
+/* ドロワーが開いている間はスクロール禁止（下の要素に触れない） */
+body.is-drawer-open{
+  overflow: hidden;
+  touch-action: none;
 }
