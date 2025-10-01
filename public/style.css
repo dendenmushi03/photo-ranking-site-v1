@@ -926,6 +926,12 @@ input[type="radio"] {
   transition: transform .15s ease, box-shadow .15s ease, background .15s ease, color .15s ease;
 }
 
+  /* ← ここから追加 */
+  white-space: nowrap;          /* 必ず1行 */
+  overflow: hidden;             /* はみ出しを切り捨て */
+  text-overflow: ellipsis;      /* どうしても入らない時の保険 */
+  /* ← ここまで追加 */
+
 .tab-list a:hover{
   transform: translateY(-1px);
   box-shadow: 0 6px 16px rgba(0,0,0,.10);
@@ -941,27 +947,30 @@ input[type="radio"] {
   height: 44px;        /* ← アクティブでもサイズ不変 */
 }
 
-/* スマホ：横一列（4タブ）に収める */
+/* スマホ：4カラムの等幅グリッド＋1行固定＋自動縮小 */
 @media (max-width: 560px){
   .tab-list{
-    flex-wrap: nowrap;   /* ← 折り返し禁止 */
-    gap: 6px;            /* 余白を詰める */
-    padding: 8px 0;      /* 高さも少し詰める */
+    display: grid;                          /* ← グリッドに切替 */
+    grid-template-columns: repeat(4, 1fr);  /* ← 4等分で常に同幅 */
+    gap: 8px;
+    padding: 8px 0;
   }
   .tab-list a{
-    flex: 1 1 0;         /* 均等に横幅配分 */
-    min-width: 0;        /* 最小幅の縛りを外す */
-    padding: 8px 10px;   /* コンパクトに */
-    font-size: 14px;     /* 文字も少し小さめ */
+    min-width: 0;                 /* グリッド内での縮みを許可 */
+    padding: 8px 10px;
     border-radius: 12px;
+
+    /* 端末幅に応じて自動縮小（最小11px〜最大14px） */
+    font-size: clamp(11px, 3.2vw, 14px);
   }
 }
 
-/* さらに狭い端末（iPhone SE 等）用の微調整 */
+/* さらに狭い端末（iPhone SE 等）ではもう一段コンパクトに */
 @media (max-width: 360px){
   .tab-list a{
     padding: 6px 8px;
-    font-size: 13px;
+    /* 11〜13pxの範囲でさらに小さく可変 */
+    font-size: clamp(11px, 3.6vw, 13px);
     letter-spacing: .01em;
   }
 }
@@ -1000,14 +1009,13 @@ input[type="radio"] {
   display: grid; justify-items: center; text-decoration: none;
   color: #111;
 }
-.brand__logo{ width: 34px; height: 34px; display:block; }
-.brand__name{ font-size: 14px; font-weight: 800; letter-spacing: .02em; margin-top: 4px; white-space: nowrap; }
+.brand__logo{ width: 56px; height: 56px; display:block; object-fit: contain; }
+.brand__name{ display: none; } /* ← 文字は非表示（ARIAで名称は残る） */
 
-/* モバイル最適化 */
 @media (max-width: 480px){
   .appbar__inner{ height: 56px; }
-  .brand__logo{ width: 30px; height: 30px; }
-  .brand__name{ font-size: 13px; }
+  .brand__logo{ width: 44px; height: 44px; }  /* ← スマホでも一回り大きく */
+  .brand__name{ display: none; }              /* ← テキストは非表示 */
   .appbar__side span{ font-size: 13px; }
 }
 
@@ -1043,9 +1051,10 @@ input[type="radio"] {
 }
 
 .appbar__side{ display:flex; align-items:center; gap:8px; background:none; border:0; font:inherit; color:#222; }
+
 .appbar__brand{ display:grid; justify-items:center; text-decoration:none; color:#111; }
-.brand__logo{ width:36px; height:36px; object-fit:contain; display:block; }
-.brand__name{ font-weight:800; font-size:16px; line-height:1; margin-top:4px; white-space:nowrap; }
+.brand__logo{ width:56px; height:56px; object-fit:contain; display:block; }
+.brand__name{ display:none; }
 
 /* 端の配置を明示 */
 .appbar__lang{  justify-self: start; }
