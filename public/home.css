@@ -644,3 +644,80 @@
   .news-list li{ font-size: 14px; }
 }
 /* ===== /home スマホ最適化 ここまで ========================== */
+
+/* === Home：KPI（掲載枚数/累計投票/今日の更新）をスマホ向けに小さく横並び === */
+/* hero 下の <ul class="hero-stats"> を対象。ホーム以外に波及しないよう .hero を頭に付ける */
+.hero .hero-stats{
+  width: min(1000px, calc(100% - 24px));
+  margin: 14px auto;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  align-items: stretch;
+  justify-items: center;
+}
+
+.hero .hero-stats li{
+  list-style: none;
+  width: 100%;
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 2px 10px rgba(0,0,0,.08);
+  padding: 10px 8px;
+  display: grid;
+  place-items: center;
+  row-gap: 6px;
+}
+
+.hero .hero-stats strong{
+  font-size: 18px;
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: .02em;
+}
+
+.hero .hero-stats span{
+  font-size: 12px;
+  color: #333;
+  opacity: .85;
+  line-height: 1.2;
+}
+
+/* タブレット〜PC では少しだけ大きく */
+@media (min-width: 560px){
+  .hero .hero-stats{ gap: 12px; }
+  .hero .hero-stats strong{ font-size: 20px; }
+  .hero .hero-stats span{ font-size: 13px; }
+}
+
+/* さらに狭い端末（SE 等）でも1行に収める微調整 */
+@media (max-width: 360px){
+  .hero .hero-stats{ gap: 8px; }
+  .hero .hero-stats li{ padding: 8px 6px; }
+  .hero .hero-stats strong{ font-size: 17px; }
+  .hero .hero-stats span{ font-size: 11px; }
+}
+
+/* ===== How-to（3ステップ）: モバイルでの重なり解消 ===== */
+/* ステップカード同士にギャップを作る（HTMLはそのまま） */
+.steps-flow{
+  display: flex;               /* 縦積みでも gap が効くように */
+  flex-direction: column;
+  gap: 28px;                   /* ← ここが重なり解消のキモ */
+}
+
+/* カードの内側にも少し下余白を足して、STEPバッジがはみ出しても当たらないように */
+.step{
+  padding-bottom: 20px;
+}
+
+/* ボタンの直後にスペースを確保（下のSTEPバッジと干渉しにくく） */
+.step-cta{
+  margin-bottom: 14px;
+}
+
+/* 画面が広い時は少しだけ間隔を広げる */
+@media (min-width: 768px){
+  .steps-flow{ gap: 36px; }
+  .step{ padding-bottom: 24px; }
+}

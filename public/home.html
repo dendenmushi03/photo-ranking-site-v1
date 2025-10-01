@@ -333,29 +333,30 @@
     </div>
   </footer>
 
-  <!-- ヒーロー背景：public/image からランダムに選ぶ -->
-  <script>
-    (function () {
-      const hero = document.querySelector('.hero-bg');
-      if (!hero) return;
+<script>
+  (function () {
+    const hero = document.querySelector('.hero-bg');
+    if (!hero) return;
 
-      // ★ image/ 以下の“使いたいファイル名（拡張子付き）”を配列に並べる
-      const candidates = [
-        "68388a7bc1ca771eebdc9056.jpg",
-        "68388608c1ca771eebdc8f3e.jpg",
-        "6849986893f62a360ccd7687.jpg"
-        // ここに好きなだけ追加
-      ];
+    const candidates = [
+      "68388a7bc1ca771eebdc9056.jpg",
+      "68388608c1ca771eebdc8f3e.jpg",
+      "6849986893f62a360ccd7687.jpg"
+    ];
+    const pick = candidates[Math.floor(Math.random() * candidates.length)];
 
-      // 1つランダム選択
-      const pick = candidates[Math.floor(Math.random() * candidates.length)];
+    // 画面幅で背景のフィット方法を切り替え
+    const isSmall = window.matchMedia('(max-width: 520px)').matches;
+    // モバイル：拡大を抑える（高さ基準で 110% 程度に）
+    const bgSize = isSmall ? 'auto 110%' : 'cover';
+    // モバイル：被写体の顔が見えやすいように少し上寄せ
+    const bgPos  = isSmall ? 'center 20%' : 'center';
 
-      // CSSの2レイヤー背景を適用（上：薄い暗幕、下：写真）
-      hero.style.background =
-        'linear-gradient(180deg, rgba(16,12,24,.35), rgba(16,12,24,.55)),' +
-        `url("/image/${pick}") center / cover no-repeat`;
-    })();
-  </script>
+    hero.style.background =
+      `linear-gradient(180deg, rgba(16,12,24,.35), rgba(16,12,24,.55)),` +
+      `url("/image/${pick}") ${bgPos} / ${bgSize} no-repeat`;
+  })();
+</script>
 
   <script>
   (function(){
