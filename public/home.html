@@ -27,11 +27,11 @@
       <svg class="chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 10l5 5 5-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
     </button>
 
-    <!-- Center: Logo -->
-    <a href="/" class="appbar__brand" aria-label="AI Beauty Rank">
-      <img src="/assets/logo-48.png" alt="" class="brand__logo" />
-      <span class="brand__name">AI Beauty Rank</span>
-    </a>
+<!-- Center: Logo（vote.html に合わせる：ワードマーク画像＋テキストは画面非表示） -->
+<a href="/" class="appbar__brand" aria-label="AI Beauty Rank">
+  <img src="/image/aibijo-logo.png" alt="AI Beauty Rank" class="brand__logo brand__logo--wordmark" />
+  <span class="brand__name sr-only">AI Beauty Rank</span>
+</a>
 
     <!-- Right: Menu -->
     <button class="appbar__side appbar__menu" type="button" aria-controls="global-menu" aria-expanded="false">
@@ -109,9 +109,9 @@
         <path d="M9 13h2v2H9zm4 0h2v2h-2z" fill="currentColor"/>
       </svg>
     </div>
-    <div class="stat-label">掲載枚数</div>
+    <div class="stat-label">ノミネート</div>
     <div class="stat-value">
-      <span id="stat-photos">3,250</span><span class="stat-unit">枚</span>
+      <span id="stat-photos">512</span><span class="stat-unit">人</span>
     </div>
   </div>
 
@@ -125,7 +125,7 @@
     </div>
     <div class="stat-label">累計投票</div>
     <div class="stat-value">
-      <span id="stat-votes">128,765</span><span class="stat-unit">票</span>
+      <span id="stat-votes">324</span><span class="stat-unit">票</span>
     </div>
   </div>
 
@@ -140,7 +140,7 @@
     </div>
     <div class="stat-label">今日の更新</div>
     <div class="stat-value">
-      <span id="stat-today">24</span><span class="stat-unit">件</span>
+      <span id="stat-today">12</span><span class="stat-unit">件</span>
     </div>
   </div>
 </div>
@@ -154,7 +154,7 @@
 <section id="features" class="features">
   <div class="container">
 
-    <h2 class="sec-ttl gradient-text">AI Beauty Rank の特徴</h2>
+    <h2 class="sec-ttl gradient-text">アイ美女 の特徴</h2>
 
     <div class="features-grid">
 
@@ -174,7 +174,7 @@
       </a>
 
       <!-- 2. 投票体験 -->
-      <a class="feature-card" href="/index.html">
+      <a class="feature-card" href="/vote.html">
         <span class="icon">
           <!-- カメラ -->
           <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -202,7 +202,7 @@
       </a>
 
       <!-- 4. チャット -->
-      <a class="feature-card" href="/chat.html">
+      <a class="feature-card" href="/history.html">
         <span class="icon">
           <!-- メガホン -->
           <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -266,7 +266,7 @@
         </div>
         <h3 class="step-title">投票ページへ</h3>
         <p class="step-desc">写真がランダムに表示されます。気になった子をチェック。</p>
-        <a class="step-cta" href="/index.html">投票をはじめる</a>
+        <a class="step-cta" href="/vote.html">投票をはじめる</a>
       </li>
 
       <!-- STEP 02 -->
@@ -322,7 +322,7 @@
   <footer class="site-footer">
     <div class="container footer-inner">
       <div class="footer-brand">
-        <span class="brand-name">AI Beauty Rank</span>
+        <span class="brand-name">アイ美女</span>
         <small>© 2025 myrankingphoto.com</small>
       </div>
       <nav class="footer-nav" aria-label="フッター">

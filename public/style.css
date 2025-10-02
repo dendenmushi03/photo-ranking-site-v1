@@ -1107,13 +1107,19 @@ input[type="radio"] {
 /* Appbar内の画像はグローバルimgの max-width/height:auto に負けない */
 .appbar img { max-width: none; height: auto; }
 
-/* ロゴは常に固定サイズ */
+/* ヘッダーのロゴはワードマーク想定の大きめサイズに統一 */
 .appbar .brand__logo{
-  width: 36px;
-  height: 36px;
+  width: 96px;       /* モバイルで見やすい幅 */
+  height: auto;
   object-fit: contain;
   display: block;
 }
+@media (min-width: 768px){
+  .appbar .brand__logo{ width: 120px; }  /* タブレット以上で少し拡大 */
+}
+
+/* テキストロゴは画面では非表示（読み上げは sr-only で残す） */
+.brand__name{ display: none !important; }
 
 /* ===== Appbar を画面いっぱいに。ページ内 <style> の上書きも無効化 ===== */
 .appbar > .appbar__inner{

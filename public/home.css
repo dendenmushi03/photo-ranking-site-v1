@@ -736,6 +736,21 @@
   .step{ padding-bottom: 24px; }
 }
 
+/* === モバイルで「はじめ方」上の余白を圧縮 === */
+@media (max-width: 560px){
+  /* 特徴セクションの“下”を詰める（64px → 20px） */
+  .features{ padding: 40px 0 20px; }
+
+  /* はじめ方セクションの“上”を詰める（56px → 20px） */
+  .steps{ padding: 20px 0 56px; }
+}
+
+/* さらに狭い端末（iPhone SE 等）はもう少し詰める */
+@media (max-width: 360px){
+  .features{ padding: 36px 0 16px; }
+  .steps{ padding: 16px 0 52px; }
+}
+
 /* === モバイルのヒーロー背景の“拡大しすぎ”を強制で抑える（保険） === */
 @media (max-width: 560px){
   .hero-bg{
