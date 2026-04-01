@@ -2,57 +2,55 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-QZSHV2K7QG"></script>
+  <script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-QZSHV2K7QG');
+  </script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AI美女ランキング | myrankingphoto.com</title>
-  <link rel="stylesheet" href="ui.css">
+  <title>投票ページ</title>
+  <link rel="stylesheet" href="style.css">
+
+  <!-- ✅ AdSense所有権確認コード -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2449604975433002"
+    crossorigin="anonymous"></script>
+
+<meta property="og:title" content="AI美女ランキング | myrankingphoto.com">
+<meta property="og:description" content="毎日更新のAI美女フォト。気に入った子に投票してね。">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://myrankingphoto.com/">
+<meta property="og:image" content="https://myrankingphoto.com/og/daily.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@your_handle">
 </head>
-<body data-page="top">
-  <header class="site-header">
-    <div class="header-inner">
-      <a class="brand" href="/">
-        <span class="brand-mark"></span>
-        <span><strong>AI Beauty Rank</strong><div class="brand-sub">myrankingphoto.com</div></span>
-      </a>
-      <button class="menu-toggle" type="button" aria-expanded="false" aria-label="メニュー">☰</button>
-      <nav class="site-nav" aria-label="グローバルナビゲーション">
-        <ul>
-          <li><a href="/" data-page="top">トップ</a></li>
-          <li><a href="/vote.html" data-page="vote">投票</a></li>
-          <li><a href="/rankings.html" data-page="rankings">ランキング</a></li>
-          <li><a href="/upload.html" data-page="upload">投稿</a></li>
-          <li><a href="/history.html" data-page="history">履歴 / チャット</a></li>
-        </ul>
-      </nav>
-    </div>
-  </header>
 
-  <main class="page-shell">
-    <section class="section card">
-      <h1 class="page-title">AI美女ランキングを、シンプルに楽しむ。</h1>
-      <p class="page-lead">毎日更新されるAI画像から、お気に入りの1枚に投票。ランキング確認、投稿参加、履歴管理まで迷わず使える導線に整理しました。</p>
-      <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:16px;">
-        <a class="btn btn-primary" href="/vote.html">投票をはじめる</a>
-        <a class="btn btn-secondary" href="/rankings.html">ランキングを見る</a>
-      </div>
-    </section>
+<body>
+  <h1>ランダムに表示された写真に投票してください</h1>
 
-    <section class="section grid-3">
-      <article class="card"><h2>投票</h2><p class="page-lead">6枚から1枚を選んで投票。直感的で迷わないUIです。</p><a class="btn btn-ghost" href="/vote.html">投票ページへ</a></article>
-      <article class="card"><h2>ランキング</h2><p class="page-lead">上位表示を見やすく再設計。上位3位は特別カードで表示。</p><a class="btn btn-ghost" href="/rankings.html">ランキングへ</a></article>
-      <article class="card"><h2>投稿参加</h2><p class="page-lead">投稿フォームは余白・階層を整理し、参加しやすい構成に。</p><a class="btn btn-ghost" href="/upload.html">投稿する</a></article>
-    </section>
-  </main>
+  <div id="photo-container"></div>
+  <div id="vote-container" style="display:none;">
+    <button id="vote-button">投票する</button>
+  </div>
 
-  <footer class="footer">
-    <div class="footer-inner">
-      <small>© myrankingphoto.com</small>
-      <div class="footer-links">
-        <a href="/privacy.html">プライバシーポリシー</a>
-        <a href="/terms.html">利用規約</a>
-        <a href="/contact.html">お問い合わせ</a>
-      </div>
-    </div>
+  <div>
+    <a href="upload.html"><button>写真アップロードページへ</button></a>
+    <a href="rankings.html"><button>ランキングページへ</button></a>
+  </div>
+
+  <footer>
+    <p>
+      <a href="/privacy.html">プライバシーポリシー</a> |
+      <a href="/terms.html">利用規約</a>
+    </p>
   </footer>
-  <script src="ui.js"></script>
+
+  <script src="vote.js"></script>
 </body>
 </html>
