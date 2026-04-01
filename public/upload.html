@@ -2,29 +2,344 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8" />
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-QZSHV2K7QG"></script>
+  <script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-QZSHV2K7QG');
+  </script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>投稿 | AI美女ランキング</title>
-  <link rel="stylesheet" href="ui.css" />
+  <title>AI画像投稿</title>
+  <link rel="stylesheet" href="style.css?v=1" />
   <style>
-    .drop{border:2px dashed #c9d2ea;border-radius:16px;padding:28px;text-align:center;background:var(--surface-soft)}
-    .form-grid{display:grid;gap:16px}
+
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background: linear-gradient(to bottom, #f7eaff, #fce4ec);
+  padding: 0;
+}
+/* 本文エリアだけ中央寄せしたい場合に使うヘルパー */
+.content-center { text-align: center; }
+
+    h1 {
+      font-size: 2rem;
+      font-weight: bold;
+      color: #4e4eaa;
+      margin-bottom: 2rem;
+    }
+
+    form {
+      background: white;
+      padding: 2rem 3rem;
+      border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      display: inline-block;
+    }
+
+    .form-row {
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1.2rem;
+    }
+
+    .form-row label {
+      font-weight: bold;
+      width: 160px;
+      text-align: right;
+      white-space: nowrap;
+    }
+
+    .form-row input[type="text"],
+    .form-row input[type="file"] {
+      flex: 1;
+      padding: 0.5rem;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 1rem;
+    }
+
+    .form-row input[type="text"] {
+      width: 100%;
+    }
+
+#upload button {
+  display: block;
+  width: 100%;
+  padding: 0.8rem;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  margin-top: 1rem;
+  cursor: pointer;
+}
+#upload img {
+  cursor: pointer;
+  max-width: 100%;
+  height: auto;
+}
+
+#upload button:hover {
+  background-color: #0056b3;
+}
+
+    .nav-links {
+      margin-top: 2rem;
+    }
+
+    .nav-button {
+      display: inline-block;
+      margin: 0 1rem;
+      padding: 0.8rem 1.8rem;
+      font-size: 1rem;
+      color: white;
+      border: none;
+      border-radius: 30px;
+      text-decoration: none;
+      background: linear-gradient(to right, #a18cd1, #fbc2eb);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      transition: transform 0.2s ease;
+    }
+
+    .nav-button:hover {
+      transform: translateY(-2px);
+    }
+
+.header-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: clamp(90px, 18vw, 200px);  /* ← 高さをレスポンシブ固定 */
+  padding: 0 8px;
+  overflow: hidden;                  /* はみ出し対策 */
+  background-color: #fffbe8;
+  border-bottom: 1px solid #d8b7ff;
+  margin-bottom: 1rem;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.aibijo-logo {
+  height: 100%;          /* 高さに合わせる */
+  width: auto;
+  object-fit: contain;   /* ロゴは潰さない */
+  flex: 0 0 auto;
+}
+
+.banner-right {
+  height: 100%;          /* 高さに合わせる */
+  width: auto;
+  max-width: 72vw;       /* 横暴れ防止の上限（お好みで） */
+  object-fit: cover;     /* 右側はトリミングで見せる */
+  flex: 1 1 auto;
+}
+
+@media (max-width: 600px) {
+  .header-banner { height: clamp(72px, 22vw, 140px); } /* さらにコンパクト */
+
+  .aibijo-logo,
+  .banner-right {
+    height: 100%;
+    width: auto;
+  }
+
+  .header-banner img { display: block; }
+}
+
   </style>
 </head>
-<body data-page="upload">
-<header class="site-header"><div class="header-inner"><a class="brand" href="/"><span class="brand-mark"></span><span><strong>AI Beauty Rank</strong><div class="brand-sub">myrankingphoto.com</div></span></a><button class="menu-toggle" type="button" aria-expanded="false">☰</button><nav class="site-nav"><ul><li><a href="/" data-page="top">トップ</a></li><li><a href="/vote.html" data-page="vote">投票</a></li><li><a href="/rankings.html" data-page="rankings">ランキング</a></li><li><a href="/upload.html" data-page="upload">投稿</a></li><li><a href="/history.html" data-page="history">履歴 / チャット</a></li></ul></nav></div></header>
-<main class="page-shell">
-<section class="card"><h1 class="page-title">AI画像を投稿する</h1><p class="page-lead">画像と投稿者名を入力して送信。審査後にランキング対象として公開されます。</p>
-<form id="uploadForm" class="form-grid" enctype="multipart/form-data">
-  <div><label class="field-label" for="photo">画像を選択（複数可）</label><div class="drop"><input type="file" id="photo" name="photo" accept="image/*" multiple required><p class="page-lead" id="fileHint">ドラッグ＆ドロップまたはクリックして選択</p></div></div>
-  <div><label class="field-label" for="author">投稿者名（10文字以内）</label><input class="input" type="text" id="author" name="author" maxlength="10" placeholder="ニックネーム" required></div>
-  <div style="display:flex;gap:10px;flex-wrap:wrap"><button id="uploadButton" class="btn btn-primary" type="submit">アップロードする</button><a class="btn btn-secondary" href="/vote.html">投票ページへ</a></div>
-</form></section>
+
+<body>
+
+<!-- 置き換え後：海遊館風アプリバー -->
+<header class="appbar" role="banner">
+  <div class="appbar__inner">
+    <!-- Left: Language -->
+    <button class="appbar__side appbar__lang" type="button" aria-haspopup="true" aria-expanded="false">
+      <span>Language</span>
+      <svg class="chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 10l5 5 5-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+    </button>
+
+<!-- Center: Logo（vote.html に合わせる：ワードマーク画像＋テキストは画面非表示） -->
+<a href="/home.html" class="appbar__brand" aria-label="AI Beauty Rank">
+  <img src="/image/aibijo-logo.png" alt="AI Beauty Rank" class="brand__logo brand__logo--wordmark" />
+  <span class="brand__name sr-only">AI Beauty Rank</span>
+</a>
+
+    <!-- Right: Menu -->
+    <button class="appbar__side appbar__menu" type="button" aria-controls="global-menu" aria-expanded="false">
+      <svg class="burger" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+      <span>Menu</span>
+    </button>
+  </div>
+</header>
+
+<!-- オプション：開閉メニュー（必要な人だけ） -->
+<nav id="global-menu" class="drawer" hidden>
+  <ul class="drawer__list">
+    <li><a href="/vote.html">投票</a></li>
+    <li><a href="/rankings.html">ランキング</a></li>
+    <li><a href="/history.html">チャット</a></li>
+    <li><a href="/upload.html">アップロード</a></li>
+    <li><a href="/privacy.html">プライバシー</a></li>
+    <li><a href="/terms.html">利用規約</a></li>
+    <li><a href="/contact.html">お問い合わせ</a></li>
+  </ul>
+</nav>
+
+<!-- === Tabs: ページ切り替え === -->
+<nav class="tab-nav" aria-label="モード切替">
+  <ul class="tab-list" role="tablist">
+    <li role="presentation"><a role="tab" href="/vote.html"      data-tab="vote">投票</a></li>
+    <li role="presentation"><a role="tab" href="/rankings.html"  data-tab="rankings">ランキング</a></li>
+    <li role="presentation"><a role="tab" href="/history.html"   data-tab="chat">チャット</a></li>
+    <li role="presentation"><a role="tab" href="/upload.html"    data-tab="upload">アップロード</a></li>
+  </ul>
+</nav>
+
+<img
+  src="/image/banners/upload.png?v=1"
+  alt="アップロード"
+  class="page-banner-img"
+  loading="eager"
+  fetchpriority="high"
+/>
+
+<hr class="section-divider">
+
+  <div class="underline"></div>
+
+  <form id="uploadForm" enctype="multipart/form-data">
+    <div class="form-row">
+      <label for="photo">画像を選択（複数可）：</label>
+      <input type="file" id="photo" name="photo" accept="image/*" multiple required>
+    </div>
+    <div class="form-row">
+      <label for="author">投稿者名：</label>
+      <input type="text" id="author" name="author" placeholder="ニックネームを入力（10字以内）" maxlength="10" required>
+    </div>
+    <button id="uploadButton" type="submit">アップロード</button>
+  </form>
+
+  <div class="nav-links">
+    <a href="vote.html" class="nav-button">🗳 投票ページへ</a>
+    <a href="rankings.html" class="nav-button">🏆 ランキングページへ</a>
+  </div>
 </main>
-<footer class="footer"><div class="footer-inner"><small>© myrankingphoto.com</small><div class="footer-links"><a href="/privacy.html">プライバシーポリシー</a><a href="/terms.html">利用規約</a><a href="/contact.html">お問い合わせ</a></div></div></footer>
-<script src="ui.js"></script>
-<script src="upload.js"></script>
+
+  <script src="upload.js?v=1"></script>
+
+  <footer>
+    <p>
+      <a href="/privacy.html">プライバシーポリシー</a> |
+      <a href="/terms.html">利用規約</a>
+    </p>
+  </footer>
+
+  <div class="ad-container">
+    <!-- admax -->
+    <script src="https://adm.shinobi.jp/s/932c9bf67e636e25d45fea85af67e7cd"></script>
+    <!-- admax -->
+  </div>
+
 <script>
-document.getElementById('photo').addEventListener('change',(e)=>{const count=e.target.files.length;document.getElementById('fileHint').textContent=count?`${count}件のファイルを選択中`:'ドラッグ＆ドロップまたはクリックして選択';});
+  (function () {
+    // 末尾スラッシュや .html の有無を吸収して比較
+    const norm = (p) => {
+      try {
+        const u = new URL(p, location.origin).pathname
+          .replace(/\/+$/, '');
+        if (u === '' || u === '/') return '/index.html';
+        if (!/\.[a-z0-9]+$/i.test(u)) return u + '.html';
+        return u;
+      } catch { return p; }
+    };
+
+    const here = norm(location.pathname);
+
+    let activated = false;
+    document.querySelectorAll('.tab-list a').forEach(a => {
+      const target = norm(a.getAttribute('href'));
+      if (target === here ||
+          (target === '/index.html' && (here === '/index.html')) ||
+          (target === '/upload.html' && here === '/upload.html')) {
+        a.classList.add('is-active');
+        a.setAttribute('aria-current', 'page');
+        a.setAttribute('aria-selected', 'true');
+        a.setAttribute('tabindex', '0');
+        activated = true;
+      }
+    });
+
+    // フォールバック：このページでは upload を強制アクティブ
+    if (!activated) {
+      const fallback = document.querySelector('.tab-list a[data-tab="upload"]');
+      if (fallback) {
+        fallback.classList.add('is-active');
+        fallback.setAttribute('aria-current', 'page');
+        fallback.setAttribute('aria-selected', 'true');
+        fallback.setAttribute('tabindex', '0');
+      }
+    }
+  })();
 </script>
+
+<script>
+(function(){
+  const btn    = document.querySelector('.appbar__menu');
+  const drawer = document.getElementById('global-menu');
+  if(!btn || !drawer) return;
+
+  // 背面レイヤーを1度だけ生成
+  let backdrop = document.getElementById('drawer-backdrop');
+  if(!backdrop){
+    backdrop = document.createElement('div');
+    backdrop.id = 'drawer-backdrop';
+    document.body.appendChild(backdrop);
+  }
+
+  function openDrawer(){
+    drawer.removeAttribute('hidden');
+    document.body.classList.add('is-drawer-open');
+    backdrop.style.display = 'block';
+    btn.setAttribute('aria-expanded', 'true');
+  }
+  function closeDrawer(){
+    drawer.setAttribute('hidden','');
+    document.body.classList.remove('is-drawer-open');
+    backdrop.style.display = 'none';
+    btn.setAttribute('aria-expanded', 'false');
+  }
+
+  // トグル
+  btn.addEventListener('click', (e) => {
+    e.preventDefault();
+    if (drawer.hasAttribute('hidden')) openDrawer();
+    else closeDrawer();
+  });
+
+  // 背面クリックで閉じる
+  backdrop.addEventListener('click', closeDrawer);
+
+  // メニュー内リンクを押したら閉じる
+  drawer.addEventListener('click', (e) => {
+    if (e.target.closest('a')) closeDrawer();
+  });
+
+  // Escキーでも閉じる
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && !drawer.hasAttribute('hidden')) closeDrawer();
+  });
+})();
+</script>
+
 </body>
 </html>

@@ -2,48 +2,508 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8" />
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-QZSHV2K7QG"></script>
+  <script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-QZSHV2K7QG');
+  </script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ランキング | AI美女ランキング</title>
-  <link rel="stylesheet" href="ui.css" />
+  <title>写真ランキング（1〜10位）</title>
+  <link rel="stylesheet" href="style.css?v=1" />
   <style>
-    .top3{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}
-    .rank-card img{aspect-ratio:3/4;object-fit:cover;border-radius:10px;margin-bottom:10px}
-    .rank-badge{font-weight:700;color:#fff;padding:4px 10px;border-radius:999px;display:inline-block}
-    .gold{background:#ca8a04}.silver{background:#64748b}.bronze{background:#b45309}
-    .list{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
+    body {
+      background: linear-gradient(to bottom, #f7eaff, #fce4ec);
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      padding: 0;
+      text-align: center;
+    }
+
+    .underline-pink {
+    width: 60%;
+    height: 4px;
+    background: linear-gradient(to right, #ff69b4, #ff1493);
+    margin: 0 auto 2rem;
+    border-radius: 2px;
+    }
+
+    h1 {
+      font-size: 2.8rem;
+      font-weight: bold;
+      color: #ff69b4;
+      margin: 0;
+    }
+
+    .underline {
+      height: 5px;
+      background: linear-gradient(to right, #ff69b4, hotpink);
+      width: 90%;
+      max-width: 600px;
+      margin: 1rem auto 2rem auto;
+      border-radius: 3px;
+    }
+
+    .top-ranking {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .top-card {
+      width: 220px;
+      padding: 1rem;
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      text-align: center;
+    }
+
+    .top-card img {
+      width: 100%;
+      height: 220px;
+      object-fit: cover;
+      border-radius: 12px;
+    }
+
+    .top-card.gold {
+      border: 4px solid gold;
+      background: linear-gradient(to top, #fff8dc, white);
+    }
+
+    .top-card.silver {
+      border: 4px solid silver;
+      background: linear-gradient(to top, #f0f0f0, white);
+    }
+
+    .top-card.bronze {
+      border: 4px solid #cd7f32;
+      background: linear-gradient(to top, #ffe5d0, white);
+    }
+
+    .rank-list {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1.5rem;
+    }
+
+    .rank-card {
+      width: 200px;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      padding: 1rem;
+      background: #fff;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    }
+
+    .rank-card img {
+      width: 100%;
+      height: 150px;
+      object-fit: cover;
+      border-radius: 8px;
+    }
+
+    .rank-card h4 {
+      margin: 0.5rem 0 0.3rem;
+      font-size: 1rem;
+    }
+
+    .rank-card p {
+      margin: 0;
+      font-size: 0.9rem;
+    }
+
+    .vote-btn {
+      margin-top: 0.5rem;
+      padding: 6px 12px;
+      background-color: #ff69b4;
+      color: white;
+      border: none;
+      border-radius: 20px;
+      cursor: pointer;
+    }
+
+    .nav-links {
+      margin-top: 2rem;
+    }
+
+    .nav-button {
+      display: inline-block;
+      margin: 0.5rem;
+      padding: 0.8rem 1.8rem;
+      font-size: 1rem;
+      color: white;
+      border: none;
+      border-radius: 30px;
+      text-decoration: none;
+      background: linear-gradient(to right, #a18cd1, #fbc2eb);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      transition: transform 0.2s ease;
+    }
+
+    .nav-button:hover {
+      transform: translateY(-2px);
+    }
+
+        .header-banner {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 0;
+  background-color: #fffbe8;
+  border-bottom: 1px solid #d8b7ff;
+  margin-bottom: 1rem;
+  flex-wrap: nowrap;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.aibijo-logo {
+  width: 30%;
+  height: auto;
+  object-fit: contain;
+}
+
+.banner-right {
+  width: 70%;
+  height: auto;
+  object-fit: cover;
+}
+
+@media (max-width: 600px) {
+  .header-banner {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 0;
+    margin: 0;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .aibijo-logo {
+    width: 25%;
+    max-width: 25%;
+    height: auto;
+    object-fit: contain;
+  }
+
+  .banner-right {
+    width: 75%;
+    max-width: 75%;
+    height: auto;
+    object-fit: cover;
+  }
+
+  .header-banner img {
+    display: block;
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+  }
+}
+
   </style>
 </head>
-<body data-page="rankings">
-<header class="site-header"><div class="header-inner"><a class="brand" href="/"><span class="brand-mark"></span><span><strong>AI Beauty Rank</strong><div class="brand-sub">myrankingphoto.com</div></span></a><button class="menu-toggle" type="button" aria-expanded="false">☰</button><nav class="site-nav"><ul><li><a href="/" data-page="top">トップ</a></li><li><a href="/vote.html" data-page="vote">投票</a></li><li><a href="/rankings.html" data-page="rankings">ランキング</a></li><li><a href="/upload.html" data-page="upload">投稿</a></li><li><a href="/history.html" data-page="history">履歴 / チャット</a></li></ul></nav></div></header>
-<main class="page-shell">
-<section class="card section"><h1 class="page-title">ランキング（1〜10位）</h1><p class="page-lead">上位3位は特別表示。11位以下は専用ページから確認できます。</p></section>
-<section class="section"><div id="top-ranking" class="top3"></div></section>
-<section class="section card"><h2 style="margin-top:0">4位〜10位</h2><div id="rank-list" class="list"></div></section>
-<section class="section" style="display:flex;gap:10px;flex-wrap:wrap;"><a class="btn btn-primary" href="/vote.html">投票ページへ</a><a class="btn btn-secondary" href="/rankings-others.html">11位以下を見る</a></section>
-</main>
-<footer class="footer"><div class="footer-inner"><small>© myrankingphoto.com</small><div class="footer-links"><a href="/privacy.html">プライバシーポリシー</a><a href="/terms.html">利用規約</a><a href="/contact.html">お問い合わせ</a></div></div></footer>
-<script src="ui.js"></script>
-<script>
-Promise.all([fetch('/photo-meta').then(r=>r.json()), fetch('/api/rankings').then(r=>r.json())]).then(([meta, rankings]) => {
-  const merged = rankings.map(item => ({ fileId: item.id, votes: item.votes, author: meta.find(m => m.filename === item.id)?.author || '不明' }));
-  const top10 = merged.slice(0, 10);
-  const top3 = document.getElementById('top-ranking');
-  const list = document.getElementById('rank-list');
-  const labels = ['gold','silver','bronze'];
-  top10.slice(0,3).forEach((item, index) => {
-    const card = document.createElement('article');
-    card.className = 'card rank-card';
-    card.innerHTML = `<span class="rank-badge ${labels[index]}">${index+1}位</span><img src="/image/${item.fileId}" alt="${index+1}位"><h3>${item.author} さん</h3><p class="page-lead">得票数 ${item.votes} 票</p><button class="btn btn-secondary" onclick="vote('${item.fileId}')">投票する</button>`;
-    top3.appendChild(card);
-  });
-  top10.slice(3).forEach((item, i) => {
-    const card = document.createElement('article');
-    card.className = 'card rank-card';
-    card.innerHTML = `<strong>${i+4}位</strong><img src="/image/${item.fileId}" alt="${i+4}位"><h4>${item.author} さん</h4><p class="page-lead">${item.votes} 票</p><button class="btn btn-ghost" onclick="vote('${item.fileId}')">この子に投票</button>`;
-    list.appendChild(card);
-  });
-});
-function vote(fileId){fetch('/api/vote',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({imageUrl:fileId,characterId:fileId})}).then(r=>r.json()).then(d=>{if(d.success){alert('投票しました');location.reload();}else{alert('投票に失敗しました');}}).catch(()=>alert('通信エラーが発生しました。'));}
+<body>
+
+<!-- 置き換え後：海遊館風アプリバー -->
+<header class="appbar" role="banner">
+  <div class="appbar__inner">
+    <!-- Left: Language -->
+    <button class="appbar__side appbar__lang" type="button" aria-haspopup="true" aria-expanded="false">
+      <span>Language</span>
+      <svg class="chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 10l5 5 5-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+    </button>
+
+<!-- Center: Logo（vote.html に合わせる：ワードマーク画像＋テキストは画面非表示） -->
+<a href="/home.html" class="appbar__brand" aria-label="AI Beauty Rank">
+  <img src="/image/aibijo-logo.png" alt="AI Beauty Rank" class="brand__logo brand__logo--wordmark" />
+  <span class="brand__name sr-only">AI Beauty Rank</span>
+</a>
+
+    <!-- Right: Menu -->
+    <button class="appbar__side appbar__menu" type="button" aria-controls="global-menu" aria-expanded="false">
+      <svg class="burger" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+      <span>Menu</span>
+    </button>
+  </div>
+</header>
+
+<!-- オプション：開閉メニュー（必要な人だけ） -->
+<nav id="global-menu" class="drawer" hidden>
+  <ul class="drawer__list">
+    <li><a href="/vote.html">投票</a></li>
+    <li><a href="/rankings.html">ランキング</a></li>
+    <li><a href="/history.html">チャット</a></li>
+    <li><a href="/upload.html">アップロード</a></li>
+    <li><a href="/privacy.html">プライバシー</a></li>
+    <li><a href="/terms.html">利用規約</a></li>
+    <li><a href="/contact.html">お問い合わせ</a></li>
+  </ul>
+</nav>
+
+<!-- === Tabs: ページ切り替え === -->
+<nav class="tab-nav" aria-label="モード切替">
+  <ul class="tab-list" role="tablist">
+    <li role="presentation"><a role="tab" href="/vote.html"      data-tab="vote">投票</a></li>
+    <li role="presentation"><a role="tab" href="/rankings.html"  data-tab="rankings" aria-current="page" class="is-active">ランキング</a></li>
+    <li role="presentation"><a role="tab" href="/history.html"   data-tab="chat">チャット</a></li>
+    <li role="presentation"><a role="tab" href="/upload.html"    data-tab="upload">アップロード</a></li>
+  </ul>
+</nav>
+
+  <div class="ad-container">
+    <!-- admax -->
+     <!-- <div class="ad-highlight pop-glow">
+     <a href="https://px.a8.net/svt/ejp?a8mat=457LFU+G4HNLE+22QA+66WOX" rel="nofollow">
+<img border="0" width="728" height="90" alt="" src="https://www29.a8.net/svt/bgt?aid=250617162975&wid=001&eno=01&mid=s00000009685001040000&mc=1"></a>
+<img border="0" width="1" height="1" src="https://www18.a8.net/0.gif?a8mat=457LFU+G4HNLE+22QA+66WOX" alt="">
+     </div> -->
+    <!-- admax -->
+  </div>
+
+  <!-- admax -->
+<script src="https://adm.shinobi.jp/s/bbaa6d1e92004c679c4eb68fd3f022fc"></script>
+<!-- admax -->
+
+  <div class="signup-bubble" id="signupBubble">
+  急上昇中！今すぐチェック！<br>
+  直近で <span class="highlight" id="signupNumber">123</span> 人が無料登録！
+  </div>
+
+<img
+  src="/image/banners/ranking.png?v=1"
+  alt="ランキング"
+  class="page-banner-img"
+  loading="eager"
+  fetchpriority="high"
+/>
+
+  <hr class="section-divider">
+
+  <div class="underline"></div>
+
+  <div class="top-ranking" id="top-ranking"></div>
+  <div id="rank-list"></div>
+
+  <div class="underline-pink"></div>
+
+  <div class="ad-container">
+    <!-- admax -->
+     <!-- <div class="ad-highlight pop-glow">
+     <a href="https://track.myrankingphoto.com/svt/ejp?a8mat=457LFU+G9UK1E+59G0+644DT" rel="nofollow">
+  <img border="0" width="728" height="90" alt="" src="https://www25.a8.net/svt/bgt?aid=250617162984&wid=001&eno=01&mid=s00000024552001027000&mc=1">
+</a>
+<img border="0" width="1" height="1" src="https://www10.a8.net/0.gif?a8mat=457LFU+G9UK1E+59G0+644DT" alt="">
+     </div> -->
+    <!-- admax -->
+  </div>
+
+  <!-- admax -->
+<script src="https://adm.shinobi.jp/s/9748da77105a23df75bcd54923baf7b3"></script>
+<!-- admax -->
+
+  <div class="signup-bubble" id="signupBubble">
+  巷でウワサの神サイト！<br>
+  直近で <span class="highlight" id="signupNumber">123</span> 人が無料登録！
+  </div>
+
+  <div class="nav-links">
+    <a href="history.html" class="nav-button">💌 推しとチャット（告白）</a>
+    <a href="vote.html" class="nav-button">🗳 投票ページへ戻る</a>
+    <a href="rankings-others.html" class="nav-button">🏆 11位以下を見る</a>
+    <a href="upload.html" class="nav-button">📤 AI画像を投稿して参加！</a>
+  </div>
+
+  <script>
+    Promise.all([
+      fetch('/photo-meta').then(res => res.json()),
+      fetch('/api/rankings').then(res => res.json()),
+      fetch('/api/comments/all').then(res => res.json())
+    ])
+    .then(([meta, rankings, allComments]) => {
+      const topContainer = document.getElementById('top-ranking');
+      const listContainer = document.getElementById('rank-list');
+
+      const merged = rankings.map(item => {
+        const info = meta.find(m => m.filename === item.id);
+        return {
+          fileId: item.id,
+          author: info ? info.author : '不明',
+          votes: item.votes
+        };
+      });
+
+      const top10 = merged.slice(0, 10);
+
+      top10.forEach((item, index) => {
+        if (index < 3) {
+          const div = document.createElement('div');
+          div.className = 'top-card';
+          if (index === 0) div.classList.add('gold');
+          else if (index === 1) div.classList.add('silver');
+          else if (index === 2) div.classList.add('bronze');
+          div.innerHTML = `
+            <div style="font-size: 2rem;">${['🥇', '🥈', '🥉'][index]}</div>
+            <img src="/image/${item.fileId}" alt="画像">
+            <div>${item.author}さん<br>得票数：${item.votes}票</div>
+            <button class="vote-btn" onclick="vote('${item.fileId}')">投票する</button>
+          `;
+          topContainer.appendChild(div);
+        }
+      });
+
+      const renderRankCards = (items, startRank) => {
+        const row = document.createElement('div');
+        row.className = 'rank-list';
+        items.forEach((item, i) => {
+          const div = document.createElement('div');
+          div.className = 'rank-card';
+          div.innerHTML = `
+            <img src="/image/${item.fileId}" alt="画像">
+            <h4>第${startRank + i}位：${item.author}さん</h4>
+            <p>得票数：${item.votes}票</p>
+            <button class="vote-btn" onclick="vote('${item.fileId}')">投票する</button>
+          `;
+          row.appendChild(div);
+        });
+        listContainer.appendChild(row);
+      };
+
+      renderRankCards(top10.slice(3, 6), 4);
+      renderRankCards(top10.slice(6, 10), 7);
+    });
+
+    function vote(fileId) {
+      fetch('/api/vote', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ imageUrl: fileId, characterId: fileId })
+      })
+      .then(res => res.json())
+      .then(result => {
+        if (result.success) {
+          alert('投票しました！');
+          location.reload();
+        } else {
+          alert('投票に失敗しました。');
+        }
+      })
+      .catch(err => {
+        console.error('投票エラー:', err);
+        alert('通信エラーが発生しました。');
+      });
+    }
+  </script>
+
+  <footer>
+    <p>
+      <a href="/privacy.html">プライバシーポリシー</a> |
+      <a href="/terms.html">利用規約</a>
+    </p>
+  </footer>
+
+  <div class="ad-container">
+    <!-- admax -->
+     <!-- <div class="ad-highlight pop-glow">
+     <a href="https://track.myrankingphoto.com/svt/ejp?a8mat=457LFU+G9UK1E+59G0+63OY9" rel="nofollow">
+  <img border="0" width="300" height="250" alt="" src="https://www29.a8.net/svt/bgt?aid=250617162984&wid=001&eno=01&mid=s00000024552001025000&mc=1">
+</a>
+<img border="0" width="1" height="1" src="https://www19.a8.net/0.gif?a8mat=457LFU+G9UK1E+59G0+63OY9" alt="">
+    </div> -->
+    <!-- admax -->
+  </div>
+
+  <!-- admax -->
+<script src="https://adm.shinobi.jp/s/ee8aa3e0ded94c05d690709eaf0bdbc2"></script>
+<!-- admax -->
+
+  <script>
+  const randomCount = Math.floor(Math.random() * 101) + 100; // 100〜200
+  document.getElementById("signupNumber").textContent = randomCount;
+  </script>
+
+  <script>
+  // 現在URLから該当タブをハイライト（冪等）
+  (function(){
+    const path = location.pathname;
+    const map = [
+      {key:'vote',      test: p => /\/(vote|index)\.html$/.test(p) || p === '/' },
+      {key:'rankings',  test: p => /\/rankings(\.html)?$/.test(p) },   // このページ
+      {key:'chat',      test: p => /\/history\.html$/.test(p) },
+      {key:'upload',    test: p => /\/upload\.html$/.test(p) }
+    ];
+    const hit = map.find(m => m.test(path));
+    if(!hit) return;
+    const el = document.querySelector('.tab-list a[data-tab="'+hit.key+'"]');
+    if(el){
+      el.classList.add('is-active');
+      el.setAttribute('aria-selected','true');
+      el.setAttribute('tabindex','0');
+      // ARIAでの現在地も付与（CSSは style.css 側で対応）
+      el.setAttribute('aria-current','page');
+    }
+  })();
 </script>
+
+<script>
+(function(){
+  const btn    = document.querySelector('.appbar__menu');
+  const drawer = document.getElementById('global-menu');
+  if(!btn || !drawer) return;
+
+  // 背面レイヤーを1度だけ生成
+  let backdrop = document.getElementById('drawer-backdrop');
+  if(!backdrop){
+    backdrop = document.createElement('div');
+    backdrop.id = 'drawer-backdrop';
+    document.body.appendChild(backdrop);
+  }
+
+  function openDrawer(){
+    drawer.removeAttribute('hidden');
+    document.body.classList.add('is-drawer-open');
+    backdrop.style.display = 'block';
+    btn.setAttribute('aria-expanded', 'true');
+  }
+  function closeDrawer(){
+    drawer.setAttribute('hidden','');
+    document.body.classList.remove('is-drawer-open');
+    backdrop.style.display = 'none';
+    btn.setAttribute('aria-expanded', 'false');
+  }
+
+  // トグル
+  btn.addEventListener('click', (e) => {
+    e.preventDefault();
+    if (drawer.hasAttribute('hidden')) openDrawer();
+    else closeDrawer();
+  });
+
+  // 背面クリックで閉じる
+  backdrop.addEventListener('click', closeDrawer);
+
+  // メニュー内リンクを押したら閉じる
+  drawer.addEventListener('click', (e) => {
+    if (e.target.closest('a')) closeDrawer();
+  });
+
+  // Escキーでも閉じる
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && !drawer.hasAttribute('hidden')) closeDrawer();
+  });
+})();
+</script>
+
 </body>
 </html>
+

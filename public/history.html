@@ -2,48 +2,574 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-QZSHV2K7QG"></script>
+  <script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-QZSHV2K7QG');
+  </script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>履歴 / チャット導線 | AI美女ランキング</title>
-  <link rel="stylesheet" href="ui.css">
+  <title>投票履歴</title>
+  <link rel="stylesheet" href="style.css?v=1">
   <style>
-    .history-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:16px}
-    .history-card img{aspect-ratio:3/4;object-fit:cover;border-radius:10px;margin-bottom:10px}
-    .history-actions{display:grid;gap:8px}
+    .history-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 1rem;
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+  justify-items: center;
+}
+
+    .history-card {
+      border: 1px solid #ccc;
+      border-radius: 12px;
+      padding: 1rem;
+      text-align: center;
+      width: 180px;
+      box-shadow: 2px 2px 6px rgba(0,0,0,0.1);
+      background: linear-gradient(to bottom, #f7eaff, #fce4ec);
+    }
+    .history-card img {
+      width: 100%;
+      height: auto;
+      border-radius: 8px;
+    }
+    .chat-btn, .love-btn {
+      padding: 0.5rem 1.2rem;
+      margin-top: 0.6rem;
+      border: none;
+      border-radius: 30px;
+      cursor: pointer;
+      color: white;
+      font-weight: bold;
+      font-size: 0.95rem;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    }
+    .chat-btn {
+      background: linear-gradient(to right, #2196f3, #42a5f5);
+    }
+    .chat-btn:hover {
+      background: linear-gradient(to right, #1976d2, #42a5f5);
+      transform: scale(1.05);
+    }
+    .love-btn {
+      background: linear-gradient(to right, #ff5e8e, #ff84a3);
+    }
+    .love-btn:hover {
+      background: linear-gradient(to right, #ff3e78, #ff6899);
+      transform: scale(1.05);
+    }
+    .remove-icon {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      width: 28px;
+      height: 28px;
+      cursor: pointer;
+      z-index: 2;
+      transition: transform 0.2s ease;
+    }
+    .remove-icon:hover {
+      transform: scale(1.1);
+    }
+
+        .header-banner {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 0;
+  background-color: #fffbe8;
+  border-bottom: 1px solid #d8b7ff;
+  margin-bottom: 1rem;
+  flex-wrap: nowrap;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.aibijo-logo {
+  width: 30%;
+  height: auto;
+  object-fit: contain;
+}
+
+.banner-right {
+  width: 70%;
+  height: auto;
+  object-fit: cover;
+}
+
+@media (max-width: 600px) {
+  .header-banner {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 0;
+    margin: 0;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .aibijo-logo {
+    width: 25%;
+    max-width: 25%;
+    height: auto;
+    object-fit: contain;
+  }
+
+  .banner-right {
+    width: 75%;
+    max-width: 75%;
+    height: auto;
+    object-fit: cover;
+  }
+
+  .header-banner img {
+    display: block;
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+  }
+}
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  padding: 1rem;
+  box-sizing: border-box;
+}
+
+.modal-content {
+  background: linear-gradient(to bottom right, #fff0f5, #f0f8ff);
+  background-image: url('image/heart-pattern.svg'); /* 透かしのようなハート模様を入れても◎ */
+  background-size: cover;
+  background-color: #fff;
+  border-radius: 16px;
+  max-width: 90%;
+  width: 360px;
+  text-align: center;
+  padding: 2rem 1.5rem;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+  position: relative;
+}
+
+#confessImage {
+  width: 90%;
+  max-width: 280px;
+  border-radius: 16px;
+  box-shadow: 0 8px 20px rgba(255, 105, 180, 0.3);
+  margin-bottom: 1.2rem;
+}
+
+.modal-content h2 {
+  font-size: 1.6rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+}
+
+.modal-content img {
+  width: 100%;
+  max-width: 260px;
+  border-radius: 12px;
+  margin: 0 auto 1.2rem;
+  display: block;
+}
+
+.modal-content button,
+.modal-content a.nav-button {
+  background: linear-gradient(to right, #d8b4fe, #fbc2eb);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  font-weight: bold;
+  font-size: 1.05rem;
+  padding: 0.9rem 1rem;
+  border-radius: 30px;
+  width: 100%;
+  max-width: 280px;
+  margin: 0.5rem auto;
+  display: block;
+  color: white;
+  text-decoration: none;
+  transition: transform 0.2s ease;
+}
+
+.modal-content a.nav-button:hover {
+  transform: scale(1.05);
+}
+
+.modal-close {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  font-size: 1.4rem;
+  background: none;
+  border: none;
+  color: #444;
+  cursor: pointer;
+}
+
+.hidden {
+  display: none !important;
+}
+
   </style>
 </head>
-<body data-page="history">
-<header class="site-header"><div class="header-inner"><a class="brand" href="/"><span class="brand-mark"></span><span><strong>AI Beauty Rank</strong><div class="brand-sub">myrankingphoto.com</div></span></a><button class="menu-toggle" type="button" aria-expanded="false">☰</button><nav class="site-nav"><ul><li><a href="/" data-page="top">トップ</a></li><li><a href="/vote.html" data-page="vote">投票</a></li><li><a href="/rankings.html" data-page="rankings">ランキング</a></li><li><a href="/upload.html" data-page="upload">投稿</a></li><li><a href="/history.html" data-page="history">履歴 / チャット</a></li></ul></nav></div></header>
-<main class="page-shell">
-<section class="card"><h1 class="page-title">投票履歴</h1><p class="page-lead">投票した画像からチャットや告白に進めます。主導線は「チャットする」です。</p></section>
-<section class="section"><div id="history" class="history-grid"></div></section>
-<section class="section" style="display:flex;gap:10px;flex-wrap:wrap"><a class="btn btn-primary" href="/girlfriends.html">彼女ページへ</a><a class="btn btn-secondary" href="/vote.html">投票ページへ</a><a class="btn btn-ghost" href="/rankings.html">ランキングへ</a></section>
-</main>
-<footer class="footer"><div class="footer-inner"><small>© myrankingphoto.com</small><div class="footer-links"><a href="/privacy.html">プライバシーポリシー</a><a href="/terms.html">利用規約</a><a href="/contact.html">お問い合わせ</a></div></div></footer>
 
-<div id="confessModal" class="modal hidden"><div class="card modal-card"><h2 id="confessMessage">告白結果</h2><img id="confessImage" src="" alt="告白画像" style="max-width:220px;margin:0 auto 10px;border-radius:12px;"><div id="confessButtons" style="display:grid;gap:8px"></div><button class="btn btn-ghost" type="button" onclick="closeConfessModal()">閉じる</button></div></div>
+<body>
 
-<script src="ui.js"></script>
-<script>
-fetch('/api/vote-history').then(res => res.ok ? res.json() : Promise.reject()).then(data => {
+  <!-- 置き換え後：海遊館風アプリバー -->
+<header class="appbar" role="banner">
+  <div class="appbar__inner">
+    <!-- Left: Language -->
+    <button class="appbar__side appbar__lang" type="button" aria-haspopup="true" aria-expanded="false">
+      <span>Language</span>
+      <svg class="chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 10l5 5 5-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+    </button>
+
+<!-- Center: Logo（vote.html に合わせる：ワードマーク画像＋テキストは画面非表示） -->
+<a href="/home.html" class="appbar__brand" aria-label="AI Beauty Rank">
+  <img src="/image/aibijo-logo.png" alt="AI Beauty Rank" class="brand__logo brand__logo--wordmark" />
+  <span class="brand__name sr-only">AI Beauty Rank</span>
+</a>
+
+    <!-- Right: Menu -->
+    <button class="appbar__side appbar__menu" type="button" aria-controls="global-menu" aria-expanded="false">
+      <svg class="burger" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+      <span>Menu</span>
+    </button>
+  </div>
+</header>
+
+<!-- オプション：開閉メニュー（必要な人だけ） -->
+<nav id="global-menu" class="drawer" hidden>
+  <ul class="drawer__list">
+    <li><a href="/vote.html">投票</a></li>
+    <li><a href="/rankings.html">ランキング</a></li>
+    <li><a href="/history.html">チャット</a></li>
+    <li><a href="/upload.html">アップロード</a></li>
+    <li><a href="/privacy.html">プライバシー</a></li>
+    <li><a href="/terms.html">利用規約</a></li>
+    <li><a href="/contact.html">お問い合わせ</a></li>
+  </ul>
+</nav>
+  
+<!-- === Tabs: ページ切り替え === -->
+<nav class="tab-nav" aria-label="モード切替">
+  <ul class="tab-list" role="tablist">
+    <li role="presentation"><a role="tab" href="/vote.html"      data-tab="vote">投票</a></li>
+    <li role="presentation"><a role="tab" href="/rankings.html"  data-tab="rankings">ランキング</a></li>
+    <li role="presentation"><a role="tab" href="/history.html"   data-tab="chat" class="is-active" aria-current="page">チャット</a></li>
+    <li role="presentation"><a role="tab" href="/upload.html"    data-tab="upload">アップロード</a></li>
+  </ul>
+</nav>
+
+  <div class="ad-container">
+    <!-- admax -->
+     <!-- <div class="ad-highlight pop-glow">
+     <a href="https://track.myrankingphoto.com/svt/ejp?a8mat=457LFU+G4HNLE+22QA+5ZEMP" rel="nofollow">
+  <img border="0" width="350" height="80" alt="" src="https://www21.a8.net/svt/bgt?aid=250617162975&wid=001&eno=01&mid=s00000009685001005000&mc=1">
+</a>
+<img border="0" width="1" height="1" src="https://www14.a8.net/0.gif?a8mat=457LFU+G4HNLE+22QA+5ZEMP" alt="">
+     </div> -->
+    <!-- admax -->
+  </div>
+
+<!-- admax -->
+<script src="https://adm.shinobi.jp/s/f35106b1625b103acbdde4786dcd9d58"></script>
+<!-- admax -->
+
+  <div class="signup-bubble" id="signupBubble">
+  もう試した？コレは一度見たらハマる！<br>
+  直近で <span class="highlight" id="signupNumber">123</span> 人が無料登録！
+  </div>
+
+<!-- バナー画像をそのまま表示 -->
+<img
+  src="/image/banners/chat.png?v=1"
+  alt="チャット"
+  class="page-banner-img"
+  loading="eager"
+  fetchpriority="high"
+/>
+<hr class="section-divider">
+
+  <div class="underline"></div>
+  <div class="history-container" id="history"></div>
+
+  <script>
+    fetch('/api/vote-history')
+      .then(res => res.ok ? res.json() : Promise.reject('取得失敗'))
+      .then(data => {
   const container = document.getElementById('history');
-  const girlfriends = JSON.parse(localStorage.getItem('girlfriends') || '[]');
-  const rejected = JSON.parse(localStorage.getItem('rejectedGirls') || '[]');
-  const girlfriendKeys = new Set(girlfriends.map(g => `${g.characterId}-${g.timestamp}`));
-  const filtered = data.filter(entry => !girlfriendKeys.has(`${entry.characterId}-${entry.timestamp}`) && !rejected.includes(`${entry.characterId}-${entry.timestamp}`));
-  if (!filtered.length) { container.innerHTML = '<div class="card">表示できる履歴がありません。まずは投票してみましょう。</div>'; return; }
-  filtered.forEach(entry => {
-    const card = document.createElement('article');
-    card.className = 'card history-card';
-    card.innerHTML = `<img src="/image/${entry.imageUrl}" alt="履歴画像"><p class="page-lead">${new Date(entry.timestamp).toLocaleString()}</p><div class="history-actions"><button class="btn btn-primary" onclick="startChat('${entry.characterId}','${entry.imageUrl}')">チャットする</button><button class="btn btn-secondary" onclick="addToGirlfriends('${entry.characterId}','${entry.imageUrl}','${entry.timestamp}')">告白する</button><button class="btn btn-ghost" onclick="deleteVote('${entry.characterId}','${entry.timestamp}',this)">履歴を削除</button></div>`;
-    container.appendChild(card);
-  });
-}).catch(()=>{document.getElementById('history').innerHTML='<p>履歴の読み込みに失敗しました。</p>';});
+  const girlfriends = JSON.parse(localStorage.getItem("girlfriends") || "[]");
+  const rejected = JSON.parse(localStorage.getItem("rejectedGirls") || "[]");
 
-function deleteVote(characterId,timestamp,button){if(!confirm('この投票履歴を削除しますか？'))return;fetch('/api/delete-vote',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({characterId,timestamp})}).then(res=>{if(res.ok){button.closest('.history-card').remove();}else{alert('削除に失敗しました。');}})}
-function startChat(characterId,imageUrl){localStorage.setItem('chatCharacterId',characterId);localStorage.setItem('chatCharacterImage',`/image/${imageUrl}`);localStorage.setItem('chatContext','history');window.location.href='chat.html';}
-function addToGirlfriends(characterId,imageUrl,timestamp){const girlfriends=JSON.parse(localStorage.getItem('girlfriends')||'[]');if(girlfriends.length>=3)return alert('彼女は3人までしか登録できません！');if(girlfriends.some(g=>String(g.characterId)===String(characterId)))return alert('すでに彼女リストに追加されています！');const success=Math.random()<0.3;if(success){girlfriends.push({characterId,imageUrl,timestamp});localStorage.setItem('girlfriends',JSON.stringify(girlfriends));showConfessModal(true,imageUrl);}else{const rejected=JSON.parse(localStorage.getItem('rejectedGirls')||'[]');rejected.push(`${characterId}-${timestamp}`);localStorage.setItem('rejectedGirls',JSON.stringify(rejected));showConfessModal(false,imageUrl);}fetch('/api/vote-history',{method:'DELETE',headers:{'Content-Type':'application/json'},body:JSON.stringify({imageUrl})});document.querySelector(`.history-card img[src='/image/${imageUrl}']`)?.closest('.history-card')?.remove();}
-function showConfessModal(success,imageUrl){const msg=document.getElementById('confessMessage');const img=document.getElementById('confessImage');const buttons=document.getElementById('confessButtons');if(success){msg.textContent='告白成功';img.src=`/image/${imageUrl}`;img.style.display='block';buttons.innerHTML='<a class="btn btn-primary" href="/girlfriends.html">彼女ページへ</a>';}else{msg.textContent='告白は成立しませんでした';img.style.display='none';buttons.innerHTML='<a class="btn btn-secondary" href="/history.html">別の相手に告白する</a>';}document.getElementById('confessModal').classList.remove('hidden');}
-function closeConfessModal(){document.getElementById('confessModal').classList.add('hidden');}
+  const girlfriendKeys = new Set(girlfriends.map(g => `${g.characterId}-${g.timestamp}`));
+  const rejectedKeys = new Set(rejected);
+
+  const filtered = data.filter(entry => {
+    const key = `${entry.characterId}-${entry.timestamp}`;
+    return !(girlfriendKeys.has(key) || rejectedKeys.has(key));
+  });
+
+        if (filtered.length === 0) {
+          container.innerHTML = '<p style="text-align:center;">表示できる履歴がありません。まずはお気に入りの女の子を見つけて投票しよう！</p>';
+          return;
+        }
+
+        filtered.forEach(entry => {
+          const div = document.createElement('div');
+          div.className = 'history-card';
+          div.innerHTML = `
+  <div class="image-wrapper">
+    <button class="remove-btn" onclick="deleteVote('${entry.characterId}', '${entry.timestamp}', this)">×</button>
+    <img src="/image/${entry.imageUrl}" class="photo" alt="履歴画像">
+  </div>
+  <p>${new Date(entry.timestamp).toLocaleString()}</p>
+  <button class="chat-btn" onclick="startChat('${entry.characterId}', '${entry.imageUrl}')">チャットする</button>
+  <button class="love-btn" onclick="addToGirlfriends('${entry.characterId}', '${entry.imageUrl}', '${entry.timestamp}')">告白する</button>
+`;       
+          container.appendChild(div);
+        });
+      })
+      .catch(err => {
+        console.error(err);
+        document.getElementById('history').innerHTML =
+          '<p style="color:red;">履歴の読み込みに失敗しました。</p>';
+      });
+
+    function deleteVote(characterId, timestamp, button) {
+      const confirmed = confirm("この投票履歴を削除しますか？");
+      if (!confirmed) return;
+
+      fetch(`/api/delete-vote`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ characterId, timestamp })
+      })
+      .then(res => {
+        if (res.ok) {
+          const card = button.closest(".history-card");
+          if (card) card.remove();
+        } else {
+          alert("削除に失敗しました。");
+        }
+      })
+      .catch(err => {
+        console.error("削除エラー:", err);
+        alert("通信エラーが発生しました。");
+      });
+    }
+
+    function startChat(characterId, imageUrl) {
+      localStorage.setItem("chatCharacterId", characterId);
+      localStorage.setItem("chatCharacterImage", `/image/${imageUrl}`); // ← ✅ここが重要
+      localStorage.setItem("chatContext", "history");
+    window.location.href = "chat.html";
+    }
+
+    function addToGirlfriends(characterId, imageUrl, timestamp) {
+  const girlfriends = JSON.parse(localStorage.getItem("girlfriends") || "[]");
+
+  if (girlfriends.length >= 3) {
+    alert("彼女は3人までしか登録できません！");
+    return;
+  }
+
+  const exists = girlfriends.some(g => String(g.characterId) === String(characterId));
+  if (exists) {
+    alert("すでに彼女リストに追加されています！");
+    return;
+  }
+
+  const success = Math.random() < 0.3;
+
+  if (success) {
+    girlfriends.push({ characterId, imageUrl, timestamp });
+    localStorage.setItem("girlfriends", JSON.stringify(girlfriends));
+    showConfessModal(true, imageUrl);  // ✅ 成功モーダル表示
+  } else {
+    const rejected = JSON.parse(localStorage.getItem("rejectedGirls") || "[]");
+    rejected.push(`${characterId}-${timestamp}`);
+    localStorage.setItem("rejectedGirls", JSON.stringify(rejected));
+    showConfessModal(false, imageUrl); // ✅ 失敗モーダル表示
+  }
+
+  fetch('/api/vote-history', {
+    method: 'DELETE',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ imageUrl })
+  }).catch(err => console.error("履歴削除失敗:", err));
+
+  // ✅ 履歴から即座に削除（DOM）
+const historyCard = document.querySelector(
+  `.history-card img[src="/image/${imageUrl}"]`
+)?.closest(".history-card");
+
+if (historyCard) historyCard.remove();
+
+}
+
+function showConfessModal(success, imageUrl) {
+  const modal = document.getElementById("confessModal");
+  const message = document.getElementById("confessMessage");
+  const image = document.getElementById("confessImage");
+  const buttons = document.getElementById("confessButtons");
+
+  if (success) {
+    message.textContent = "告白成功！💘";
+    image.src = `/image/${imageUrl}`;
+    image.style.display = "block";
+    buttons.innerHTML = `
+      <a href="girlfriends.html" class="nav-button">彼女ページへ</a>
+    `;
+  } else {
+    message.textContent = "告白失敗…フラれてしまいました😢";
+    image.style.display = "none";
+    buttons.innerHTML = `
+      <a href="history.html" class="nav-button">他の人に告白する</a>
+    `;
+  }
+
+  modal.classList.remove("hidden");
+}
+
+function closeConfessModal() {
+  document.getElementById("confessModal").classList.add("hidden");
+}
+
+  </script>
+
+  <div class="ad-container">
+    <!-- admax -->
+    <script src="https://adm.shinobi.jp/s/9b9fced49658d57c8a76c69b23d95c50"></script>
+    <!-- admax -->
+  </div>
+
+  <div class="signup-bubble" id="signupBubble">
+  覗いたら最後、本当は教えたくない！<br>
+  直近で <span class="highlight" id="signupNumber">123</span> 人が無料登録！
+  </div>
+
+  <div class="nav-links">
+    <a href="girlfriends.html" class="nav-button">💖 彼女</a>
+    <a href="vote.html" class="nav-button">🗳 投票ページ</a>
+    <a href="rankings.html" class="nav-button">🏆 ランキングページへ</a>
+    <a href="upload.html" class="nav-button">📤 AI画像を投稿して参加!</a>
+  </div>
+
+  <footer>
+    <p>
+      <a href="/privacy.html">プライバシーポリシー</a> |
+      <a href="/terms.html">利用規約</a>
+    </p>
+  </footer>
+
+  <div class="ad-container">
+    <!-- admax -->
+    <script src="https://adm.shinobi.jp/s/8dd4dfeae7d420bc4156800b1ab67128"></script>
+    <!-- admax -->
+  </div>
+    
+  <script>
+  const randomCount = Math.floor(Math.random() * 101) + 100; // 100〜200
+  document.getElementById("signupNumber").textContent = randomCount;
+  </script>
+
+  <!-- 告白モーダル -->
+<div id="confessModal" class="modal hidden">
+  <div class="modal-content">
+    <button class="remove-btn" onclick="closeConfessModal()">×</button>
+    <h2 id="confessMessage">告白成功！</h2>
+    <img id="confessImage" src="" alt="告白画像" />
+    <div id="confessButtons"></div>
+  </div>
+</div>
+
+<script>
+  // 現在URLから該当タブをハイライト（冪等）
+  (function(){
+    const path = location.pathname;
+    const map = [
+      {key:'vote',      test: p => /\/(vote|index)\.html$/.test(p) || p === '/' },
+      {key:'rankings',  test: p => /\/rankings(\.html)?$/.test(p) },
+      {key:'chat',      test: p => /\/history\.html$/.test(p) },   // このページ
+      {key:'upload',    test: p => /\/upload\.html$/.test(p) }
+    ];
+    const hit = map.find(m => m.test(path));
+    if(!hit) return;
+    const el = document.querySelector('.tab-list a[data-tab="'+hit.key+'"]');
+    if(el){
+      el.classList.add('is-active');
+      el.setAttribute('aria-selected','true');
+      el.setAttribute('tabindex','0');
+      el.setAttribute('aria-current','page');
+    }
+  })();
 </script>
+
+<script>
+(function(){
+  const btn    = document.querySelector('.appbar__menu');
+  const drawer = document.getElementById('global-menu');
+  if(!btn || !drawer) return;
+
+  // 背面レイヤーを1度だけ生成
+  let backdrop = document.getElementById('drawer-backdrop');
+  if(!backdrop){
+    backdrop = document.createElement('div');
+    backdrop.id = 'drawer-backdrop';
+    document.body.appendChild(backdrop);
+  }
+
+  function openDrawer(){
+    drawer.removeAttribute('hidden');
+    document.body.classList.add('is-drawer-open');
+    backdrop.style.display = 'block';
+    btn.setAttribute('aria-expanded', 'true');
+  }
+  function closeDrawer(){
+    drawer.setAttribute('hidden','');
+    document.body.classList.remove('is-drawer-open');
+    backdrop.style.display = 'none';
+    btn.setAttribute('aria-expanded', 'false');
+  }
+
+  // トグル
+  btn.addEventListener('click', (e) => {
+    e.preventDefault();
+    if (drawer.hasAttribute('hidden')) openDrawer();
+    else closeDrawer();
+  });
+
+  // 背面クリックで閉じる
+  backdrop.addEventListener('click', closeDrawer);
+
+  // メニュー内リンクを押したら閉じる
+  drawer.addEventListener('click', (e) => {
+    if (e.target.closest('a')) closeDrawer();
+  });
+
+  // Escキーでも閉じる
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && !drawer.hasAttribute('hidden')) closeDrawer();
+  });
+})();
+</script>
+
 </body>
 </html>
